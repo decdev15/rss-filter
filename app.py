@@ -9,11 +9,11 @@ app = Flask(__name__)
 # -------------------------------------------------------------
 # CONFIGURATION
 # -------------------------------------------------------------
-# 1. Enter the words you want to REQUIRE. 
-# Using the pipe | symbol allows you to look for multiple words (e.g., "league|cup|final")
-ALLOWED_WORDS = r"\b(league)\b"
+# 1. Blocklist Configuration (Case-Insensitive)
+# This flags the exact phrase "israel games" or the standalone word "pubs"
+BLOCKED_WORDS = r"israel games|\bpubs\b"
 
-# 2. Your new target RSS feed URL
+# 2. Target RSS feed URL
 SOURCE_FEED_URL = "https://www.independent.ie/sport/rss"
 # -------------------------------------------------------------
 
@@ -24,15 +24,15 @@ def filter_rss():
         resp = requests.get(SOURCE_FEED_URL, headers=headers, timeout=10)
         raw_feed = feedparser.parse(resp.text)
         
-        # Compile the regex to look for our allowed keyword(s)
-        compiled_regex = re.compile(ALLOWED_WORDS, re.IGNORECASE)
+        # re.IGNORECASE makes the filter completely case-insensitive
+        compiled_regex = re.compile(BLOCKED_WORDS, re.IGNORECASE)
         items_xml = []
 
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             
-            # INVERTED LOGIC: If the keyword "League" is NOT found in the title, skip the article
-            if not compiled_regex.search(title):
+            # If the title matches our blocked phrase or word, drop it immediately
+            if compiled_regex.search(title):
                 continue  
                 
             link = entry.get('link', '')
@@ -40,18 +40,17 @@ def filter_rss():
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = entry.get('id', link)
             
-            # Extract Independent.ie thumbnail images if present in the media_content block
+            # Extract Independent.ie thumbnail images
             img_url = ""
             if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
             elif 'links' in entry:
-                # Fallback: Check standard links for image enclosures
                 for l in entry['links']:
                     if 'image' in l.get('type', ''):
                         img_url = l.get('href', '')
                         break
             
-            # Prepend the image to the description block for Inoreader layout compatibility
+            # Prepend the image to the description block for Inoreader compatibility
             if img_url:
                 desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
             else:
