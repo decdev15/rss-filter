@@ -9,11 +9,10 @@ app = Flask(__name__)
 # -------------------------------------------------------------
 # CONFIGURATION
 # -------------------------------------------------------------
-# 1. Paste your 100-200 words here inside the parenthesis, separated by | pipes.
-# Keep them lowercase, with NO spaces directly next to the pipes.
+# 1. Paste your words here inside the parenthesis, separated by | pipes.
 BLOCKED_WORDS = r"\b(crypto|sponsored|giveaway|word1|word2|word3)\b"
 
-# 2. Replace this URL with your actual target RSS feed URL
+# 2. Your target RSS feed URL
 SOURCE_FEED_URL = "https://rss.nytimes.com/services/xml/rss/nyt/Homepage.xml"
 # -------------------------------------------------------------
 
@@ -25,8 +24,6 @@ def filter_rss():
         raw_feed = feedparser.parse(resp.text)
         
         compiled_regex = re.compile(BLOCKED_WORDS, re.IGNORECASE)
-        
-        # We'll build the XML string directly to avoid strict library conversion crashes
         items_xml = []
 
         for entry in raw_feed.entries:
@@ -41,6 +38,15 @@ def filter_rss():
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = entry.get('id', link)
             
+            # Capture NYT image structures (media:content / links)
+            media_block = ""
+            if 'media_content' in entry:
+                for media in entry['media_content']:
+                    url = media.get('url', '')
+                    medium = media.get('medium', 'image')
+                    if url:
+                        media_block += f'\n        <media:content url="{url}" medium="{medium}" />'
+
             # Clean up potential XML breaking characters in text fields
             title_clean = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             
@@ -49,17 +55,17 @@ def filter_rss():
         <link>{link}</link>
         <description><![CDATA[{desc}]]></description>
         <guid isPermaLink="false">{guid}</guid>
-        <pubDate>{pub_date}</pubDate>
+        <pubDate>{pub_date}</pubDate>{media_block}
     </item>"""
             items_xml.append(item_block)
 
-        # Assemble the final valid RSS feed structure
+        # Assemble the final RSS with media namespaces included at the top
         feed_title = raw_feed.feed.get('title', 'Filtered Feed').replace("&", "&amp;")
         feed_link = raw_feed.feed.get('link', '')
         feed_desc = raw_feed.feed.get('description', 'Cleaned Feed').replace("&", "&amp;")
         
         xml_output = f"""<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
     <title>{feed_title}</title>
     <link>{feed_link}</link>
