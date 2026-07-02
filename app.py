@@ -11,7 +11,38 @@ app = Flask(__name__)
 # =============================================================
 
 # Shared blocklist used across multiple feeds
-G_BLOCK_NEGATIVE = r"Garda|Gardai|abuse|rape|rapist|murder|crime|death|stabbing|killed|crisis|dire|blood|safety|cruelty|offences|stolen|charged|prison|inmate|criminal" 
+
+G_BLOCK_NEGATIVE = (
+r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
+r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|charged|prison|inmate|criminal|demise|rolf harris|jimmy savile|"
+r"struggles|diagnosis|hate|miserable|"
+r"abused|rapes|raped|murdered|murders|killing|kills|"
+r"fatal|fatality|fatalities|deathly|deadly|"
+r"attack|attacks|attacked|"
+r"assault|assaulted|assaults|"
+r"violence|violent|"
+r"bomb|bombing|bombed|explosion|explosions|"
+r"shooting|shot|gunfire|gunman|"
+r"stabbed|stabbing|"
+r"terror|terrorism|terrorist|extremism|extremist|"
+r"hostage|hostages|"
+r"kidnap|kidnapped|kidnapping|abduction|abducted|"
+r"fraud|scam|scams|scamming|"
+r"corruption|bribery|"
+r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
+r"tragedy|tragic|"
+r"suffer|suffering|suffers|suffered|"
+r"hospitalised|hospitalized|injured|critical|critical condition|"
+r"terminal|terminally ill|"
+r"missing|missing person|"
+r"overdose|overdosed|"
+r"suicide|self-harm|"
+r"grief|mourning|bereavement|"
+r"burial|funeral"
+)
+
+
+G_BLOCK_NEGATIVE = r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|charged|prison|inmate|criminal|demise|rolf harris|jimmy savile|struggles|diagnosis|hate|miserable" 
 G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
 
 
@@ -101,6 +132,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # ("https://rss-filter-y4fa.onrender.com" per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) 
 # 
 # https://rss-filter-y4fa.onrender.com/indo_main.xml
+# https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml
 # https://rss-filter-y4fa.onrender.com/indo_sport.xml
 # https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml
 # https://rss-filter-y4fa.onrender.com/indo_ent.xml
@@ -110,6 +142,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # https://rss-filter-y4fa.onrender.com/wired.xml
 # https://rss-filter-y4fa.onrender.com/fortune.xml
 # https://rss-filter-y4fa.onrender.com/nyt_soccer.xml
+# ...
 
 # "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out
 # "FI: " means filtered in i.e. only articles with certain words and phrases are displayed 
@@ -121,10 +154,25 @@ def indo_main():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|politics|breaking"
     return process_generic_feed("https://www.independent.ie/rss", BLOCKS, "FO: Indo Main", exclude_sports_ent=True)
 
+# Independent.ie Main Feed (Inclusive Phrases Only)
+# Use this to test the exlusions above dont cause many false positives
+@app.route('/indo_main_inclusive.xml')
+def indo_main_inclusive():
+    # allowed keywords
+    ALLOWED = f"{G_BLOCK_NEGATIVE}|phrase 2"
+    return process_generic_feed("https://www.independent.ie/rss", ALLOWED, "FI: Indo Main", inclusive=True)
+
+
+
+
+
+
+
+
 # Independent.ie Sport Feed (Standard Blocklist)
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = r"Liverpool|\bpubs\b" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|\bpubs\b" 
     return process_generic_feed("https://www.independent.ie/sport/rss", BLOCKS, "FO: Indo Sport")
 
 # Independent.ie Sport Feed (Inclusive Phrases Only)
@@ -139,7 +187,7 @@ def indo_sport_inclusive():
 # Independent.ie Entertainment Feed (Standard Blocklist)
 @app.route('/indo_ent.xml')
 def indo_ent():
-    BLOCKS = r"Niall Horan|diagnosis|hate" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|Niall Horan|musical|mcnally" 
     return process_generic_feed("https://www.independent.ie/entertainment/rss", BLOCKS, "FO: Indo Entertainment")
 
 # Independent.ie Entertainment Feed (Inclusive Phrases Only)
@@ -152,31 +200,31 @@ def indo_ent_inclusive():
 # Business Insider Feed
 @app.route('/business_insider.xml')
 def business_insider():
-    BLOCKS = r"word1|word2" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
     return process_generic_feed("https://feeds.businessinsider.com/custom/all", BLOCKS, "FO: Business Insider")
 
 # Forbes Pop Stories Feed
 @app.route('/forbes.xml')
 def forbes():
-    BLOCKS = r"word1|word2" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
     return process_generic_feed("https://www.forbes.com/feeds/popstories.xml", BLOCKS, "FO: Forbes")
 
 # Wired Feed
 @app.route('/wired.xml')
 def wired():
-    BLOCKS = r"word1|word2" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
     return process_generic_feed("https://www.wired.com/feed/rss", BLOCKS, "FO: Wired")
 
 # Fortune Feed
 @app.route('/fortune.xml')
 def fortune():
-    BLOCKS = r"word1|word2" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
     return process_generic_feed("https://fortune.com/rss", BLOCKS, "FO: Fortune")
 
 # NY Times Soccer Feed
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
-    BLOCKS = r"word1|word2" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
     return process_generic_feed("https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml", BLOCKS, "FO: NYT Soccer")
 
 # The Athletic (Inclusive Phrases Only)
@@ -189,7 +237,7 @@ def athletic_inclusive():
 # The Athletic (Standard Blocklist)
 @app.route('/athletic.xml')
 def athletic():
-    BLOCKS = r"Liverpool|word2" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|word2" 
     return process_generic_feed("https://www.nytimes.com/athletic/rss/uk", BLOCKS, "FO: The Athletic")
 
 
