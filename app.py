@@ -34,18 +34,20 @@ def filter_rss():
                 continue  
                 
             link = entry.get('link', '')
-            desc = entry.get('summary', entry.get('description', ''))
+            base_desc = entry.get('summary', entry.get('description', ''))
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = entry.get('id', link)
             
-            # Capture NYT image structures (media:content / links)
-            media_block = ""
-            if 'media_content' in entry:
-                for media in entry['media_content']:
-                    url = media.get('url', '')
-                    medium = media.get('medium', 'image')
-                    if url:
-                        media_block += f'\n        <media:content url="{url}" medium="{medium}" />'
+            # Look for the image URL in the media_content block
+            img_url = ""
+            if 'media_content' in entry and len(entry['media_content']) > 0:
+                img_url = entry['media_content'][0].get('url', '')
+            
+            # If an image URL is found, inject it as an HTML tag at the top of the description
+            if img_url:
+                desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
+            else:
+                desc_html = base_desc
 
             # Clean up potential XML breaking characters in text fields
             title_clean = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -53,19 +55,19 @@ def filter_rss():
             item_block = f"""    <item>
         <title>{title_clean}</title>
         <link>{link}</link>
-        <description><![CDATA[{desc}]]></description>
+        <description><![CDATA[{desc_html}]]></description>
         <guid isPermaLink="false">{guid}</guid>
-        <pubDate>{pub_date}</pubDate>{media_block}
+        <pubDate>{pub_date}</pubDate>
     </item>"""
             items_xml.append(item_block)
 
-        # Assemble the final RSS with media namespaces included at the top
+        # Assemble the final RSS stream layout
         feed_title = raw_feed.feed.get('title', 'Filtered Feed').replace("&", "&amp;")
         feed_link = raw_feed.feed.get('link', '')
         feed_desc = raw_feed.feed.get('description', 'Cleaned Feed').replace("&", "&amp;")
         
         xml_output = f"""<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
     <title>{feed_title}</title>
     <link>{feed_link}</link>
