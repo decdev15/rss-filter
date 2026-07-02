@@ -7,6 +7,15 @@ import requests
 app = Flask(__name__)
 
 # =============================================================
+# Global variables
+# =============================================================
+
+# Shared blocklist used across multiple feeds
+G_BLOCK_NEGATIVE = r"Garda|Gardai|abuse|rape|rapist|murder|crime|death|stabbing|killed|crisis|dire|blood|safety|cruelty|offences|stolen|charged|prison|inmate|criminal" 
+G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
+
+
+# =============================================================
 # HELPER FUNCTION: Centralizes feed fetching and filtering
 # =============================================================
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_sports_ent=False, inclusive=False):
@@ -108,7 +117,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # 1. Independent.ie Main Feed (With Sport & Entertainment Exclusion)
 @app.route('/indo_main.xml')
 def indo_main():
-    BLOCKS = r"Garda|Gardai|abuse|rape|rapist|murder|crime|death|stabbing|killed|crisis|dire|euromillions|housing|insurance|tax|blood|safety|cruelty|offences|stolen|charged|prison|inmate|criminal" 
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|politics|breaking"
     return process_generic_feed("https://www.independent.ie/rss", BLOCKS, "Filtered Indo Main", exclude_sports_ent=True)
 
 # 2. Independent.ie Sport Feed (Standard Blocklist)
