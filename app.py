@@ -123,14 +123,14 @@ def indo_main():
 # 2. Independent.ie Sport Feed (Standard Blocklist)
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = r"israel games|\bpubs\b" 
+    BLOCKS = r"Liverpool|\bpubs\b" 
     return process_generic_feed("https://www.independent.ie/sport/rss", BLOCKS, "FO: Indo Sport")
 
 # 3. NEW: Independent.ie Sport Feed (Inclusive Phrases Only)
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
     # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
-    ALLOWED = r"phrase 1|phrase 2"
+    ALLOWED = r"Liverpool|phrase 2"
     return process_generic_feed("https://www.independent.ie/sport/rss", ALLOWED, "FI: Indo Sport", inclusive=True)
 
 # 4. Independent.ie Entertainment Feed (Standard Blocklist)
