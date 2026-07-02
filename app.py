@@ -21,7 +21,6 @@ SOURCE_FEED_URL = "https://rss.nytimes.com/services/xml/rss/nyt/Homepage.xml"
 @app.route('/feed.xml')
 def filter_rss():
     try:
-        # Fetch original feed
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         resp = requests.get(SOURCE_FEED_URL, headers=headers, timeout=10)
         raw_feed = feedparser.parse(resp.text)
@@ -32,21 +31,21 @@ def filter_rss():
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             
-            # Check if any blocklisted words are in the title
             if compiled_regex.search(title):
-                continue  # Skip this article entirely
+                continue  
                 
-            # Keep original descriptions, links, and embedded images intact
+            # Fallbacks to guarantee HTML structure isn't stripped or broken
+            desc = entry.get('summary', entry.get('description', ''))
+            
             item = Item(
                 title=title,
                 link=entry.get('link', ''),
-                description=entry.get('summary', entry.get('description', '')),
+                description=desc,
                 guid=Guid(entry.get('id', entry.get('link', ''))),
                 pubDate=entry.get('published', '')
             )
             filtered_items.append(item)
 
-        # Build the fresh feed structure
         feed = Feed(
             title=raw_feed.feed.get('title', 'Filtered Feed'),
             link=raw_feed.feed.get('link', ''),
@@ -55,10 +54,13 @@ def filter_rss():
             items=filtered_items
         )
 
-        return Response(feed.rss(), mimetype='application/rss+xml')
+        # FIX: Explicitly prepend standard XML declarations so Inoreader accepts it
+        xml_output = '<?xml version="1.0" encoding="UTF-8" ?>\n' + feed.rss()
+
+        return Response(xml_output, status=200, mimetype='application/rss+xml')
         
     except Exception as e:
-        return Response(f"Error processing feed: {str(e)}", status=500)
+        return Response(f"Error processing feed: {str(e)}", status=500, mimetype='text/plain')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
