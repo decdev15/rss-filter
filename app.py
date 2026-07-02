@@ -88,10 +88,27 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # INDIVIDUAL FEED PATHWAYS (ROUTES) & CONFIGURATIONS
 # =============================================================
 
+# The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com"
+# (per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) and these app.routes below
+# 
+# e.g. https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg & '/indo_main.xml' = 'https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_main.xml'
+# 
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_main.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_sport.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_sport_inclusive.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_ent.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_ent_inclusive.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/business_insider.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/forbes.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/wired.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/fortune.xml
+# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/nyt_soccer.xml
+
+
 # 1. Independent.ie Main Feed (With Sport & Entertainment Exclusion)
 @app.route('/indo_main.xml')
 def indo_main():
-    BLOCKS = r"Garda|Gardai|abuse|rape|rapist|murder|crime|death|stabbing|dire|euromillions|housing|insurance|tax|blood|safety|cruelty|offences|stolen|charged|prison|inmate|criminal" 
+    BLOCKS = r"Garda|Gardai|abuse|rape|rapist|murder|crime|death|stabbing|killed|crisis|dire|euromillions|housing|insurance|tax|blood|safety|cruelty|offences|stolen|charged|prison|inmate|criminal" 
     return process_generic_feed("https://www.independent.ie/rss", BLOCKS, "Filtered Indo Main", exclude_sports_ent=True)
 
 # 2. Independent.ie Sport Feed (Standard Blocklist)
