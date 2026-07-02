@@ -3,7 +3,6 @@ import re
 from flask import Flask, Response
 import feedparser
 import requests
-from rfeed import Item, Feed, Guid
 
 app = Flask(__name__)
 
@@ -25,37 +24,50 @@ def filter_rss():
         resp = requests.get(SOURCE_FEED_URL, headers=headers, timeout=10)
         raw_feed = feedparser.parse(resp.text)
         
-        filtered_items = []
         compiled_regex = re.compile(BLOCKED_WORDS, re.IGNORECASE)
+        
+        # We'll build the XML string directly to avoid strict library conversion crashes
+        items_xml = []
 
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             
+            # Filter check
             if compiled_regex.search(title):
                 continue  
                 
-            # Fallbacks to guarantee HTML structure isn't stripped or broken
+            link = entry.get('link', '')
             desc = entry.get('summary', entry.get('description', ''))
+            pub_date = entry.get('published', entry.get('updated', ''))
+            guid = entry.get('id', link)
             
-            item = Item(
-                title=title,
-                link=entry.get('link', ''),
-                description=desc,
-                guid=Guid(entry.get('id', entry.get('link', ''))),
-                pubDate=entry.get('published', '')
-            )
-            filtered_items.append(item)
+            # Clean up potential XML breaking characters in text fields
+            title_clean = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            
+            item_block = f"""    <item>
+        <title>{title_clean}</title>
+        <link>{link}</link>
+        <description><![CDATA[{desc}]]></description>
+        <guid isPermaLink="false">{guid}</guid>
+        <pubDate>{pub_date}</pubDate>
+    </item>"""
+            items_xml.append(item_block)
 
-        feed = Feed(
-            title=raw_feed.feed.get('title', 'Filtered Feed'),
-            link=raw_feed.feed.get('link', ''),
-            description=raw_feed.feed.get('description', 'Cleaned Feed'),
-            language=raw_feed.feed.get('language', 'en-US'),
-            items=filtered_items
-        )
-
-        # FIX: Explicitly prepend standard XML declarations so Inoreader accepts it
-        xml_output = '<?xml version="1.0" encoding="UTF-8" ?>\n' + feed.rss()
+        # Assemble the final valid RSS feed structure
+        feed_title = raw_feed.feed.get('title', 'Filtered Feed').replace("&", "&amp;")
+        feed_link = raw_feed.feed.get('link', '')
+        feed_desc = raw_feed.feed.get('description', 'Cleaned Feed').replace("&", "&amp;")
+        
+        xml_output = f"""<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+    <title>{feed_title}</title>
+    <link>{feed_link}</link>
+    <description>{feed_desc}</description>
+    <language>en-US</language>
+{"\n".join(items_xml)}
+</channel>
+</rss>"""
 
         return Response(xml_output, status=200, mimetype='application/rss+xml')
         
