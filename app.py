@@ -97,84 +97,84 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # INDIVIDUAL FEED PATHWAYS (ROUTES) & CONFIGURATIONS
 # =============================================================
 
-# The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com"
-# (per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) and these app.routes below
+# The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com" and these app.routes below
+# ("https://rss-filter-y4fa.onrender.com" per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) 
 # 
-# e.g. https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg & '/indo_main.xml' = 'https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_main.xml'
-# 
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_main.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_sport.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_sport_inclusive.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_ent.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/indo_ent_inclusive.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/business_insider.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/forbes.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/wired.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/fortune.xml
-# https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg/nyt_soccer.xml
+# https://rss-filter-y4fa.onrender.com/indo_main.xml
+# https://rss-filter-y4fa.onrender.com/indo_sport.xml
+# https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml
+# https://rss-filter-y4fa.onrender.com/indo_ent.xml
+# https://rss-filter-y4fa.onrender.com/indo_ent_inclusive.xml
+# https://rss-filter-y4fa.onrender.com/business_insider.xml
+# https://rss-filter-y4fa.onrender.com/forbes.xml
+# https://rss-filter-y4fa.onrender.com/wired.xml
+# https://rss-filter-y4fa.onrender.com/fortune.xml
+# https://rss-filter-y4fa.onrender.com/nyt_soccer.xml
 
+# "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out
+# "FI: " means filtered in i.e. only articles with certain words and phrases are displayed 
 
 # 1. Independent.ie Main Feed (With Sport & Entertainment Exclusion)
 @app.route('/indo_main.xml')
 def indo_main():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|politics|breaking"
-    return process_generic_feed("https://www.independent.ie/rss", BLOCKS, "Filtered Indo Main", exclude_sports_ent=True)
+    return process_generic_feed("https://www.independent.ie/rss", BLOCKS, "FO: Indo Main", exclude_sports_ent=True)
 
 # 2. Independent.ie Sport Feed (Standard Blocklist)
 @app.route('/indo_sport.xml')
 def indo_sport():
     BLOCKS = r"israel games|\bpubs\b" 
-    return process_generic_feed("https://www.independent.ie/sport/rss", BLOCKS, "Filtered Indo Sport")
+    return process_generic_feed("https://www.independent.ie/sport/rss", BLOCKS, "FO: Indo Sport")
 
 # 3. NEW: Independent.ie Sport Feed (Inclusive Phrases Only)
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
     # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
     ALLOWED = r"phrase 1|phrase 2"
-    return process_generic_feed("https://www.independent.ie/sport/rss", ALLOWED, "Inclusive Indo Sport", inclusive=True)
+    return process_generic_feed("https://www.independent.ie/sport/rss", ALLOWED, "FI: Indo Sport", inclusive=True)
 
 # 4. Independent.ie Entertainment Feed (Standard Blocklist)
 @app.route('/indo_ent.xml')
 def indo_ent():
     BLOCKS = r"Niall Horan|diagnosis|hate" 
-    return process_generic_feed("https://www.independent.ie/entertainment/rss", BLOCKS, "Filtered Indo Entertainment")
+    return process_generic_feed("https://www.independent.ie/entertainment/rss", BLOCKS, "FO: Indo Entertainment")
 
 # 5. NEW: Independent.ie Entertainment Feed (Inclusive Phrases Only)
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
     # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
     ALLOWED = r"horan|phrase 2"
-    return process_generic_feed("https://www.independent.ie/entertainment/rss", ALLOWED, "Inclusive Indo Entertainment", inclusive=True)
+    return process_generic_feed("https://www.independent.ie/entertainment/rss", ALLOWED, "FI: Indo Entertainment", inclusive=True)
 
 # 6. Business Insider Feed
 @app.route('/business_insider.xml')
 def business_insider():
     BLOCKS = r"word1|word2" 
-    return process_generic_feed("https://feeds.businessinsider.com/custom/all", BLOCKS, "Filtered Business Insider")
+    return process_generic_feed("https://feeds.businessinsider.com/custom/all", BLOCKS, "FO: Business Insider")
 
 # 7. Forbes Pop Stories Feed
 @app.route('/forbes.xml')
 def forbes():
     BLOCKS = r"word1|word2" 
-    return process_generic_feed("https://www.forbes.com/feeds/popstories.xml", BLOCKS, "Filtered Forbes Pop")
+    return process_generic_feed("https://www.forbes.com/feeds/popstories.xml", BLOCKS, "FO: Forbes")
 
 # 8. Wired Feed
 @app.route('/wired.xml')
 def wired():
     BLOCKS = r"word1|word2" 
-    return process_generic_feed("https://www.wired.com/feed/rss", BLOCKS, "Filtered Wired")
+    return process_generic_feed("https://www.wired.com/feed/rss", BLOCKS, "FO: Wired")
 
 # 9. Fortune Feed
 @app.route('/fortune.xml')
 def fortune():
     BLOCKS = r"word1|word2" 
-    return process_generic_feed("https://fortune.com/rss", BLOCKS, "Filtered Fortune")
+    return process_generic_feed("https://fortune.com/rss", BLOCKS, "FO: Fortune")
 
 # 10. NY Times Soccer Feed
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
     BLOCKS = r"word1|word2" 
-    return process_generic_feed("https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml", BLOCKS, "Filtered NYT Soccer")
+    return process_generic_feed("https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml", BLOCKS, "FO: NYT Soccer")
 
 
 
