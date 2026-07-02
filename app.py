@@ -127,6 +127,8 @@ def indo_sport():
     return process_generic_feed("https://www.independent.ie/sport/rss", BLOCKS, "FO: Indo Sport")
 
 # 3. NEW: Independent.ie Sport Feed (Inclusive Phrases Only)
+# Liverpool blocked in the sport feed above, so such stories will only appear here
+# Liverpool not required to be blocked from the main feed, as links with sports and ent in the url are blocked there.  Therefore general Liverpool stories could still appear there.
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
     # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
