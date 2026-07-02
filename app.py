@@ -10,11 +10,9 @@ app = Flask(__name__)
 # Global variables
 # =============================================================
 
-# Shared blocklist used across multiple feeds
-
 G_BLOCK_NEGATIVE = (
 r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
-r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|charged|prison|inmate|criminal|demise|rolf harris|jimmy savile|"
+r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|"
 r"struggles|diagnosis|hate|miserable|"
 r"abused|rapes|raped|murdered|murders|killing|kills|"
 r"fatal|fatality|fatalities|deathly|deadly|"
@@ -31,8 +29,8 @@ r"fraud|scam|scams|scamming|"
 r"corruption|bribery|"
 r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
 r"tragedy|tragic|"
-r"suffer|suffering|suffers|suffered|"
-r"hospitalised|hospitalized|injured|critical|critical condition|"
+r"suffer|suffering|suffers|"
+r"hospitalised|hospitalized|critical|critical condition|"
 r"terminal|terminally ill|"
 r"missing|missing person|"
 r"overdose|overdosed|"
@@ -41,49 +39,54 @@ r"grief|mourning|bereavement|"
 r"burial|funeral"
 )
 
-
-G_BLOCK_NEGATIVE = r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|charged|prison|inmate|criminal|demise|rolf harris|jimmy savile|struggles|diagnosis|hate|miserable" 
+G_BLOCK_NEGATIVE = r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|charged|prison|inmate|criminal|demise|rolf harris|jimmy savile|struggles|diagnosis|hate|miserable"
 G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
 
+# =============================================================
+# HELPER FUNCTION
+# =============================================================
+def process_generic_feed(source_url, regex_pattern, feed_title_override,
+                          exclude_sports_ent=False, inclusive=False):
 
-# =============================================================
-# HELPER FUNCTION: Centralizes feed fetching and filtering
-# =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_sports_ent=False, inclusive=False):
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         resp = requests.get(source_url, headers=headers, timeout=10)
         raw_feed = feedparser.parse(resp.text)
-        
+
         compiled_regex = re.compile(regex_pattern, re.IGNORECASE) if regex_pattern else None
         items_xml = []
 
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             link = entry.get('link', '')
-            
-            # --- OVERLAP AVOIDANCE (Deduplication) ---
+
+            # --- OVERLAP AVOIDANCE ---
             if exclude_sports_ent and link:
                 url_lower = link.lower()
                 if '/sport/' in url_lower or '/entertainment/' in url_lower:
-                    continue  # Drop sports and entertainment articles from the main feed
+                    continue
 
-            # --- FILTER LOGIC ---
+            # =====================================================
+            # FILTER LOGIC (TITLE + URL ONLY)
+            # =====================================================
             if compiled_regex:
+                title_l = title.lower()
+                link_l = link.lower()
+
                 if inclusive:
-                    # INCLUSIVE MODE: Skip the article if it does NOT match the phrases
-                    if not compiled_regex.search(title):
+                    # must match somewhere in title or url
+                    if not (compiled_regex.search(title_l) or compiled_regex.search(link_l)):
                         continue
                 else:
-                    # EXCLUSIVE MODE (Blocklist): Skip the article if it matches the phrases
-                    if compiled_regex.search(title):
-                        continue  
-                
+                    # block if found in either
+                    if compiled_regex.search(title_l) or compiled_regex.search(link_l):
+                        continue
+
             base_desc = entry.get('summary', entry.get('description', ''))
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = entry.get('id', link)
-            
-            # Extract thumbnail images across different publisher structures
+
+            # Extract thumbnail images
             img_url = ""
             if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
@@ -92,16 +95,15 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     if 'image' in l.get('type', ''):
                         img_url = l.get('href', '')
                         break
-            
-            # Inject standard HTML tag for image rendering inside Inoreader
+
+            # Inject image
             if img_url:
                 desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
             else:
                 desc_html = base_desc
 
-            # Standard XML escape rules
             title_clean = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            
+
             items_xml.append(f"""    <item>
         <title>{title_clean}</title>
         <link>{link}</link>
@@ -119,127 +121,150 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
     {"\n".join(items_xml)}
 </channel>
 </rss>"""
+
         return Response(xml_output, status=200, mimetype='application/rss+xml')
+
     except Exception as e:
         return Response(f"Error processing feed: {str(e)}", status=500, mimetype='text/plain')
 
 
 # =============================================================
-# INDIVIDUAL FEED PATHWAYS (ROUTES) & CONFIGURATIONS
+# ROUTES
 # =============================================================
 
-# The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com" and these app.routes below
-# ("https://rss-filter-y4fa.onrender.com" per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) 
-# 
-# https://rss-filter-y4fa.onrender.com/indo_main.xml
-# https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml
-# https://rss-filter-y4fa.onrender.com/indo_sport.xml
-# https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml
-# https://rss-filter-y4fa.onrender.com/indo_ent.xml
-# https://rss-filter-y4fa.onrender.com/indo_ent_inclusive.xml
-# https://rss-filter-y4fa.onrender.com/business_insider.xml
-# https://rss-filter-y4fa.onrender.com/forbes.xml
-# https://rss-filter-y4fa.onrender.com/wired.xml
-# https://rss-filter-y4fa.onrender.com/fortune.xml
-# https://rss-filter-y4fa.onrender.com/nyt_soccer.xml
-# ...
-
-# "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out
-# "FI: " means filtered in i.e. only articles with certain words and phrases are displayed 
-
-
-# Independent.ie Main Feed (With Sport & Entertainment Exclusion)
 @app.route('/indo_main.xml')
 def indo_main():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|politics|breaking"
-    return process_generic_feed("https://www.independent.ie/rss", BLOCKS, "FO: Indo Main", exclude_sports_ent=True)
+    return process_generic_feed(
+        "https://www.independent.ie/rss",
+        BLOCKS,
+        "FO: Indo Main",
+        exclude_sports_ent=True
+    )
 
-# Independent.ie Main Feed (Inclusive Phrases Only)
-# Use this to test the exlusions above dont cause many false positives
+
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
-    # allowed keywords
     ALLOWED = f"{G_BLOCK_NEGATIVE}|phrase 2"
-    return process_generic_feed("https://www.independent.ie/rss", ALLOWED, "FI: Indo Main", inclusive=True)
+    return process_generic_feed(
+        "https://www.independent.ie/rss",
+        ALLOWED,
+        "FI: Indo Main",
+        inclusive=True
+    )
 
 
-
-
-
-
-
-
-# Independent.ie Sport Feed (Standard Blocklist)
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|\bpubs\b" 
-    return process_generic_feed("https://www.independent.ie/sport/rss", BLOCKS, "FO: Indo Sport")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|\\bpubs\\b"
+    return process_generic_feed(
+        "https://www.independent.ie/sport/rss",
+        BLOCKS,
+        "FO: Indo Sport"
+    )
 
-# Independent.ie Sport Feed (Inclusive Phrases Only)
-# Liverpool blocked in the sport feed above, so such stories will only appear here
-# Liverpool not required to be blocked from the main feed, as links with sports and ent in the url are blocked there.  Therefore general Liverpool stories could still appear there.
+
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
-    # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
     ALLOWED = r"Liverpool|phrase 2"
-    return process_generic_feed("https://www.independent.ie/sport/rss", ALLOWED, "FI: Indo Sport", inclusive=True)
+    return process_generic_feed(
+        "https://www.independent.ie/sport/rss",
+        ALLOWED,
+        "FI: Indo Sport",
+        inclusive=True
+    )
 
-# Independent.ie Entertainment Feed (Standard Blocklist)
+
 @app.route('/indo_ent.xml')
 def indo_ent():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|Niall Horan|musical|mcnally" 
-    return process_generic_feed("https://www.independent.ie/entertainment/rss", BLOCKS, "FO: Indo Entertainment")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|Niall Horan|musical|mcnally"
+    return process_generic_feed(
+        "https://www.independent.ie/entertainment/rss",
+        BLOCKS,
+        "FO: Indo Entertainment"
+    )
 
-# Independent.ie Entertainment Feed (Inclusive Phrases Only)
+
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
-    # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
     ALLOWED = r"horan|phrase 2"
-    return process_generic_feed("https://www.independent.ie/entertainment/rss", ALLOWED, "FI: Indo Entertainment", inclusive=True)
+    return process_generic_feed(
+        "https://www.independent.ie/entertainment/rss",
+        ALLOWED,
+        "FI: Indo Entertainment",
+        inclusive=True
+    )
 
-# Business Insider Feed
+
 @app.route('/business_insider.xml')
 def business_insider():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
-    return process_generic_feed("https://feeds.businessinsider.com/custom/all", BLOCKS, "FO: Business Insider")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    return process_generic_feed(
+        "https://feeds.businessinsider.com/custom/all",
+        BLOCKS,
+        "FO: Business Insider"
+    )
 
-# Forbes Pop Stories Feed
+
 @app.route('/forbes.xml')
 def forbes():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
-    return process_generic_feed("https://www.forbes.com/feeds/popstories.xml", BLOCKS, "FO: Forbes")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    return process_generic_feed(
+        "https://www.forbes.com/feeds/popstories.xml",
+        BLOCKS,
+        "FO: Forbes"
+    )
 
-# Wired Feed
+
 @app.route('/wired.xml')
 def wired():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
-    return process_generic_feed("https://www.wired.com/feed/rss", BLOCKS, "FO: Wired")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    return process_generic_feed(
+        "https://www.wired.com/feed/rss",
+        BLOCKS,
+        "FO: Wired"
+    )
 
-# Fortune Feed
+
 @app.route('/fortune.xml')
 def fortune():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
-    return process_generic_feed("https://fortune.com/rss", BLOCKS, "FO: Fortune")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    return process_generic_feed(
+        "https://fortune.com/rss",
+        BLOCKS,
+        "FO: Fortune"
+    )
 
-# NY Times Soccer Feed
+
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2" 
-    return process_generic_feed("https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml", BLOCKS, "FO: NYT Soccer")
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    return process_generic_feed(
+        "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
+        BLOCKS,
+        "FO: NYT Soccer"
+    )
 
-# The Athletic (Inclusive Phrases Only)
+
 @app.route('/athletic_inclusive.xml')
 def athletic_inclusive():
-    # Replace "phrase 1" and "phrase 2" with your actual allowed keywords
     ALLOWED = r"Liverpool|phrase 2"
-    return process_generic_feed("https://www.nytimes.com/athletic/rss/uk", ALLOWED, "FI: The Athletic", inclusive=True)
+    return process_generic_feed(
+        "https://www.nytimes.com/athletic/rss/uk",
+        ALLOWED,
+        "FI: The Athletic",
+        inclusive=True
+    )
 
-# The Athletic (Standard Blocklist)
+
 @app.route('/athletic.xml')
 def athletic():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|word2" 
-    return process_generic_feed("https://www.nytimes.com/athletic/rss/uk", BLOCKS, "FO: The Athletic")
-
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|word2"
+    return process_generic_feed(
+        "https://www.nytimes.com/athletic/rss/uk",
+        BLOCKS,
+        "FO: The Athletic"
+    )
 
 
 if __name__ == '__main__':
