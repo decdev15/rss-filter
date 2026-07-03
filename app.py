@@ -1,25 +1,13 @@
 import os
 import re
-import sys
-import logging
 from flask import Flask, Response
 import feedparser
 import requests
+# Logging:
+import sys
+import logging
 
 app = Flask(__name__)
-
-# =============================================================
-# LOGGING (Render/Gunicorn safe)
-# =============================================================
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-
-logger = logging.getLogger(__name__)
-
 
 # =============================================================
 # Global variables
@@ -55,55 +43,55 @@ r"burial|funeral"
 
 G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
 
-
 # =============================================================
-# DEBUG FUNCTION (ONLY logs real matches)
+# DEBUG HELPER
 # =============================================================
-
-def debug_match(title, link, regex):
+def debug_match(title, link, compiled_regex):
+    """Print exactly what is being checked and what matches."""
     title_l = title.lower()
     link_l = link.lower()
 
-    title_match = regex.search(title_l)
-    link_match = regex.search(link_l)
+    print("\n================ FEED ITEM DEBUG ================")
+    print("TITLE:", title)
+    print("LINK:", link)
 
-    if title_match or link_match:
-        logger.info("====================================================")
-        logger.info("MATCHED ITEM DETECTED")
-        logger.info(f"TITLE: {title}")
-        logger.info(f"LINK: {link}")
-        logger.info(f"TITLE MATCH: {bool(title_match)}")
-        logger.info(f"LINK MATCH: {bool(link_match)}")
-        logger.info("====================================================")
+    if compiled_regex:
+        title_match = compiled_regex.search(title_l)
+        link_match = compiled_regex.search(link_l)
+
+        print("TITLE MATCH:", bool(title_match))
+        print("LINK MATCH:", bool(link_match))
+
+        if title_match:
+            print("➡ MATCHED IN TITLE")
+        if link_match:
+            print("➡ MATCHED IN LINK")
+
+    print("=================================================\n")
 
 
 # =============================================================
-# CORE FEED PROCESSOR
+# HELPER FUNCTION
 # =============================================================
-
 def process_generic_feed(source_url, regex_pattern, feed_title_override,
                           exclude_sports_ent=False, inclusive=False):
 
     try:
-        logger.info(f"Fetching feed: {source_url}")
-
-        headers = {'User-Agent': 'Mozilla/5.0'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
         resp = requests.get(source_url, headers=headers, timeout=10)
         raw_feed = feedparser.parse(resp.text)
 
         compiled_regex = re.compile(regex_pattern, re.IGNORECASE) if regex_pattern else None
         items_xml = []
 
-        logger.info(f"Feed loaded. Items: {len(raw_feed.entries)}")
-
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             link = entry.get('link', '')
 
-            # --- OVERLAP FILTER ---
+            # --- OVERLAP AVOIDANCE ---
             if exclude_sports_ent and link:
-                if '/sport/' in link.lower() or '/entertainment/' in link.lower():
-                    logger.info(f"SKIP (sport/ent): {title}")
+                url_lower = link.lower()
+                if '/sport/' in url_lower or '/entertainment/' in url_lower:
                     continue
 
             # =====================================================
@@ -113,26 +101,25 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
                 title_l = title.lower()
                 link_l = link.lower()
 
+                # DEBUG OUTPUT (ONLY ACTIVE WHEN FILTER EXISTS)
                 debug_match(title, link, compiled_regex)
 
                 if inclusive:
                     if not (compiled_regex.search(title_l) or compiled_regex.search(link_l)):
-                        logger.info(f"EXCLUDED (inclusive mismatch): {title}")
+                        print("➡ EXCLUDED (inclusive mode)")
                         continue
-                    else:
-                        logger.info(f"INCLUDED (inclusive match): {title}")
                 else:
                     if compiled_regex.search(title_l) or compiled_regex.search(link_l):
-                        logger.info(f"BLOCKED (negative match): {title}")
+                        print("➡ BLOCKED (negative match)")
                         continue
 
             base_desc = entry.get('summary', entry.get('description', ''))
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = entry.get('id', link)
 
-            # Images
+            # Extract thumbnail images
             img_url = ""
-            if 'media_content' in entry and entry['media_content']:
+            if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
             elif 'links' in entry:
                 for l in entry['links']:
@@ -141,7 +128,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
                         break
 
             if img_url:
-                desc_html = f'<img src="{img_url}" style="max-width:100%;height:auto;margin-bottom:10px;" /><br/>{base_desc}'
+                desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
             else:
                 desc_html = base_desc
 
@@ -165,13 +152,11 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
 </channel>
 </rss>"""
 
-        logger.info(f"Feed generated: {feed_title_override} items={len(items_xml)}")
-
         return Response(xml_output, status=200, mimetype='application/rss+xml')
 
     except Exception as e:
-        logger.exception("Feed processing error")
-        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+        print("ERROR:", str(e))
+        return Response(f"Error processing feed: {str(e)}", status=500, mimetype='text/plain')
 
 
 # =============================================================
@@ -180,7 +165,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
 
 @app.route('/indo_main.xml')
 def indo_main():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|politics|breaking"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
     return process_generic_feed(
         "https://www.independent.ie/rss",
         BLOCKS,
@@ -191,7 +176,7 @@ def indo_main():
 
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
-    ALLOWED = f"{G_BLOCK_NEGATIVE}|phrase 2"
+    ALLOWED = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|phrase 2"
     return process_generic_feed(
         "https://www.independent.ie/rss",
         ALLOWED,
@@ -314,5 +299,4 @@ def athletic():
 
 
 if __name__ == '__main__':
-    logger.info("Starting Flask app")
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
