@@ -233,7 +233,7 @@ def indo_sport_inclusive():
 # Independent.ie Entertainment Feed (Standard Blocklist)
 @app.route('/indo_ent.xml')
 def indo_ent():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|Niall Horan|musical|McNally"
+    BLOCKS = f"McNally"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
