@@ -163,6 +163,25 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
 # ROUTES (UNCHANGED)
 # =============================================================
 
+# The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com" and these app.routes below 
+# ("https://rss-filter-y4fa.onrender.com" per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) 
+# 
+# https://rss-filter-y4fa.onrender.com/indo_main.xml 
+# https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml 
+# https://rss-filter-y4fa.onrender.com/indo_sport.xml 
+# https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml 
+# https://rss-filter-y4fa.onrender.com/indo_ent.xml 
+# https://rss-filter-y4fa.onrender.com/indo_ent_inclusive.xml 
+# https://rss-filter-y4fa.onrender.com/business_insider.xml 
+# https://rss-filter-y4fa.onrender.com/forbes.xml 
+# https://rss-filter-y4fa.onrender.com/wired.xml 
+# https://rss-filter-y4fa.onrender.com/fortune.xml 
+# https://rss-filter-y4fa.onrender.com/nyt_soccer.xml 
+# ... 
+# "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out 
+# "FI: " means filtered in i.e. only articles with certain words and phrases are displayed
+
+# Independent.ie Main Feed (With Sport & Entertainment Exclusion)
 @app.route('/indo_main.xml')
 def indo_main():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
@@ -173,7 +192,8 @@ def indo_main():
         exclude_sports_ent=True
     )
 
-
+# Independent.ie Main Feed (Inclusive Phrases Only) 
+# Use this to test the exlusions above dont cause many false positives
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
     ALLOWED = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|phrase 2"
@@ -185,6 +205,7 @@ def indo_main_inclusive():
     )
 
 
+# Independent.ie Sport Feed (Standard Blocklist)
 @app.route('/indo_sport.xml')
 def indo_sport():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|\\bpubs\\b"
@@ -194,6 +215,10 @@ def indo_sport():
         "FO: Indo Sport"
     )
 
+# Independent.ie Sport Feed (Inclusive Phrases Only) 
+# Liverpool blocked in the sport feed above, so such stories will only appear here 
+# Liverpool not required to be blocked from the main feed, as links with sports and ent in the url are blocked there. 
+# Therefore general Liverpool stories could still appear there.
 
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
@@ -205,7 +230,7 @@ def indo_sport_inclusive():
         inclusive=True
     )
 
-
+# Independent.ie Entertainment Feed (Standard Blocklist)
 @app.route('/indo_ent.xml')
 def indo_ent():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|Niall Horan|musical|mcnally"
@@ -215,7 +240,7 @@ def indo_ent():
         "FO: Indo Entertainment"
     )
 
-
+# Independent.ie Entertainment Feed (Inclusive Phrases Only)
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
     ALLOWED = r"horan|phrase 2"
@@ -226,7 +251,7 @@ def indo_ent_inclusive():
         inclusive=True
     )
 
-
+# Business Insider Feed
 @app.route('/business_insider.xml')
 def business_insider():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
@@ -236,7 +261,7 @@ def business_insider():
         "FO: Business Insider"
     )
 
-
+# Forbes Pop Stories Feed
 @app.route('/forbes.xml')
 def forbes():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
@@ -246,7 +271,7 @@ def forbes():
         "FO: Forbes"
     )
 
-
+# Wired Feed
 @app.route('/wired.xml')
 def wired():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
@@ -256,7 +281,7 @@ def wired():
         "FO: Wired"
     )
 
-
+# Fortune Feed
 @app.route('/fortune.xml')
 def fortune():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
@@ -266,7 +291,7 @@ def fortune():
         "FO: Fortune"
     )
 
-
+# NY Times Soccer Feed
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
@@ -276,7 +301,7 @@ def nyt_soccer():
         "FO: NYT Soccer"
     )
 
-
+# The Athletic (Inclusive Phrases Only)
 @app.route('/athletic_inclusive.xml')
 def athletic_inclusive():
     ALLOWED = r"Liverpool|phrase 2"
@@ -287,7 +312,7 @@ def athletic_inclusive():
         inclusive=True
     )
 
-
+# The Athletic (Standard Blocklist)
 @app.route('/athletic.xml')
 def athletic():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|word2"
