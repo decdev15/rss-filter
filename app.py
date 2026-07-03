@@ -42,7 +42,10 @@ r"grief|mourning|bereavement|"
 r"burial|funeral"
 )
 
-G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
+G_BLOCK_OTHER = (
+r"euromillions|housing|insurance|tax"
+r"queer|pride|lesbian|gay|LGBQT"
+)
 
 # =============================================================
 # DEBUG HELPER
