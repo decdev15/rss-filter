@@ -100,7 +100,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
             # --- OVERLAP AVOIDANCE ---
             if exclude_sports_ent and link:
                 url_lower = link.lower()
-                if '/sport/' in url_lower or '/entertainment/' or '/politics/' or '/courts/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower:
                     continue
 
             # =====================================================
