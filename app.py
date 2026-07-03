@@ -15,7 +15,7 @@ app = Flask(__name__)
 # =============================================================
 
 G_BLOCK_NEGATIVE = (
-r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
+r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
 r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|"
 r"struggles|diagnosis|hate|miserable|"
 r"abused|rapes|raped|murdered|murders|killing|kills|"
