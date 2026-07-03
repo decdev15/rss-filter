@@ -203,15 +203,18 @@ def indo_main():
 
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
+    # Only put words here that you explicitly WANT to see. Do not include block variables.
     ALLOWED = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|phrase 2"
+    
+    # Pass the named arguments exactly matching the helper function blueprint
     return process_generic_feed(
-        "https://www.independent.ie/rss",
-        ALLOWED,
-        "FI: Indo Main",
-        inclusive=True,
-        exclude_sports_ent=True
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=ALLOWED,
+        feed_title_override="FI: Indo Main",
+        exclude_sports_ent=True,
+        inclusive=True
     )
-
+    
 
 # Independent.ie Sport Feed (Standard Blocklist)
 # https://rss-filter-y4fa.onrender.com/indo_sport.xml 
