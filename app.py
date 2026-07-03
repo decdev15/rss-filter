@@ -208,7 +208,8 @@ def indo_main_inclusive():
         "https://www.independent.ie/rss",
         ALLOWED,
         "FI: Indo Main",
-        inclusive=True
+        inclusive=True,
+        exclude_sports_ent=True
     )
 
 
