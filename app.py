@@ -41,6 +41,33 @@ r"burial|funeral"
 G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
 
 # =============================================================
+# DEBUG HELPER
+# =============================================================
+def debug_match(title, link, compiled_regex):
+    """Print exactly what is being checked and what matches."""
+    title_l = title.lower()
+    link_l = link.lower()
+
+    print("\n================ FEED ITEM DEBUG ================")
+    print("TITLE:", title)
+    print("LINK:", link)
+
+    if compiled_regex:
+        title_match = compiled_regex.search(title_l)
+        link_match = compiled_regex.search(link_l)
+
+        print("TITLE MATCH:", bool(title_match))
+        print("LINK MATCH:", bool(link_match))
+
+        if title_match:
+            print("➡ MATCHED IN TITLE")
+        if link_match:
+            print("➡ MATCHED IN LINK")
+
+    print("=================================================\n")
+
+
+# =============================================================
 # HELPER FUNCTION
 # =============================================================
 def process_generic_feed(source_url, regex_pattern, feed_title_override,
@@ -71,13 +98,16 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
                 title_l = title.lower()
                 link_l = link.lower()
 
+                # DEBUG OUTPUT (ONLY ACTIVE WHEN FILTER EXISTS)
+                debug_match(title, link, compiled_regex)
+
                 if inclusive:
-                    # must match somewhere in title or url
                     if not (compiled_regex.search(title_l) or compiled_regex.search(link_l)):
+                        print("➡ EXCLUDED (inclusive mode)")
                         continue
                 else:
-                    # block if found in either
                     if compiled_regex.search(title_l) or compiled_regex.search(link_l):
+                        print("➡ BLOCKED (negative match)")
                         continue
 
             base_desc = entry.get('summary', entry.get('description', ''))
@@ -94,7 +124,6 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
                         img_url = l.get('href', '')
                         break
 
-            # Inject image
             if img_url:
                 desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
             else:
@@ -123,11 +152,12 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
         return Response(xml_output, status=200, mimetype='application/rss+xml')
 
     except Exception as e:
+        print("ERROR:", str(e))
         return Response(f"Error processing feed: {str(e)}", status=500, mimetype='text/plain')
 
 
 # =============================================================
-# ROUTES
+# ROUTES (UNCHANGED)
 # =============================================================
 
 @app.route('/indo_main.xml')
