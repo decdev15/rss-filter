@@ -224,7 +224,7 @@ def indo_main_inclusive():
 
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|\\bpubs\\b"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|\\bpubs\\b"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
@@ -281,7 +281,7 @@ def indo_ent_inclusive():
 
 @app.route('/business_insider.xml')
 def business_insider():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
@@ -294,7 +294,7 @@ def business_insider():
 
 @app.route('/forbes.xml')
 def forbes():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         "https://www.forbes.com/feeds/popstories.xml",
         BLOCKS,
@@ -307,7 +307,7 @@ def forbes():
 
 @app.route('/wired.xml')
 def wired():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         "https://www.wired.com/feed/rss",
         BLOCKS,
@@ -320,7 +320,7 @@ def wired():
 
 @app.route('/fortune.xml')
 def fortune():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         "https://fortune.com/rss",
         BLOCKS,
@@ -333,7 +333,7 @@ def fortune():
 
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
         BLOCKS,
@@ -360,7 +360,7 @@ def athletic_inclusive():
 
 @app.route('/athletic.xml')
 def athletic():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|Liverpool|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|word2"
     return process_generic_feed(
         "https://www.nytimes.com/athletic/rss/uk",
         BLOCKS,
