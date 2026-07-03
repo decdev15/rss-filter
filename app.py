@@ -3,6 +3,7 @@ import re
 from flask import Flask, Response
 import feedparser
 import requests
+import time
 # Logging:
 import sys
 import logging
@@ -115,7 +116,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
 
             base_desc = entry.get('summary', entry.get('description', ''))
             pub_date = entry.get('published', entry.get('updated', ''))
-            guid = entry.get('id', link)
+            guid = f"{link}#{hash(title)}"
 
             # Extract thumbnail images
             img_url = ""
@@ -148,11 +149,22 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
     <title>{feed_title_override}</title>
     <link>{raw_feed.feed.get('link', '')}</link>
     <description>Filtered cloud stream</description>
+    <lastBuildDate>{time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime())}</lastBuildDate>
     {"\n".join(items_xml)}
 </channel>
 </rss>"""
 
-        return Response(xml_output, status=200, mimetype='application/rss+xml')
+        response = Response(xml_output, status=200, mimetype='application/rss+xml')
+
+        # =====================================================
+        # FORCE FRESHNESS (IMPORTANT FOR INOREADER)
+        # =====================================================
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+
+        return response
+
 
     except Exception as e:
         print("ERROR:", str(e))
