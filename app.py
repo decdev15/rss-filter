@@ -38,7 +38,6 @@ r"grief|mourning|bereavement|"
 r"burial|funeral"
 )
 
-G_BLOCK_NEGATIVE = r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|charged|prison|inmate|criminal|demise|rolf harris|jimmy savile|struggles|diagnosis|hate|miserable"
 G_BLOCK_OTHER = r"euromillions|housing|insurance|tax"
 
 # =============================================================
