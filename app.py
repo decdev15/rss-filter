@@ -243,7 +243,7 @@ def indo_ent():
 # Independent.ie Entertainment Feed (Inclusive Phrases Only)
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
-    ALLOWED = r"horan|phrase 2"
+    ALLOWED = r"horan|McNally"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         ALLOWED,
