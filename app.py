@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 G_BLOCK_NEGATIVE = (
 r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
-r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry"
+r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
 r"struggles|diagnosis|hate|miserable|"
 r"abused|rapes|raped|murdered|murders|killing|kills|"
 r"fatal|fatality|fatalities|deathly|deadly|"
@@ -40,7 +40,7 @@ r"overdose|overdosed|"
 r"suicide|self-harm|"
 r"grief|mourning|bereavement|"
 r"burial|funeral|"
-r"ordeal|burglary|aggravated|vicious|protest|vandalism|"
+r"ordeal|burglary|aggravated|vicious|protest|vandalism"
 )
 
 G_BLOCK_OTHER = (
@@ -49,7 +49,7 @@ r"queer|pride|lesbian|gay|LGBQT|"
 r"shelbourne|bohemians|league of ireland|LOI|"
 r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
 r"Eurobasket|"
-r"Selena Gomez|Bieber|theatre|Lily Allen|"
+r"Selena Gomez|Bieber|theatre|Lily Allen"
 )
 
 # =============================================================
