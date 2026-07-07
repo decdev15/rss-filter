@@ -22,7 +22,7 @@ r"fatal|fatality|fatalities|deathly|deadly|"
 r"attack|attacks|attacked|"
 r"assault|assaulted|assaults|"
 r"violence|violent|"
-r"racism|racist|ku klux Klan|kkk"
+r"racism|racist|ku klux Klan|kkk|"
 r"bomb|bombing|bombed|explosion|explosions|"
 r"shooting|shot|gunfire|gunman|"
 r"stabbed|stabbing|"
@@ -96,9 +96,13 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             title = entry.get('title', '')
             link = entry.get('link', '')
 
+
+            # Create url_lower immediately here if link exists so it is globally available below
+            url_lower = link.lower() if link else ""
+
             # --- OVERLAP AVOIDANCE ---
-            if exclude_groups_of_links and link:
-                url_lower = link.lower()
+            if exclude_groups_of_links and url_lower:
+ 
                 if '/sport/' in url_lower or '/entertainment/' in url_lower or '/courts/' in url_lower:
                     continue
 
