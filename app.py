@@ -116,7 +116,7 @@ def debug_match(title, link, compiled_regex):
 # =============================================================, 
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False, irish_news_only=False, weather_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -137,7 +137,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
  
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
                     continue
 
 
@@ -163,6 +163,14 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- NEW: world-news ONLY MODE ---
             if world_news_only and '/world-news/' not in url_lower:
                 continue  # Skip anything that isn't a world-news article
+
+            # --- NEW: irish-news ONLY MODE ---
+            if irish_news_only and '/irish-news/' not in url_lower:
+                continue  # Skip anything that isn't a irish-news article
+
+            # --- NEW: weather ONLY MODE ---
+            if weather_only and '/weather/' not in url_lower:
+                continue  # Skip anything that isn't a weather article
 
 
 
@@ -355,8 +363,6 @@ def indo_ent_inclusive():
 
 
 
-### TESTING
-
 # Independent.ie Politics Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_politics.xml
 
@@ -373,7 +379,6 @@ def indo_politics():
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         politics_only=True       # Forces the engine to only allow /politics/ URLs
     )
-
 
 
 # Independent.ie Courts Only Feed
@@ -393,7 +398,6 @@ def indo_courts():
     )
 
 
-
 # Independent.ie County Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_county.xml
 
@@ -410,8 +414,6 @@ def indo_county():
         county_only=True       # Forces the engine to only allow /county/ URLs
     )
     
-
-
 
 # Independent.ie business Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_business.xml
@@ -430,10 +432,8 @@ def indo_business():
     )
     
 
-
-
 # Independent.ie world-news Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_world-news.xml
+# https://rss-filter-y4fa.onrender.com/indo_world_news.xml
 
 @app.route('/indo_world_news.xml')
 def indo_world_news():
@@ -449,7 +449,39 @@ def indo_world_news():
     )
     
 
+# Independent.ie irish-news Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_irish_news.xml
 
+@app.route('/indo_irish_news.xml')
+def indo_irish_news():
+    # Keep your blocklist active to filter out unwanted words within irish-news
+    BLOCKS = r"asdf|word 1"
+    
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Irish News",
+        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
+        irish_news_only=True       # Forces the engine to only allow /irish-news/ URLs
+    )
+    
+    
+# Independent.ie world-news Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_weather.xml
+
+@app.route('/indo_weather.xml')
+def indo_weather():
+    # Keep your blocklist active to filter out unwanted words within indo_weather
+    BLOCKS = r"asdf|word 1"
+    
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Weather",
+        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
+        weather_only=True       # Forces the engine to only allow /world-news/ URLs
+    )
+        
 
 
 
