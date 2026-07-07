@@ -445,7 +445,7 @@ def indo_world_news():
         regex_pattern=BLOCKS,
         feed_title_override="FO: Indo World News",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        world-news_only=True       # Forces the engine to only allow /world-news/ URLs
+        world_news_only=True       # Forces the engine to only allow /world-news/ URLs
     )
     
 
