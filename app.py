@@ -24,7 +24,7 @@ app = Flask(__name__)
             # # --- OVERLAP AVOIDANCE ---
             # if exclude_groups_of_links and url_lower:
  
-                # if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower:
+                # if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
                     # continue
 
 
@@ -116,7 +116,7 @@ def debug_match(title, link, compiled_regex):
 # =============================================================, 
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False, irish_news_only=False, weather_only=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False, irish_news_only=False, weather_only=False, rugby_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -143,6 +143,16 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
 
 
+
+            # --- SPORT-SPECIFIC EXCLUSIONS ---
+            # If we are pulling from the main sport RSS feed, strip out rugby layout variants
+            if source_url == "https://www.independent.ie/sport/rss" and not rugby_only:
+                if '/rugby/' in url_lower:
+                    continue
+
+            # --- NEW: RUGBY ONLY MODE ---
+            if rugby_only and '/rugby/' not in url_lower:
+                continue
 
             # --- NEW: POLITICS ONLY MODE ---
             if politics_only and '/politics/' not in url_lower:
@@ -304,7 +314,8 @@ def indo_main_inclusive():
 
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|\\bpubs\\b"
+    # BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|\\bpubs\\b"
+    BLOCKS = r"Liverpool|\\bpubs\\b"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
@@ -483,7 +494,18 @@ def indo_weather():
     )
         
 
-
+# Independent.ie Rugby Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_rugby.xml
+@app.route('/indo_rugby.xml')
+def indo_rugby():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Rugby",
+        exclude_groups_of_links=False,
+        rugby_only=True
+    )
 
 
 # Business Insider Feed
