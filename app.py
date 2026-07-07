@@ -79,10 +79,10 @@ def debug_match(title, link, compiled_regex):
     print("=================================================\n")
 
 
-# =============================================================
+# =============================================================, 
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -103,7 +103,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
  
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/courts/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower:
                     continue
 
 
@@ -117,6 +117,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- NEW: Courts ONLY MODE ---
             if courts_only and '/courts/' not in url_lower:
                 continue  # Skip anything that isn't a courts article
+                
+            # --- NEW: county ONLY MODE ---
+            if county_only and '/county/' not in url_lower:
+                continue  # Skip anything that isn't a county article
 
 
 
@@ -342,6 +346,25 @@ def indo_courts():
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         courts_only=True       # Forces the engine to only allow /courts/ URLs
     )
+
+
+
+# Independent.ie county Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_county.xml
+
+@app.route('/indo_county.xml')
+def indo_county():
+    # Keep your blocklist active to filter out unwanted words within county
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo county",
+        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
+        county_only=True       # Forces the engine to only allow /county/ URLs
+    )
+    
 
 
 
