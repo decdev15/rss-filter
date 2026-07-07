@@ -107,7 +107,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             if weather_only and '/weather/' not in url_lower:
                 continue
 
-            # =====================================================
+# =====================================================
             # --- SPORT-SPECIFIC MODES & EXCLUSIONS ---
             # =====================================================
             if source_url == "https://www.independent.ie/sport/rss":
@@ -120,16 +120,20 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     continue
                 if golf_only and '/golf/' not in url_lower:
                     continue
-                if other_sports_only and ('/sport/' not in url_lower or '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower):
+                if other_sports_only and '/other-sports/' not in url_lower:
+                    continue
+                if podcasts_only and '/podcasts/' not in url_lower:
+                    continue
+                if irish_news_only and '/irish-news/' not in url_lower:
+                    continue
+                if county_only and '/county/' not in url_lower:
                     continue
                 
                 # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
-                if not (rugby_only or gaa_only or soccer_only or golf_only or other_sports_only):
-                    if '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower:
+                if not (rugby_only or gaa_only or soccer_only or golf_only or other_sports_only or podcasts_only or irish_news_only or county_only):
+                    # Added '/podcasts/' here so they are stripped out of the main general sports feed
+                    if '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower or '/other-sports/' in url_lower or '/podcasts/' in url_lower or '/irish-news/' in url_lower or '/county/' in url_lower:
                         continue
-
-            if podcasts_only and '/podcasts/' not in url_lower:
-                continue
 
             # =====================================================
             # --- BUSINESS-SPECIFIC MODES & EXCLUSIONS ---
@@ -471,6 +475,28 @@ def indo_podcasts():
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Podcasts",
         podcasts_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_irish_news.xml
+@app.route('/indo_irish_news.xml')
+def indo_irish_news():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Sport: irish_news",
+        irish_news_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county.xml
+@app.route('/indo_county.xml')
+def indo_county():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Sport: county",
+        county_only=True
     )
 
 
