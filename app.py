@@ -16,11 +16,11 @@ app = Flask(__name__)
 # "Indo Main" and "FI: Indo Main" include all articles except for:
 # those containing the block words above;
 # links included in this block of code (or similar as will be updated):
-#
-# # --- OVERLAP AVOIDANCE ---
-# if exclude_groups_of_links and url_lower:
-#      if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
-#          continue
+    #
+    # # --- OVERLAP AVOIDANCE ---
+    # if exclude_groups_of_links and url_lower:
+    #      if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
+    #          continue
 
 # =============================================================
 # Global variables
@@ -68,7 +68,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                          politics_only=False, courts_only=False, county_only=False, business_only=False, 
                          world_news_only=False, irish_news_only=False, weather_only=False, 
                          rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, podcasts_only=False,
-                         irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False):
+                         irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False,
+                         theatre_arts_only=False, celebrity_only=False, music_only=False, television_only=False, books_only=False, horoscopes_only=False, movies_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -149,6 +150,31 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
                 if not (irish_business_only or money_only or world_only or technology_only or commercial_property_only):
                     if '/irish-business/' in url_lower or '/money/' in url_lower or '/world/' in url_lower or '/technology/' in url_lower or '/commercial-property/' in url_lower:
+                        continue
+
+            # =====================================================
+            # --- ENTERTAINMENT-SPECIFIC MODES & EXCLUSIONS ---
+            # =====================================================
+            if source_url == "https://www.independent.ie/entertainment/rss":
+                # 1. Sub-feed filtering (If a selector is True, filter strictly)
+                if theatre_arts_only and '/theatre-arts/' not in url_lower:
+                    continue
+                if celebrity_only and '/celebrity/' not in url_lower:
+                    continue
+                if music_only and '/music/' not in url_lower:
+                    continue
+                if television_only and '/television/' not in url_lower:
+                    continue
+                if books_only and '/books/' not in url_lower:
+                    continue
+                if horoscopes_only and '/horoscopes/' not in url_lower:
+                    continue
+                if movies_only and '/movies/' not in url_lower:
+                    continue
+
+                # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
+                if not (theatre_arts_only or celebrity_only or music_only or television_only or books_only or horoscopes_only or movies_only):
+                    if '/theatre-arts/' in url_lower or '/celebrity/' in url_lower or '/music/' in url_lower or '/television/' in url_lower or '/books/' in url_lower or '/horoscopes/' in url_lower or '/movies/' in url_lower:
                         continue
 
             # =====================================================
@@ -252,7 +278,7 @@ def indo_main_inclusive():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
-        feed_title_override="FI: Indo Main",
+        feed_title_override="Indo Main (FI)",
         exclude_groups_of_links=True,
         inclusive=True
     )
@@ -274,7 +300,7 @@ def indo_sport_inclusive():
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         ALLOWED,
-        "FI: Indo Sport",
+        "Indo Sport (FI)",
         inclusive=True
     )
 
@@ -295,7 +321,7 @@ def indo_ent_inclusive():
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         ALLOWED,
-        "FI: Indo Entertainment",
+        "Indo Entertainment (FI)",
         inclusive=True
     )
 
@@ -457,7 +483,7 @@ def indo_irish_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="Indo Business: Irish Business",
+        feed_title_override="Indo Business: Irish",
         irish_business_only=True
     )
 
@@ -479,7 +505,7 @@ def indo_world_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="Indo Business: World Business",
+        feed_title_override="Indo Business: World",
         world_only=True
     )
 
@@ -503,6 +529,86 @@ def indo_commercial_property():
         regex_pattern=BLOCKS,
         feed_title_override="Indo Business: Commercial Property",
         commercial_property_only=True
+    )
+
+
+########################### INDO ENTERTAINMENT FEEDS
+
+# https://rss-filter-y4fa.onrender.com/indo_theatre_arts.xml
+@app.route('/indo_theatre_arts.xml')
+def indo_theatre_arts():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Theatre & Arts",
+        theatre_arts_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_celebrity.xml
+@app.route('/indo_celebrity.xml')
+def indo_celebrity():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Celebrity",
+        celebrity_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_music.xml
+@app.route('/indo_music.xml')
+def indo_music():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Music",
+        music_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_television.xml
+@app.route('/indo_television.xml')
+def indo_television():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Television",
+        television_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_books.xml
+@app.route('/indo_books.xml')
+def indo_books():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Books",
+        books_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_horoscopes.xml
+@app.route('/indo_horoscopes.xml')
+def indo_horoscopes():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Horoscopes",
+        horoscopes_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_movies.xml
+@app.route('/indo_movies.xml')
+def indo_movies():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Movies",
+        movies_only=True
     )
 
 
@@ -558,16 +664,6 @@ def nyt_soccer():
         "NYT Soccer"
     )
 
-# https://rss-filter-y4fa.onrender.com/athletic_inclusive.xml
-@app.route('/athletic_inclusive.xml')
-def athletic_inclusive():
-    ALLOWED = r"Liverpool|phrase 2"
-    return process_generic_feed(
-        "https://www.nytimes.com/athletic/rss/uk",
-        ALLOWED,
-        "FI: The Athletic",
-        inclusive=True
-    )
 
 # https://rss-filter-y4fa.onrender.com/athletic.xml
 @app.route('/athletic.xml')
@@ -578,6 +674,18 @@ def athletic():
         BLOCKS,
         "The Athletic"
     )
+ 
+# https://rss-filter-y4fa.onrender.com/athletic_inclusive.xml
+@app.route('/athletic_inclusive.xml')
+def athletic_inclusive():
+    ALLOWED = r"Liverpool|phrase 2"
+    return process_generic_feed(
+        "https://www.nytimes.com/athletic/rss/uk",
+        ALLOWED,
+        "The Athletic (FI)",
+        inclusive=True
+    )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
