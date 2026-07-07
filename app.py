@@ -82,8 +82,7 @@ def debug_match(title, link, compiled_regex):
 # =============================================================
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override,
-                          exclude_sports_ent=False, inclusive=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -98,10 +97,15 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override,
             link = entry.get('link', '')
 
             # --- OVERLAP AVOIDANCE ---
-            if exclude_sports_ent and link:
+            if exclude_groups_of_links and link:
                 url_lower = link.lower()
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/courts/' in url_lower:
                     continue
+
+            # --- NEW: POLITICS ONLY MODE ---
+            if politics_only and '/politics/' not in url_lower:
+                continue  # Skip anything that isn't a politics article
+
 
             # =====================================================
             # FILTER LOGIC (TITLE + URL ONLY)
@@ -201,7 +205,7 @@ def indo_main():
         "https://www.independent.ie/rss",
         BLOCKS,
         "FO: Indo Main",
-        exclude_sports_ent=True
+        exclude_groups_of_links=True
     )
 
 
@@ -219,7 +223,7 @@ def indo_main_inclusive():
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
         feed_title_override="FI: Indo Main",
-        exclude_sports_ent=True,
+        exclude_groups_of_links=True,
         inclusive=True
     )
     
@@ -279,6 +283,43 @@ def indo_ent_inclusive():
         "FI: Indo Entertainment",
         inclusive=True
     )
+
+
+
+
+
+
+
+
+
+### TESTING
+
+# Independent.ie Politics Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_politics.xml
+
+@app.route('/indo_politics.xml')
+def indo_politics():
+    # Keep your blocklist active to filter out unwanted words within politics
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Politics",
+ #       exclude_groups_of_links=True, # Safety to drop sports overlap
+        politics_only=True       # Forces the engine to only allow /politics/ URLs
+    )
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Business Insider Feed
