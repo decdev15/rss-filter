@@ -19,8 +19,8 @@ app = Flask(__name__)
     #
     # # --- OVERLAP AVOIDANCE ---
     # if exclude_groups_of_links and url_lower:
-    #      if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
-    #          continue
+    #       if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
+    #           continue
 
 # =============================================================
 # Global variables
@@ -31,8 +31,48 @@ G_BLOCK_NEGATIVE = (
 )
 
 G_BLOCK_OTHER = (
-    r"testing12"
+    r"queer|pride|lesbian|gay|LGBQT"
 )
+
+
+# G_BLOCK_NEGATIVE = (
+# r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
+# r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
+# r"struggles|diagnosis|hate|miserable|"
+# r"abused|rapes|raped|murdered|murders|killing|kills|"
+# r"fatal|fatality|fatalities|deathly|deadly|"
+# r"attack|attacks|attacked|"
+# r"assault|assaulted|assaults|"
+# r"violence|violent|"
+# r"racism|racist|ku klux Klan|kkk"
+# r"bomb|bombing|bombed|explosion|explosions|"
+# r"shooting|shot|gunfire|gunman|"
+# r"stabbed|stabbing|"
+# r"terror|terrorism|terrorist|extremism|extremist|"
+# r"hostage|hostages|"
+# r"kidnap|kidnapped|kidnapping|abduction|abducted|"
+# r"fraud|scam|scams|scamming|"
+# r"corruption|bribery|"
+# r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
+# r"tragedy|tragic|"
+# r"hospitalised|hospitalized|critical|critical condition|"
+# r"terminal|terminally ill|"
+# r"missing|missing person|"
+# r"overdose|overdosed|"
+# r"suicide|self-harm|"
+# r"grief|mourning|bereavement|"
+# r"burial|funeral|"
+# r"ordeal|burglary|aggravated|vicious|protest|vandalism"
+# )
+
+# G_BLOCK_OTHER = (
+# r"euromillions|housing|insurance|tax|election|"
+# r"queer|pride|lesbian|gay|LGBQT|"
+# r"shelbourne|bohemians|league of ireland|LOI|"
+# r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
+# r"Eurobasket|"
+# r"Selena Gomez|Bieber|theatre|Lily Allen"
+# )
 
 # =============================================================
 # DEBUG HELPER
@@ -69,8 +109,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                          politics_only=False, courts_only=False, county_only=False, business_only=False, 
                          world_news_only=False, irish_news_only=False, weather_only=False, 
                          rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, 
-                         sport_podcasts_only=False, sport_irish_news_only=False, sport_county_only=False,  # <-- ADDED THESE THREE HERE
-                         podcasts_only=False, # (Keep this if used elsewhere)
+                         sport_podcasts_only=False, sport_irish_news_only=False, sport_county_only=False, 
+                         podcasts_only=False, 
                          irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False,
                          theatre_arts_only=False, celebrity_only=False, music_only=False, television_only=False, books_only=False, horoscopes_only=False, movies_only=False):
 
@@ -82,114 +122,89 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         compiled_regex = re.compile(regex_pattern, re.IGNORECASE) if regex_pattern else None
         items_xml = []
 
+        # Maps for main feed filtering
+        main_filters = {
+            politics_only: '/politics/',
+            courts_only: '/courts/',
+            county_only: '/county/',
+            business_only: '/business/',
+            world_news_only: '/world-news/',
+            irish_news_only: '/irish-news/',
+            weather_only: '/weather/'
+        }
+
+        # Sub-feed maps
+        sport_filters = {
+            rugby_only: '/rugby/',
+            gaa_only: '/gaa/',
+            soccer_only: '/soccer/',
+            golf_only: '/golf/',
+            other_sports_only: '/other-sports/',
+            sport_podcasts_only: '/podcasts/',
+            sport_irish_news_only: '/irish-news/',
+            sport_county_only: '/county/'
+        }
+
+        business_filters = {
+            irish_business_only: '/irish-business/',
+            money_only: '/money/',
+            world_only: '/world/',
+            technology_only: '/technology/',
+            commercial_property_only: '/commercial-property/'
+        }
+
+        entertainment_filters = {
+            theatre_arts_only: '/theatre-arts/',
+            celebrity_only: '/celebrity/',
+            music_only: '/music/',
+            television_only: '/television/',
+            books_only: '/books/',
+            horoscopes_only: '/horoscopes/',
+            movies_only: '/movies/'
+        }
+
+        # Configuration structure map linking absolute URLs to their respective category dictionary
+        feed_config = {
+            "https://www.independent.ie/sport/rss": sport_filters,
+            "https://www.independent.ie/business/rss": business_filters,
+            "https://www.independent.ie/entertainment/rss": entertainment_filters
+        }
+        
+        # Primary feed processing loop
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             link = entry.get('link', '')
-
-            # Create url_lower immediately here if link exists so it is globally available below
             url_lower = link.lower() if link else ""
 
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/business/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
+                if any(slug in url_lower for slug in ['/sport/', '/entertainment/', '/business/', '/politics/', '/courts/', '/county/', '/world-news/', '/irish-news/', '/weather/']):
                     continue
 
             # --- MAIN SECTION MODES ---
-            if politics_only and '/politics/' not in url_lower:
-                continue
-            if courts_only and '/courts/' not in url_lower:
-                continue
-            if county_only and '/county/' not in url_lower:
-                continue
-            if business_only and '/business/' not in url_lower:
-                continue
-            if world_news_only and '/world-news/' not in url_lower:
-                continue
-            if irish_news_only and '/irish-news/' not in url_lower:
-                continue
-            if weather_only and '/weather/' not in url_lower:
+            if any(flag and slug not in url_lower for flag, slug in main_filters.items()):
                 continue
 
-# =====================================================
-            # --- SPORT-SPECIFIC MODES & EXCLUSIONS ---
-            # =====================================================
-            if source_url == "https://www.independent.ie/sport/rss":
-                # 1. Sub-feed filtering (If a selector is True, filter strictly)
-                if rugby_only and '/rugby/' not in url_lower:
-                    continue
-                if gaa_only and '/gaa/' not in url_lower:
-                    continue
-                if soccer_only and '/soccer/' not in url_lower: 
-                    continue
-                if golf_only and '/golf/' not in url_lower:
-                    continue
-                if other_sports_only and '/other-sports/' not in url_lower:
-                    continue
-                if sport_podcasts_only and '/podcasts/' not in url_lower:
-                    continue
-                if sport_irish_news_only and '/irish-news/' not in url_lower:
-                    continue
-                if sport_county_only and '/county/' not in url_lower:
-                    continue
-                
-                # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
-                if not (rugby_only or gaa_only or soccer_only or golf_only or other_sports_only or sport_podcasts_only or sport_irish_news_only or sport_county_only):
-                    # Added '/podcasts/' here so they are stripped out of the main general sports feed
-                    if '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower or '/other-sports/' in url_lower or '/podcasts/' in url_lower or '/irish-news/' in url_lower or '/county/' in url_lower:
+            # --- SUB-FEED & SUB-CHANNEL SPECIFIC MODES ---
+            if source_url in feed_config:
+                current_map = feed_config[source_url]
+                any_flag_active = any(current_map.keys())
+
+                if any_flag_active:
+                    # Strict filtering: skip items missing selected sub-channel strings
+                    if any(flag and slug not in url_lower for flag, slug in current_map.items()):
+                        continue
+                else:
+                    # Catch-all strip-out strategy for main structural categories
+                    if any(slug in url_lower for slug in current_map.values()):
                         continue
 
             # =====================================================
-            # --- BUSINESS-SPECIFIC MODES & EXCLUSIONS ---
-            # =====================================================
-            if source_url == "https://www.independent.ie/business/rss":
-                # 1. Sub-feed filtering (If a selector is True, filter strictly)
-                if irish_business_only and '/irish-business/' not in url_lower:
-                    continue
-                if money_only and '/money/' not in url_lower:
-                    continue
-                if world_only and '/world/' not in url_lower:
-                    continue
-                if technology_only and '/technology/' not in url_lower:
-                    continue
-                if commercial_property_only and '/commercial-property/' not in url_lower:
-                    continue
-
-                # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
-                if not (irish_business_only or money_only or world_only or technology_only or commercial_property_only):
-                    if '/irish-business/' in url_lower or '/money/' in url_lower or '/world/' in url_lower or '/technology/' in url_lower or '/commercial-property/' in url_lower:
-                        continue
-
-            # =====================================================
-            # --- ENTERTAINMENT-SPECIFIC MODES & EXCLUSIONS ---
-            # =====================================================
-            if source_url == "https://www.independent.ie/entertainment/rss":
-                # 1. Sub-feed filtering (If a selector is True, filter strictly)
-                if theatre_arts_only and '/theatre-arts/' not in url_lower:
-                    continue
-                if celebrity_only and '/celebrity/' not in url_lower:
-                    continue
-                if music_only and '/music/' not in url_lower:
-                    continue
-                if television_only and '/television/' not in url_lower:
-                    continue
-                if books_only and '/books/' not in url_lower:
-                    continue
-                if horoscopes_only and '/horoscopes/' not in url_lower:
-                    continue
-                if movies_only and '/movies/' not in url_lower:
-                    continue
-
-                # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
-                if not (theatre_arts_only or celebrity_only or music_only or television_only or books_only or horoscopes_only or movies_only):
-                    if '/theatre-arts/' in url_lower or '/celebrity/' in url_lower or '/music/' in url_lower or '/television/' in url_lower or '/books/' in url_lower or '/horoscopes/' in url_lower or '/movies/' in url_lower:
-                        continue
-
-            # =====================================================
-            # FILTER LOGIC (TITLE + URL ONLY)
+            # FILTER LOGIC (TITLE + URL REGEX MATCHING)
             # =====================================================
             if compiled_regex:
                 title_l = title.lower()
-                link_l = link.lower()
+                link_l = url_lower
 
                 debug_match(title, link, compiled_regex)
 
@@ -202,6 +217,9 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         print("➡ BLOCKED (negative match)")
                         continue
 
+            # =====================================================
+            # XML CONSTRUCTION
+            # =====================================================
             base_desc = entry.get('summary', entry.get('description', ''))
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = f"{link}#{hash(title)}"
@@ -230,7 +248,6 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         <pubDate>{pub_date}</pubDate>
     </item>""")
 
-        # --- ADD THIS LINE TO CLEAN THE CHANNEL TITLE ---
         feed_title_clean = feed_title_override.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
         xml_output = f"""<?xml version="1.0" encoding="UTF-8" ?>
@@ -346,7 +363,7 @@ def indo_business():
     )
 
 
-########################### INDO MISC FEEDS
+########################### INDO MAIN SUB-FEEDS
 
 # https://rss-filter-y4fa.onrender.com/indo_politics.xml
 @app.route('/indo_politics.xml')
@@ -415,7 +432,7 @@ def indo_weather():
     )
 
 
-########################### INDO SPORTS FEEDS
+########################### INDO SPORT SUB-FEEDS
 
 # https://rss-filter-y4fa.onrender.com/indo_rugby.xml
 @app.route('/indo_rugby.xml')
@@ -506,7 +523,7 @@ def indo_sport_county():
     )
 
 
-########################### INDO BUSINESS FEEDS
+########################### INDO BUSINESS SUB-FEEDS
 
 # https://rss-filter-y4fa.onrender.com/indo_irish_business.xml
 @app.route('/indo_irish_business.xml')
@@ -564,7 +581,7 @@ def indo_commercial_property():
     )
 
 
-########################### INDO ENTERTAINMENT FEEDS
+########################### INDO ENTERTAINMENT SUB-FEEDS
 
 # https://rss-filter-y4fa.onrender.com/indo_theatre_arts.xml
 @app.route('/indo_theatre_arts.xml')
@@ -695,7 +712,6 @@ def nyt_soccer():
         BLOCKS,
         "NYT Soccer"
     )
-
 
 # https://rss-filter-y4fa.onrender.com/athletic.xml
 @app.route('/athletic.xml')
