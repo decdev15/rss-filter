@@ -477,9 +477,9 @@ def indo_podcasts():
         sport_podcasts_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_irish_news.xml
-@app.route('/indo_irish_news.xml')
-def indo_irish_news():
+# https://rss-filter-y4fa.onrender.com/indo_sport_irish_news.xml
+@app.route('/indo_sport_irish_news.xml')
+def indo_sport_irish_news():
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
@@ -488,9 +488,9 @@ def indo_irish_news():
         sport_irish_news_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_county.xml
-@app.route('/indo_county.xml')
-def indo_county():
+# https://rss-filter-y4fa.onrender.com/indo_sport_county.xml
+@app.route('/indo_sport_county.xml')
+def indo_sport_county():
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
