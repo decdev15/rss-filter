@@ -474,7 +474,7 @@ def indo_other_sports():
 def indo_podcasts():
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
+        source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Podcasts",
         sport_podcasts_only=True
@@ -485,7 +485,7 @@ def indo_podcasts():
 def indo_sport_irish_news():
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
+        source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: irish_news",
         sport_irish_news_only=True
@@ -496,7 +496,7 @@ def indo_sport_irish_news():
 def indo_sport_county():
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
+        source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: county",
         sport_county_only=True
