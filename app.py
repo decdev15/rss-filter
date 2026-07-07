@@ -39,43 +39,52 @@ app = Flask(__name__)
 # =============================================================
 
 G_BLOCK_NEGATIVE = (
-r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
-r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
-r"struggles|diagnosis|hate|miserable|"
-r"abused|rapes|raped|murdered|murders|killing|kills|"
-r"fatal|fatality|fatalities|deathly|deadly|"
-r"attack|attacks|attacked|"
-r"assault|assaulted|assaults|"
-r"violence|violent|"
-r"racism|racist|ku klux Klan|kkk|"
-r"bomb|bombing|bombed|explosion|explosions|"
-r"shooting|shot|gunfire|gunman|"
-r"stabbed|stabbing|"
-r"terror|terrorism|terrorist|extremism|extremist|"
-r"hostage|hostages|"
-r"kidnap|kidnapped|kidnapping|abduction|abducted|"
-r"fraud|scam|scams|scamming|"
-r"corruption|bribery|"
-r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
-r"tragedy|tragic|"
-r"hospitalised|hospitalized|critical|critical condition|"
-r"terminal|terminally ill|"
-r"missing|missing person|"
-r"overdose|overdosed|"
-r"suicide|self-harm|"
-r"grief|mourning|bereavement|"
-r"burial|funeral|"
-r"ordeal|burglary|aggravated|vicious|protest|vandalism"
+r"test123"
 )
 
+
 G_BLOCK_OTHER = (
-r"euromillions|housing|insurance|tax|election|"
-r"queer|pride|lesbian|gay|LGBQT|"
-r"shelbourne|bohemians|league of ireland|LOI|"
-r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
-r"Eurobasket|"
-r"Selena Gomez|Bieber|theatre|Lily Allen"
+r"testing12"
 )
+
+    # G_BLOCK_NEGATIVE = (
+    # r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
+    # r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
+    # r"struggles|diagnosis|hate|miserable|"
+    # r"abused|rapes|raped|murdered|murders|killing|kills|"
+    # r"fatal|fatality|fatalities|deathly|deadly|"
+    # r"attack|attacks|attacked|"
+    # r"assault|assaulted|assaults|"
+    # r"violence|violent|"
+    # r"racism|racist|ku klux Klan|kkk|"
+    # r"bomb|bombing|bombed|explosion|explosions|"
+    # r"shooting|shot|gunfire|gunman|"
+    # r"stabbed|stabbing|"
+    # r"terror|terrorism|terrorist|extremism|extremist|"
+    # r"hostage|hostages|"
+    # r"kidnap|kidnapped|kidnapping|abduction|abducted|"
+    # r"fraud|scam|scams|scamming|"
+    # r"corruption|bribery|"
+    # r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
+    # r"tragedy|tragic|"
+    # r"hospitalised|hospitalized|critical|critical condition|"
+    # r"terminal|terminally ill|"
+    # r"missing|missing person|"
+    # r"overdose|overdosed|"
+    # r"suicide|self-harm|"
+    # r"grief|mourning|bereavement|"
+    # r"burial|funeral|"
+    # r"ordeal|burglary|aggravated|vicious|protest|vandalism"
+    # )
+
+    # G_BLOCK_OTHER = (
+    # r"euromillions|housing|insurance|tax|election|"
+    # r"queer|pride|lesbian|gay|LGBQT|"
+    # r"shelbourne|bohemians|league of ireland|LOI|"
+    # r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
+    # r"Eurobasket|"
+    # r"Selena Gomez|Bieber|theatre|Lily Allen"
+    # )
 
 # =============================================================
 # DEBUG HELPER
@@ -107,7 +116,7 @@ def debug_match(title, link, compiled_regex):
 # =============================================================, 
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -128,7 +137,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
  
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower:
                     continue
 
 
@@ -146,6 +155,14 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- NEW: county ONLY MODE ---
             if county_only and '/county/' not in url_lower:
                 continue  # Skip anything that isn't a county article
+
+            # --- NEW: business ONLY MODE ---
+            if business_only and '/business/' not in url_lower:
+                continue  # Skip anything that isn't a business article
+
+            # --- NEW: world-news ONLY MODE ---
+            if world_news_only and '/world-news/' not in url_lower:
+                continue  # Skip anything that isn't a world-news article
 
 
 
@@ -244,7 +261,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
 @app.route('/indo_main.xml')
 def indo_main():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    # BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    BLOCKS = r"asdf|word 1"
     return process_generic_feed(
         "https://www.independent.ie/rss",
         BLOCKS,
@@ -260,7 +278,8 @@ def indo_main():
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
     # Only put words here that you explicitly WANT to see. Do not include block variables.
-    ALLOWED = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|phrase 2"
+    # ALLOWED = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|phrase 2"
+    ALLOWED = r"asdf|phrase 2"
     
     # Pass the named arguments exactly matching the helper function blueprint
     return process_generic_feed(
@@ -344,7 +363,8 @@ def indo_ent_inclusive():
 @app.route('/indo_politics.xml')
 def indo_politics():
     # Keep your blocklist active to filter out unwanted words within politics
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    # BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    BLOCKS = r"asdf|word 1"
     
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
@@ -362,7 +382,7 @@ def indo_politics():
 @app.route('/indo_courts.xml')
 def indo_courts():
     # Keep your blocklist active to filter out unwanted words within courts
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    BLOCKS = r"asdf|word 1"
     
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
@@ -374,18 +394,18 @@ def indo_courts():
 
 
 
-# Independent.ie county Only Feed
+# Independent.ie County Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_county.xml
 
 @app.route('/indo_county.xml')
 def indo_county():
     # Keep your blocklist active to filter out unwanted words within county
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
+    BLOCKS = r"asdf|word 1"
     
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo county",
+        feed_title_override="FO: Indo County",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         county_only=True       # Forces the engine to only allow /county/ URLs
     )
@@ -393,7 +413,41 @@ def indo_county():
 
 
 
+# Independent.ie business Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_business.xml
 
+@app.route('/indo_business.xml')
+def indo_business():
+    # Keep your blocklist active to filter out unwanted words within business
+    BLOCKS = r"asdf|word 1"
+    
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Business",
+        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
+        business_only=True       # Forces the engine to only allow /business/ URLs
+    )
+    
+
+
+
+# Independent.ie world-news Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_world-news.xml
+
+@app.route('/indo_world_news.xml')
+def indo_world_news():
+    # Keep your blocklist active to filter out unwanted words within world-news
+    BLOCKS = r"asdf|word 1"
+    
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo World News",
+        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
+        world-news_only=True       # Forces the engine to only allow /world-news/ URLs
+    )
+    
 
 
 
