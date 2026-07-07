@@ -64,10 +64,13 @@ def debug_match(title, link, compiled_regex):
 # ============================================================= 
 # HELPER FUNCTION
 # =============================================================
+
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
                          politics_only=False, courts_only=False, county_only=False, business_only=False, 
                          world_news_only=False, irish_news_only=False, weather_only=False, 
-                         rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, podcasts_only=False,
+                         rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, 
+                         sport_podcasts_only=False, sport_irish_news_only=False, sport_county_only=False,  # <-- ADDED THESE THREE HERE
+                         podcasts_only=False, # (Keep this if used elsewhere)
                          irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False,
                          theatre_arts_only=False, celebrity_only=False, music_only=False, television_only=False, books_only=False, horoscopes_only=False, movies_only=False):
 
@@ -116,7 +119,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     continue
                 if gaa_only and '/gaa/' not in url_lower:
                     continue
-                if soccer_only and '/soccer/' not in url_lower:
+                if soccer_only and '/soccer/' not in url_lower: 
                     continue
                 if golf_only and '/golf/' not in url_lower:
                     continue
