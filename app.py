@@ -1,11 +1,11 @@
 import os
 import re
-from flask import Flask, Response
 import feedparser
 import requests
 import time
 import sys
 import logging
+from flask import Flask, Response
 
 app = Flask(__name__)
 
@@ -116,7 +116,7 @@ def debug_match(title, link, compiled_regex):
 # =============================================================, 
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False, irish_news_only=False, weather_only=False, rugby_only=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False, irish_news_only=False, weather_only=False, rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, podcasts_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -142,17 +142,6 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
 
 
-
-
-            # --- SPORT-SPECIFIC EXCLUSIONS ---
-            # If we are pulling from the main sport RSS feed, strip out rugby layout variants
-            if source_url == "https://www.independent.ie/sport/rss" and not rugby_only:
-                if '/rugby/' in url_lower:
-                    continue
-
-            # --- NEW: RUGBY ONLY MODE ---
-            if rugby_only and '/rugby/' not in url_lower:
-                continue
 
             # --- NEW: POLITICS ONLY MODE ---
             if politics_only and '/politics/' not in url_lower:
@@ -181,6 +170,61 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- NEW: weather ONLY MODE ---
             if weather_only and '/weather/' not in url_lower:
                 continue  # Skip anything that isn't a weather article
+
+
+
+
+
+           # --- SPORT-SPECIFIC EXCLUSIONS ---
+            # If we are pulling from the main sport RSS feed, strip out sub-sports if we aren't explicitly looking for them
+            if source_url == "https://www.independent.ie/sport/rss" and not rugby_only:
+                if '/rugby/' in url_lower:
+                    continue
+
+            if source_url == "https://www.independent.ie/sport/rss" and not gaa_only:
+                if '/gaa/' in url_lower:
+                    continue
+
+            if source_url == "https://www.independent.ie/sport/rss" and not soccer_only:
+                if '/soccer/' in url_lower:
+                    continue
+
+            if source_url == "https://www.independent.ie/sport/rss" and not golf_only:
+                if '/golf/' in url_lower:
+                    continue
+
+            if source_url == "https://www.independent.ie/sport/rss" and other_sports_only:
+                # If we want other-sports only, drop the main heavy-traffic sports
+                if '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower:
+                    continue
+
+            # --- NEW: RUGBY ONLY MODE ---
+            if rugby_only and '/rugby/' not in url_lower:
+                continue
+
+            # --- NEW: GAA ONLY MODE ---
+            if gaa_only and '/gaa/' not in url_lower:
+                continue
+
+            # --- NEW: SOCCER ONLY MODE ---
+            if soccer_only and '/soccer/' not in url_lower:
+                continue
+
+            # --- NEW: GOLF ONLY MODE ---
+            if golf_only and '/golf/' not in url_lower:
+                continue
+
+            # --- NEW: OTHER SPORTS ONLY MODE ---
+            # Ensures it's still a sport article but none of the specific sub-sports above
+            if other_sports_only and ('/sport/' not in url_lower or '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower):
+                continue
+
+            # --- NEW: PODCASTS ONLY MODE ---
+            if podcasts_only and '/podcasts/' not in url_lower:
+                continue
+
+
+
 
 
 
@@ -263,7 +307,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
 
 # =============================================================
-# ROUTES (UNCHANGED)
+# ROUTES (UNCHANGED & UPDATED)
 # =============================================================
 
 # The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com" and these app.routes below 
@@ -273,6 +317,11 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out 
 # "FI: " means filtered in i.e. only articles with certain words and phrases are displayed
 
+
+
+########################### INDO MAIN FEEDS 
+
+# WHERE RSS ALREADY EXISTS, AND THEN I SPLIT THESE OUT INTO MY OWN XML FEEDS
 
 # Independent.ie Main Feed (With Sport & Entertainment Exclusion)
 # https://rss-filter-y4fa.onrender.com/indo_main.xml 
@@ -372,7 +421,7 @@ def indo_ent_inclusive():
 
 
 
-
+########################### INDO MISC FEEDS
 
 # Independent.ie Politics Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_politics.xml
@@ -494,6 +543,12 @@ def indo_weather():
     )
         
 
+
+
+
+
+########################### INDO SPORTS FEEDS
+
 # Independent.ie Rugby Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_rugby.xml
 @app.route('/indo_rugby.xml')
@@ -507,6 +562,90 @@ def indo_rugby():
         rugby_only=True
     )
 
+
+# Independent.ie GAA Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_gaa.xml
+@app.route('/indo_gaa.xml')
+def indo_gaa():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo GAA",
+        exclude_groups_of_links=False,
+        gaa_only=True
+    )
+
+
+# Independent.ie Soccer Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_soccer.xml
+@app.route('/indo_soccer.xml')
+def indo_soccer():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Soccer",
+        exclude_groups_of_links=False,
+        soccer_only=True
+    )
+
+
+# Independent.ie Golf Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_golf.xml
+@app.route('/indo_golf.xml')
+def indo_golf():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Golf",
+        exclude_groups_of_links=False,
+        golf_only=True
+    )
+
+
+# Independent.ie Other Sports Feed (Filters out Rugby, GAA, Soccer, Golf)
+# https://rss-filter-y4fa.onrender.com/indo_other_sports.xml
+@app.route('/indo_other_sports.xml')
+def indo_other_sports():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Other Sports",
+        exclude_groups_of_links=False,
+        other_sports_only=True
+    )
+
+
+# Independent.ie Podcasts Only Feed
+# https://rss-filter-y4fa.onrender.com/indo_podcasts.xml
+@app.route('/indo_podcasts.xml')
+def indo_podcasts():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="FO: Indo Podcasts",
+        exclude_groups_of_links=False,
+        podcasts_only=True
+    )
+
+
+
+
+########################### INDO ENTERTAINMENT FEEDS
+
+
+
+
+
+
+
+
+
+########################### OTHER FEEDS
 
 # Business Insider Feed
 # https://rss-filter-y4fa.onrender.com/business_insider.xml 
