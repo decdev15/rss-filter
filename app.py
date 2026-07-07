@@ -122,15 +122,15 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     continue
                 if other_sports_only and '/other-sports/' not in url_lower:
                     continue
-                if podcasts_only and '/podcasts/' not in url_lower:
+                if sport_podcasts_only and '/podcasts/' not in url_lower:
                     continue
-                if irish_news_only and '/irish-news/' not in url_lower:
+                if sport_irish_news_only and '/irish-news/' not in url_lower:
                     continue
-                if county_only and '/county/' not in url_lower:
+                if sport_county_only and '/county/' not in url_lower:
                     continue
                 
                 # 2. Main feed filtering (If no sub-feed selector is active, strip sub-channel items)
-                if not (rugby_only or gaa_only or soccer_only or golf_only or other_sports_only or podcasts_only or irish_news_only or county_only):
+                if not (rugby_only or gaa_only or soccer_only or golf_only or other_sports_only or sport_podcasts_only or sport_irish_news_only or sport_county_only):
                     # Added '/podcasts/' here so they are stripped out of the main general sports feed
                     if '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower or '/other-sports/' in url_lower or '/podcasts/' in url_lower or '/irish-news/' in url_lower or '/county/' in url_lower:
                         continue
@@ -474,7 +474,7 @@ def indo_podcasts():
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Podcasts",
-        podcasts_only=True
+        sport_podcasts_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_irish_news.xml
@@ -485,7 +485,7 @@ def indo_irish_news():
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: irish_news",
-        irish_news_only=True
+        sport_irish_news_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_county.xml
@@ -496,7 +496,7 @@ def indo_county():
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: county",
-        county_only=True
+        sport_county_only=True
     )
 
 
