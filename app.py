@@ -306,7 +306,7 @@ def indo_politics():
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="FO: Indo Politics",
-        exclude_groups_of_links=True, # Safety to drop sports overlap
+        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         politics_only=True       # Forces the engine to only allow /politics/ URLs
     )
 
