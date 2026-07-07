@@ -15,7 +15,7 @@ app = Flask(__name__)
 # Readme
 # =============================================================
 
-# "FO: Indo Main" and "FI: Indo Main" include all articles except for:
+# "Indo Main" and "FI: Indo Main" include all articles except for:
     
 # those containing the block words above;
 
@@ -137,7 +137,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
  
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/business/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
                     continue
 
 
@@ -314,7 +314,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # ("https://rss-filter-y4fa.onrender.com" per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) 
 # 
 # ... 
-# "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out 
+# "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out.  
+#       I have this naming removed for now, so "FO: Indo Main" now "Indo Main"
 # "FI: " means filtered in i.e. only articles with certain words and phrases are displayed
 
 
@@ -333,7 +334,7 @@ def indo_main():
     return process_generic_feed(
         "https://www.independent.ie/rss",
         BLOCKS,
-        "FO: Indo Main",
+        "Indo Main",
         exclude_groups_of_links=True
     )
 
@@ -368,7 +369,7 @@ def indo_sport():
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
-        "FO: Indo Sport"
+        "Indo Sport"
     )
 
 
@@ -394,11 +395,11 @@ def indo_sport_inclusive():
 
 @app.route('/indo_ent.xml')
 def indo_ent():
-    BLOCKS = f"McNally"
+    BLOCKS = f"asdf"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
-        "FO: Indo Entertainment"
+        "Indo Entertainment"
     )
 
 
@@ -415,7 +416,17 @@ def indo_ent_inclusive():
         inclusive=True
     )
 
+# Independent.ie Business Feed (Standard Blocklist)
+# https://rss-filter-y4fa.onrender.com/indo_business.xml 
 
+@app.route('/indo_business.xml')
+def indo_business():
+    BLOCKS = f"asdf"
+    return process_generic_feed(
+        "https://www.independent.ie/business/rss",
+        BLOCKS,
+        "Indo Business"
+    )
 
 
 
@@ -435,7 +446,7 @@ def indo_politics():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Politics",
+        feed_title_override="Indo Main: Politics",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         politics_only=True       # Forces the engine to only allow /politics/ URLs
     )
@@ -452,7 +463,7 @@ def indo_courts():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Courts",
+        feed_title_override="Indo Main: Courts",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         courts_only=True       # Forces the engine to only allow /courts/ URLs
     )
@@ -469,7 +480,7 @@ def indo_county():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo County",
+        feed_title_override="Indo Main: County",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         county_only=True       # Forces the engine to only allow /county/ URLs
     )
@@ -486,7 +497,7 @@ def indo_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Business",
+        feed_title_override="Indo Main: Business",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         business_only=True       # Forces the engine to only allow /business/ URLs
     )
@@ -503,7 +514,7 @@ def indo_world_news():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo World News",
+        feed_title_override="Indo Main: World News",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         world_news_only=True       # Forces the engine to only allow /world-news/ URLs
     )
@@ -520,13 +531,13 @@ def indo_irish_news():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Irish News",
+        feed_title_override="Indo Main: Irish News",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         irish_news_only=True       # Forces the engine to only allow /irish-news/ URLs
     )
     
     
-# Independent.ie world-news Only Feed
+# Independent.ie weather Only Feed
 # https://rss-filter-y4fa.onrender.com/indo_weather.xml
 
 @app.route('/indo_weather.xml')
@@ -537,7 +548,7 @@ def indo_weather():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Weather",
+        feed_title_override="Indo Main: Weather",
         exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
         weather_only=True       # Forces the engine to only allow /world-news/ URLs
     )
@@ -557,7 +568,7 @@ def indo_rugby():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Rugby",
+        feed_title_override="Indo Sport: Rugby",
         exclude_groups_of_links=False,
         rugby_only=True
     )
@@ -571,7 +582,7 @@ def indo_gaa():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo GAA",
+        feed_title_override="Indo Sport: GAA",
         exclude_groups_of_links=False,
         gaa_only=True
     )
@@ -585,7 +596,7 @@ def indo_soccer():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Soccer",
+        feed_title_override="Indo Sport: Soccer",
         exclude_groups_of_links=False,
         soccer_only=True
     )
@@ -599,7 +610,7 @@ def indo_golf():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Golf",
+        feed_title_override="Indo Sport: Golf",
         exclude_groups_of_links=False,
         golf_only=True
     )
@@ -613,7 +624,7 @@ def indo_other_sports():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Other Sports",
+        feed_title_override="Indo Sport: Other Sports",
         exclude_groups_of_links=False,
         other_sports_only=True
     )
@@ -627,7 +638,7 @@ def indo_podcasts():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="FO: Indo Podcasts",
+        feed_title_override="Indo Sport: Podcasts",
         exclude_groups_of_links=False,
         podcasts_only=True
     )
@@ -656,7 +667,7 @@ def business_insider():
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
-        "FO: Business Insider"
+        "Business Insider"
     )
 
 
@@ -669,7 +680,7 @@ def forbes():
     return process_generic_feed(
         "https://www.forbes.com/feeds/popstories.xml",
         BLOCKS,
-        "FO: Forbes"
+        "Forbes"
     )
 
 
@@ -682,7 +693,7 @@ def wired():
     return process_generic_feed(
         "https://www.wired.com/feed/rss",
         BLOCKS,
-        "FO: Wired"
+        "Wired"
     )
 
 
@@ -695,7 +706,7 @@ def fortune():
     return process_generic_feed(
         "https://fortune.com/rss",
         BLOCKS,
-        "FO: Fortune"
+        "Fortune"
     )
 
 
@@ -708,7 +719,7 @@ def nyt_soccer():
     return process_generic_feed(
         "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
         BLOCKS,
-        "FO: NYT Soccer"
+        "NYT Soccer"
     )
 
 
@@ -735,7 +746,7 @@ def athletic():
     return process_generic_feed(
         "https://www.nytimes.com/athletic/rss/uk",
         BLOCKS,
-        "FO: The Athletic"
+        "The Athletic"
     )
 
 
