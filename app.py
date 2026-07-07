@@ -230,10 +230,13 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         <pubDate>{pub_date}</pubDate>
     </item>""")
 
+        # --- ADD THIS LINE TO CLEAN THE CHANNEL TITLE ---
+        feed_title_clean = feed_title_override.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
         xml_output = f"""<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
 <channel>
-    <title>{feed_title_override}</title>
+    <title>{feed_title_clean}</title>
     <link>{raw_feed.feed.get('link', '')}</link>
     <description>Filtered cloud stream</description>
     <lastBuildDate>{time.strftime('%a, %d %b %Y %H:%M:%S GMT', time.gmtime())}</lastBuildDate>
@@ -487,7 +490,7 @@ def indo_sport_irish_news():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="Indo Sport: irish_news",
+        feed_title_override="Indo Sport: Irish News",
         sport_irish_news_only=True
     )
 
@@ -498,7 +501,7 @@ def indo_sport_county():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
-        feed_title_override="Indo Sport: county",
+        feed_title_override="Indo Sport: County",
         sport_county_only=True
     )
 
