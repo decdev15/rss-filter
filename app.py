@@ -9,82 +9,30 @@ from flask import Flask, Response
 
 app = Flask(__name__)
 
-
-
 # =============================================================
 # Readme
 # =============================================================
 
 # "Indo Main" and "FI: Indo Main" include all articles except for:
-    
 # those containing the block words above;
-
 # links included in this block of code (or similar as will be updated):
-    
-            # # --- OVERLAP AVOIDANCE ---
-            # if exclude_groups_of_links and url_lower:
- 
-                # if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
-                    # continue
-
-
-
-
-
-
-
+#
+# # --- OVERLAP AVOIDANCE ---
+# if exclude_groups_of_links and url_lower:
+#     if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
+#         continue
 
 # =============================================================
 # Global variables
 # =============================================================
 
 G_BLOCK_NEGATIVE = (
-r"test123"
+    r"test123"
 )
-
 
 G_BLOCK_OTHER = (
-r"testing12"
+    r"testing12"
 )
-
-    # G_BLOCK_NEGATIVE = (
-    # r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
-    # r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
-    # r"struggles|diagnosis|hate|miserable|"
-    # r"abused|rapes|raped|murdered|murders|killing|kills|"
-    # r"fatal|fatality|fatalities|deathly|deadly|"
-    # r"attack|attacks|attacked|"
-    # r"assault|assaulted|assaults|"
-    # r"violence|violent|"
-    # r"racism|racist|ku klux Klan|kkk|"
-    # r"bomb|bombing|bombed|explosion|explosions|"
-    # r"shooting|shot|gunfire|gunman|"
-    # r"stabbed|stabbing|"
-    # r"terror|terrorism|terrorist|extremism|extremist|"
-    # r"hostage|hostages|"
-    # r"kidnap|kidnapped|kidnapping|abduction|abducted|"
-    # r"fraud|scam|scams|scamming|"
-    # r"corruption|bribery|"
-    # r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
-    # r"tragedy|tragic|"
-    # r"hospitalised|hospitalized|critical|critical condition|"
-    # r"terminal|terminally ill|"
-    # r"missing|missing person|"
-    # r"overdose|overdosed|"
-    # r"suicide|self-harm|"
-    # r"grief|mourning|bereavement|"
-    # r"burial|funeral|"
-    # r"ordeal|burglary|aggravated|vicious|protest|vandalism"
-    # )
-
-    # G_BLOCK_OTHER = (
-    # r"euromillions|housing|insurance|tax|election|"
-    # r"queer|pride|lesbian|gay|LGBQT|"
-    # r"shelbourne|bohemians|league of ireland|LOI|"
-    # r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
-    # r"Eurobasket|"
-    # r"Selena Gomez|Bieber|theatre|Lily Allen"
-    # )
 
 # =============================================================
 # DEBUG HELPER
@@ -113,10 +61,14 @@ def debug_match(title, link, compiled_regex):
     print("=================================================\n")
 
 
-# =============================================================, 
+# ============================================================= 
 # HELPER FUNCTION
 # =============================================================
-def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, politics_only=False, courts_only=False, county_only=False, business_only=False, world_news_only=False, irish_news_only=False, weather_only=False, rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, podcasts_only=False):
+def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
+                         politics_only=False, courts_only=False, county_only=False, business_only=False, 
+                         world_news_only=False, irish_news_only=False, weather_only=False, 
+                         rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, podcasts_only=False,
+                         irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -130,105 +82,82 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             title = entry.get('title', '')
             link = entry.get('link', '')
 
-
             # Create url_lower immediately here if link exists so it is globally available below
             url_lower = link.lower() if link else ""
 
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
- 
-                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/business/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/business/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
                     continue
 
-
-
-
-            # --- NEW: POLITICS ONLY MODE ---
+            # --- MAIN SECTION MODES ---
             if politics_only and '/politics/' not in url_lower:
-                continue  # Skip anything that isn't a politics article
-
-            # --- NEW: Courts ONLY MODE ---
+                continue
             if courts_only and '/courts/' not in url_lower:
-                continue  # Skip anything that isn't a courts article
-                
-            # --- NEW: county ONLY MODE ---
+                continue
             if county_only and '/county/' not in url_lower:
-                continue  # Skip anything that isn't a county article
-
-            # --- NEW: business ONLY MODE ---
+                continue
             if business_only and '/business/' not in url_lower:
-                continue  # Skip anything that isn't a business article
-
-            # --- NEW: world-news ONLY MODE ---
+                continue
             if world_news_only and '/world-news/' not in url_lower:
-                continue  # Skip anything that isn't a world-news article
-
-            # --- NEW: irish-news ONLY MODE ---
+                continue
             if irish_news_only and '/irish-news/' not in url_lower:
-                continue  # Skip anything that isn't a irish-news article
-
-            # --- NEW: weather ONLY MODE ---
+                continue
             if weather_only and '/weather/' not in url_lower:
-                continue  # Skip anything that isn't a weather article
+                continue
 
-
-
-
-
-           # --- SPORT-SPECIFIC EXCLUSIONS ---
-            # If we are pulling from the main sport RSS feed, strip out sub-sports if we aren't explicitly looking for them
-            if source_url == "https://www.independent.ie/sport/rss" and not rugby_only:
-                if '/rugby/' in url_lower:
-                    continue
-
-            if source_url == "https://www.independent.ie/sport/rss" and not gaa_only:
-                if '/gaa/' in url_lower:
-                    continue
-
-            if source_url == "https://www.independent.ie/sport/rss" and not soccer_only:
-                if '/soccer/' in url_lower:
-                    continue
-
-            if source_url == "https://www.independent.ie/sport/rss" and not golf_only:
-                if '/golf/' in url_lower:
-                    continue
-
+            # --- SPORT-SPECIFIC EXCLUSIONS ---
+            if source_url == "https://www.independent.ie/sport/rss" and not rugby_only and '/rugby/' in url_lower:
+                continue
+            if source_url == "https://www.independent.ie/sport/rss" and not gaa_only and '/gaa/' in url_lower:
+                continue
+            if source_url == "https://www.independent.ie/sport/rss" and not soccer_only and '/soccer/' in url_lower:
+                continue
+            if source_url == "https://www.independent.ie/sport/rss" and not golf_only and '/golf/' in url_lower:
+                continue
             if source_url == "https://www.independent.ie/sport/rss" and other_sports_only:
-                # If we want other-sports only, drop the main heavy-traffic sports
                 if '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower:
                     continue
 
-            # --- NEW: RUGBY ONLY MODE ---
+            # --- SPORT ONLY MODES ---
             if rugby_only and '/rugby/' not in url_lower:
                 continue
-
-            # --- NEW: GAA ONLY MODE ---
             if gaa_only and '/gaa/' not in url_lower:
                 continue
-
-            # --- NEW: SOCCER ONLY MODE ---
             if soccer_only and '/soccer/' not in url_lower:
                 continue
-
-            # --- NEW: GOLF ONLY MODE ---
             if golf_only and '/golf/' not in url_lower:
                 continue
-
-            # --- NEW: OTHER SPORTS ONLY MODE ---
-            # Ensures it's still a sport article but none of the specific sub-sports above
             if other_sports_only and ('/sport/' not in url_lower or '/rugby/' in url_lower or '/gaa/' in url_lower or '/soccer/' in url_lower or '/golf/' in url_lower):
                 continue
-
-            # --- NEW: PODCASTS ONLY MODE ---
             if podcasts_only and '/podcasts/' not in url_lower:
                 continue
 
+            # --- BUSINESS SUB-FEED EXCLUSIONS ---
+            # If pulling from the main business RSS feed, strip out specific sub-channels if we aren't targeting them
+            if source_url == "https://www.independent.ie/business/rss":
+                if not irish_business_only and '/irish-business/' in url_lower:
+                    continue
+                if not money_only and '/money/' in url_lower:
+                    continue
+                if not world_only and '/world/' in url_lower:
+                    continue
+                if not technology_only and '/technology/' in url_lower:
+                    continue
+                if not commercial_property_only and '/commercial-property/' in url_lower:
+                    continue
 
-
-
-
-
-
+            # --- BUSINESS SUB-FEED ONLY MODES ---
+            if irish_business_only and '/irish-business/' not in url_lower:
+                continue
+            if money_only and '/money/' not in url_lower:
+                continue
+            if world_only and '/world/' not in url_lower:
+                continue
+            if technology_only and '/technology/' not in url_lower:
+                continue
+            if commercial_property_only and '/commercial-property/' not in url_lower:
+                continue
 
             # =====================================================
             # FILTER LOGIC (TITLE + URL ONLY)
@@ -237,7 +166,6 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 title_l = title.lower()
                 link_l = link.lower()
 
-                # DEBUG OUTPUT (ONLY ACTIVE WHEN FILTER EXISTS)
                 debug_match(title, link, compiled_regex)
 
                 if inclusive:
@@ -253,7 +181,6 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             pub_date = entry.get('published', entry.get('updated', ''))
             guid = f"{link}#{hash(title)}"
 
-            # Extract thumbnail images
             img_url = ""
             if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
@@ -290,16 +217,11 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 </rss>"""
 
         response = Response(xml_output, status=200, mimetype='application/rss+xml')
-
-        # =====================================================
-        # FORCE FRESHNESS (IMPORTANT FOR INOREADER)
-        # =====================================================
         response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '0'
 
         return response
-
 
     except Exception as e:
         print("ERROR:", str(e))
@@ -307,29 +229,13 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
 
 # =============================================================
-# ROUTES (UNCHANGED & UPDATED)
+# ROUTES
 # =============================================================
-
-# The endpoints to be added in inoreader are a concatenation of "https://rss-filter-y4fa.onrender.com" and these app.routes below 
-# ("https://rss-filter-y4fa.onrender.com" per https://dashboard.render.com/web/srv-d93apjho3t8c73f8cicg) 
-# 
-# ... 
-# "FO: " means filtered out i.e. articles with certain words and phrases in their title are filtered out.  
-#       I have this naming removed for now, so "FO: Indo Main" now "Indo Main"
-# "FI: " means filtered in i.e. only articles with certain words and phrases are displayed
-
-
 
 ########################### INDO MAIN FEEDS 
 
-# WHERE RSS ALREADY EXISTS, AND THEN I SPLIT THESE OUT INTO MY OWN XML FEEDS
-
-# Independent.ie Main Feed (With Sport & Entertainment Exclusion)
-# https://rss-filter-y4fa.onrender.com/indo_main.xml 
-
 @app.route('/indo_main.xml')
 def indo_main():
-    # BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
         "https://www.independent.ie/rss",
@@ -338,18 +244,9 @@ def indo_main():
         exclude_groups_of_links=True
     )
 
-
-# Independent.ie Main Feed (Inclusive Phrases Only) 
-# Use this to test the exlusions above dont cause many false positives
-# https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml 
-
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
-    # Only put words here that you explicitly WANT to see. Do not include block variables.
-    # ALLOWED = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|phrase 2"
     ALLOWED = r"asdf|phrase 2"
-    
-    # Pass the named arguments exactly matching the helper function blueprint
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
@@ -357,27 +254,15 @@ def indo_main_inclusive():
         exclude_groups_of_links=True,
         inclusive=True
     )
-    
-
-# Independent.ie Sport Feed (Standard Blocklist)
-# https://rss-filter-y4fa.onrender.com/indo_sport.xml 
 
 @app.route('/indo_sport.xml')
 def indo_sport():
-    # BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|\\bpubs\\b"
     BLOCKS = r"Liverpool|\\bpubs\\b"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
         "Indo Sport"
     )
-
-
-# Independent.ie Sport Feed (Inclusive Phrases Only) 
-# Liverpool blocked in the sport feed above, so such stories will only appear here 
-# Liverpool not required to be blocked from the main feed, as links with sports and ent in the url are blocked there. 
-# Therefore general Liverpool stories could still appear there.
-# https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml 
 
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
@@ -389,10 +274,6 @@ def indo_sport_inclusive():
         inclusive=True
     )
 
-
-# Independent.ie Entertainment Feed (Standard Blocklist)
-# https://rss-filter-y4fa.onrender.com/indo_ent.xml 
-
 @app.route('/indo_ent.xml')
 def indo_ent():
     BLOCKS = f"asdf"
@@ -401,10 +282,6 @@ def indo_ent():
         BLOCKS,
         "Indo Entertainment"
     )
-
-
-# Independent.ie Entertainment Feed (Inclusive Phrases Only)
-# https://rss-filter-y4fa.onrender.com/indo_ent_inclusive.xml 
 
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
@@ -416,9 +293,6 @@ def indo_ent_inclusive():
         inclusive=True
     )
 
-# Independent.ie Business Feed (Standard Blocklist)
-# https://rss-filter-y4fa.onrender.com/indo_business.xml 
-
 @app.route('/indo_business.xml')
 def indo_business():
     BLOCKS = f"asdf"
@@ -429,139 +303,71 @@ def indo_business():
     )
 
 
-
-
-
 ########################### INDO MISC FEEDS
-
-# Independent.ie Politics Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_politics.xml
 
 @app.route('/indo_politics.xml')
 def indo_politics():
-    # Keep your blocklist active to filter out unwanted words within politics
-    # BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word 1"
     BLOCKS = r"asdf|word 1"
-    
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: Politics",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        politics_only=True       # Forces the engine to only allow /politics/ URLs
+        politics_only=True 
     )
-
-
-# Independent.ie Courts Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_courts.xml
 
 @app.route('/indo_courts.xml')
 def indo_courts():
-    # Keep your blocklist active to filter out unwanted words within courts
     BLOCKS = r"asdf|word 1"
-    
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: Courts",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        courts_only=True       # Forces the engine to only allow /courts/ URLs
+        courts_only=True
     )
-
-
-# Independent.ie County Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_county.xml
 
 @app.route('/indo_county.xml')
 def indo_county():
-    # Keep your blocklist active to filter out unwanted words within county
     BLOCKS = r"asdf|word 1"
-    
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: County",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        county_only=True       # Forces the engine to only allow /county/ URLs
+        county_only=True
     )
-    
-
-# Independent.ie business Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_business.xml
-
-@app.route('/indo_business.xml')
-def indo_business():
-    # Keep your blocklist active to filter out unwanted words within business
-    BLOCKS = r"asdf|word 1"
-    
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=BLOCKS,
-        feed_title_override="Indo Main: Business",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        business_only=True       # Forces the engine to only allow /business/ URLs
-    )
-    
-
-# Independent.ie world-news Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_world_news.xml
 
 @app.route('/indo_world_news.xml')
 def indo_world_news():
-    # Keep your blocklist active to filter out unwanted words within world-news
     BLOCKS = r"asdf|word 1"
-    
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: World News",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        world_news_only=True       # Forces the engine to only allow /world-news/ URLs
+        world_news_only=True
     )
-    
-
-# Independent.ie irish-news Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_irish_news.xml
 
 @app.route('/indo_irish_news.xml')
 def indo_irish_news():
-    # Keep your blocklist active to filter out unwanted words within irish-news
     BLOCKS = r"asdf|word 1"
-    
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: Irish News",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        irish_news_only=True       # Forces the engine to only allow /irish-news/ URLs
+        irish_news_only=True
     )
-    
-    
-# Independent.ie weather Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_weather.xml
 
 @app.route('/indo_weather.xml')
 def indo_weather():
-    # Keep your blocklist active to filter out unwanted words within indo_weather
     BLOCKS = r"asdf|word 1"
-    
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: Weather",
-        exclude_groups_of_links=False, # No need to exclude as the include below is enough, but need this line to populate the argument 
-        weather_only=True       # Forces the engine to only allow /world-news/ URLs
+        weather_only=True
     )
-        
-
-
-
 
 
 ########################### INDO SPORTS FEEDS
 
-# Independent.ie Rugby Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_rugby.xml
 @app.route('/indo_rugby.xml')
 def indo_rugby():
     BLOCKS = r"asdf|word 1"
@@ -569,13 +375,9 @@ def indo_rugby():
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Rugby",
-        exclude_groups_of_links=False,
         rugby_only=True
     )
 
-
-# Independent.ie GAA Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_gaa.xml
 @app.route('/indo_gaa.xml')
 def indo_gaa():
     BLOCKS = r"asdf|word 1"
@@ -583,13 +385,9 @@ def indo_gaa():
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: GAA",
-        exclude_groups_of_links=False,
         gaa_only=True
     )
 
-
-# Independent.ie Soccer Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_soccer.xml
 @app.route('/indo_soccer.xml')
 def indo_soccer():
     BLOCKS = r"asdf|word 1"
@@ -597,13 +395,9 @@ def indo_soccer():
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Soccer",
-        exclude_groups_of_links=False,
         soccer_only=True
     )
 
-
-# Independent.ie Golf Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_golf.xml
 @app.route('/indo_golf.xml')
 def indo_golf():
     BLOCKS = r"asdf|word 1"
@@ -611,13 +405,9 @@ def indo_golf():
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Golf",
-        exclude_groups_of_links=False,
         golf_only=True
     )
 
-
-# Independent.ie Other Sports Feed (Filters out Rugby, GAA, Soccer, Golf)
-# https://rss-filter-y4fa.onrender.com/indo_other_sports.xml
 @app.route('/indo_other_sports.xml')
 def indo_other_sports():
     BLOCKS = r"asdf|word 1"
@@ -625,13 +415,9 @@ def indo_other_sports():
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Other Sports",
-        exclude_groups_of_links=False,
         other_sports_only=True
     )
 
-
-# Independent.ie Podcasts Only Feed
-# https://rss-filter-y4fa.onrender.com/indo_podcasts.xml
 @app.route('/indo_podcasts.xml')
 def indo_podcasts():
     BLOCKS = r"asdf|word 1"
@@ -639,27 +425,64 @@ def indo_podcasts():
         source_url="https://www.independent.ie/rss",
         regex_pattern=BLOCKS,
         feed_title_override="Indo Sport: Podcasts",
-        exclude_groups_of_links=False,
         podcasts_only=True
     )
 
 
+########################### INDO BUSINESS FEEDS
 
+@app.route('/indo_irish_business.xml')
+def indo_irish_business():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: Irish Business",
+        irish_business_only=True
+    )
 
-########################### INDO ENTERTAINMENT FEEDS
+@app.route('/indo_money.xml')
+def indo_money():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: Money",
+        money_only=True
+    )
 
+@app.route('/indo_world_business.xml')
+def indo_world_business():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: World Business",
+        world_only=True
+    )
 
+@app.route('/indo_technology.xml')
+def indo_technology():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: Technology",
+        technology_only=True
+    )
 
-
-
-
-
+@app.route('/indo_commercial_property.xml')
+def indo_commercial_property():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: Commercial Property",
+        commercial_property_only=True
+    )
 
 
 ########################### OTHER FEEDS
-
-# Business Insider Feed
-# https://rss-filter-y4fa.onrender.com/business_insider.xml 
 
 @app.route('/business_insider.xml')
 def business_insider():
@@ -670,10 +493,6 @@ def business_insider():
         "Business Insider"
     )
 
-
-# Forbes Pop Stories Feed
-# https://rss-filter-y4fa.onrender.com/forbes.xml 
-
 @app.route('/forbes.xml')
 def forbes():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
@@ -682,10 +501,6 @@ def forbes():
         BLOCKS,
         "Forbes"
     )
-
-
-# Wired Feed
-# https://rss-filter-y4fa.onrender.com/wired.xml 
 
 @app.route('/wired.xml')
 def wired():
@@ -696,10 +511,6 @@ def wired():
         "Wired"
     )
 
-
-# Fortune Feed
-# https://rss-filter-y4fa.onrender.com/fortune.xml 
-
 @app.route('/fortune.xml')
 def fortune():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
@@ -709,10 +520,6 @@ def fortune():
         "Fortune"
     )
 
-
-# NY Times Soccer Feed
-# https://rss-filter-y4fa.onrender.com/nyt_soccer.xml 
-
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
@@ -721,10 +528,6 @@ def nyt_soccer():
         BLOCKS,
         "NYT Soccer"
     )
-
-
-# The Athletic (Inclusive Phrases Only)
-# https://rss-filter-y4fa.onrender.com/athletic_inclusive.xml
 
 @app.route('/athletic_inclusive.xml')
 def athletic_inclusive():
@@ -736,10 +539,6 @@ def athletic_inclusive():
         inclusive=True
     )
 
-
-# The Athletic (Standard Blocklist)
-# https://rss-filter-y4fa.onrender.com/athletic.xml
-
 @app.route('/athletic.xml')
 def athletic():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|word2"
@@ -748,7 +547,6 @@ def athletic():
         BLOCKS,
         "The Athletic"
     )
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
