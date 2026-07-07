@@ -9,6 +9,31 @@ import logging
 
 app = Flask(__name__)
 
+
+
+# =============================================================
+# Readme
+# =============================================================
+
+# "FO: Indo Main" and "FI: Indo Main" include all articles except for:
+    
+# those containing the block words above;
+
+# links included in this block of code (or similar as will be updated):
+    
+            # # --- OVERLAP AVOIDANCE ---
+            # if exclude_groups_of_links and url_lower:
+ 
+                # if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower:
+                    # continue
+
+
+
+
+
+
+
+
 # =============================================================
 # Global variables
 # =============================================================
@@ -103,7 +128,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
  
-                if '/sport/' in url_lower or '/entertainment/' in url_lower:
+                if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower:
                     continue
 
 
