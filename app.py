@@ -114,8 +114,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         sport_irish_news_only=False, other_sports_only=False, sport_podcasts_only=False, 
                         rugby_only=False, 
                         
-                        commercial_property_only=False, irish_business_only=False, money_only=False, 
-                        technology_only=False, world_only=False, 
+                        commercial_property_only=False, county_business_only=False, irish_business_only=False, irish_news_business_only=False, 
+                        money_only=False, technology_only=False, world_only=False, 
                         
                         books_only=False, celebrity_only=False, horoscopes_only=False, 
                         music_only=False, movies_only=False, television_only=False, theatre_arts_only=False):
@@ -156,7 +156,9 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
         business_filters = {
             '/commercial-property/': commercial_property_only,
+            '/county/': county_business_only,
             '/irish-business/': irish_business_only,
+            '/irish-news/': irish_news_business_only,
             '/money/': money_only,
             '/technology/': technology_only,
             '/world/': world_only     
@@ -597,6 +599,17 @@ def indo_commercial_property():
         commercial_property_only=True
     )
 
+# https://rss-filter-y4fa.onrender.com/indo_county_business.xml
+@app.route('/indo_county_business.xml')
+def indo_county_business():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: County",
+        county_business_only=True
+    )
+    
 # https://rss-filter-y4fa.onrender.com/indo_irish_business.xml
 @app.route('/indo_irish_business.xml')
 def indo_irish_business():
@@ -606,6 +619,17 @@ def indo_irish_business():
         regex_pattern=BLOCKS,
         feed_title_override="Indo Business: Irish",
         irish_business_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_irish_news_business.xml
+@app.route('/indo_irish_news_business.xml')
+def indo_irish_news_business():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/business/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Business: Irish",
+        irish_news_business_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_money.xml
