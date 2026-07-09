@@ -129,51 +129,49 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         compiled_regex = re.compile(regex_pattern, re.IGNORECASE) if regex_pattern else None
         items_xml = []
 
-        # Maps for main feed filtering
+        # --- MAP STRING ENDPOINTS TO ACCURATE VALUE/SLUG PAIRS ---
         main_filters = {
-            comment_only:'/comment/',
-            courts_only: '/courts/',
-            county_only: '/county/',
-            farming_only:'/farming/',
-            irish_news_only: '/irish-news/',
-            lifestyle_only:'/lifestyle/',
-            podcasts_only: '/podcasts/',
-            politics_only: '/politics/',
-            weather_only: '/weather/',
-            world_news_only: '/world-news/'
+            '/comment/': comment_only,
+            '/courts/': courts_only,
+            '/county/': county_only,
+            '/farming/': farming_only,
+            '/irish-news/': irish_news_only,
+            '/lifestyle/': lifestyle_only,
+            '/podcasts/': podcasts_only,
+            '/politics/': politics_only,
+            '/weather/': weather_only,
+            '/world-news/': world_news_only
         }
 
-        # Sub-feed maps
         sport_filters = {
-            sport_county_only: '/county/',
-            soccer_only: '/soccer/',
-            gaa_only: '/gaa/',
-            golf_only: '/golf/',
-            sport_irish_news_only: '/irish-news/',
-            other_sports_only: '/other-sports/',
-            sport_podcasts_only: '/podcasts/',
-            rugby_only: '/rugby/'
+            '/county/': sport_county_only,
+            '/soccer/': soccer_only,
+            '/gaa/': gaa_only,
+            '/golf/': golf_only,
+            '/irish-news/': sport_irish_news_only,
+            '/other-sports/': other_sports_only,
+            '/podcasts/': sport_podcasts_only,
+            '/rugby/': rugby_only
         }
 
         business_filters = {
-            commercial_property_only: '/commercial-property/',
-            irish_business_only: '/irish-business/',
-            money_only: '/money/',
-            technology_only: '/technology/',
-            world_only: '/world/'            
+            '/commercial-property/': commercial_property_only,
+            '/irish-business/': irish_business_only,
+            '/money/': money_only,
+            '/technology/': technology_only,
+            '/world/': world_only     
         }
 
         entertainment_filters = {
-            books_only: '/books/',
-            celebrity_only: '/celebrity/',
-            horoscopes_only: '/horoscopes/',
-            movies_only: '/movies/',
-            music_only: '/music/',
-            television_only: '/television/',
-            theatre_arts_only: '/theatre-arts/'
+            '/books/': books_only,
+            '/celebrity/': celebrity_only,
+            '/horoscopes/': horoscopes_only,
+            '/movies/': movies_only,
+            '/music/': music_only,
+            '/television/': television_only,
+            '/theatre-arts/': theatre_arts_only
         }
 
-        # Configuration structure map linking absolute URLs to their respective category dictionary
         feed_config = {
             "https://www.independent.ie/sport/rss": sport_filters,
             "https://www.independent.ie/business/rss": business_filters,
@@ -190,42 +188,32 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             if exclude_groups_of_links and url_lower:
                 if any(slug in url_lower for slug in 
                 [
-                    '/sport/', 
-                    '/entertainment/', 
-                    '/business/',    
-                    
-                    '/comment/',
-                    '/courts/',
-                    '/county/',
-                    '/farming/',
-                    '/irish-news/',
-                    '/lifestyle/',
-                    '/podcasts/',
-                    '/politics/',
-                    '/weather/',
-                    '/world-news/'
+                    '/sport/', '/entertainment/', '/business/',    
+                    '/comment/', '/courts/', '/county/', '/farming/',
+                    '/irish-news/', '/lifestyle/', '/podcasts/', 
+                    '/politics/', '/weather/', '/world-news/'
                 ]):
-                    continue  # Indented exactly one level deeper than the "if".  If indented differently the deployment fails
+                    continue  
 
             # --- MAIN SECTION MODES ---
-            if any(flag and slug not in url_lower for flag, slug in main_filters.items()):
+            if any(is_active and slug not in url_lower for slug, is_active in main_filters.items()):
                 continue
 
             # --- SUB-FEED & SUB-CHANNEL SPECIFIC MODES ---
             if source_url in feed_config:
                 current_map = feed_config[source_url]
                 
-                # CORRECT CHECK: Look at the actual boolean value of the flags
-                any_flag_active = any(flag for flag in current_map.keys())
+                # Check if ANY of the sub-feed flags are True
+                any_flag_active = any(is_active for is_active in current_map.values())
 
                 if any_flag_active:
-                    # Strict filtering: Only keep items matching the ACTIVE flag(s)
-                    if any(flag and slug not in url_lower for flag, slug in current_map.items()):
+                    # Strict filtering: Only keep items matching the active sub-channel(s)
+                    if any(is_active and slug not in url_lower for slug, is_active in current_map.items()):
                         continue
                 else:
-                    # No specific sub-flags are active (e.g. main /indo_sport.xml feed).
-                    # Strip out sub-channels that have their own dedicated routes.
-                    if any(slug in url_lower for slug in current_map.values()):
+                    # Catch-all strip-out strategy for the main section route:
+                    # Skip items if they match ANY of the sub-channels that have their own feeds
+                    if any(slug in url_lower for slug in current_map.keys()):
                         continue
 
             # =====================================================
