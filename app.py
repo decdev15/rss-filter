@@ -106,12 +106,20 @@ def debug_match(title, link, compiled_regex):
 # =============================================================
 
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
-                         politics_only=False, courts_only=False, county_only=False, business_only=False, podcasts_only=False, 
-                         world_news_only=False, irish_news_only=False, weather_only=False, comment_only=False, lifestyle_only=False, farming_only=False, 
-                         rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, 
-                         sport_podcasts_only=False, sport_irish_news_only=False, sport_county_only=False, 
-                         irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False,
-                         theatre_arts_only=False, celebrity_only=False, music_only=False, television_only=False, books_only=False, horoscopes_only=False, movies_only=False):
+
+                        comment_only=False, courts_only=False, county_only=False, farming_only=False, irish_news_only=False, 
+                        lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
+                        
+                        sport_county_only=False, soccer_only=False, gaa_only=False, golf_only=False, 
+                        sport_irish_news_only=False, other_sports_only=False, sport_podcasts_only=False, 
+                        rugby_only=False, 
+                        
+                        commercial_property_only=False, irish_business_only=False, money_only=False, 
+                        technology_only=False, world_only=False, 
+                        
+                        books_only=False, celebrity_only=False, horoscopes_only=False, 
+                        music_only=False, movies_only=False, television_only=False, theatre_arts_only=False):
+
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -123,47 +131,46 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
         # Maps for main feed filtering
         main_filters = {
-            politics_only: '/politics/',
+            comment_only:'/comment/',
             courts_only: '/courts/',
             county_only: '/county/',
-            business_only: '/business/',
-            podcasts_only: '/podcasts/',
-            world_news_only: '/world-news/',
+            farming_only:'/farming/',
             irish_news_only: '/irish-news/',
-            weather_only: '/weather/',
-            comment_only:'/comment/',
             lifestyle_only:'/lifestyle/',
-            farming_only:'/farming/'
+            podcasts_only: '/podcasts/',
+            politics_only: '/politics/',
+            weather_only: '/weather/',
+            world_news_only: '/world-news/'
         }
 
         # Sub-feed maps
         sport_filters = {
-            rugby_only: '/rugby/',
-            gaa_only: '/gaa/',
+            sport_county_only: '/county/',
             soccer_only: '/soccer/',
+            gaa_only: '/gaa/',
             golf_only: '/golf/',
+            sport_irish_news_only: '/irish-news/',
             other_sports_only: '/other-sports/',
             sport_podcasts_only: '/podcasts/',
-            sport_irish_news_only: '/irish-news/',
-            sport_county_only: '/county/'
+            rugby_only: '/rugby/'
         }
 
         business_filters = {
+            commercial_property_only: '/commercial-property/',
             irish_business_only: '/irish-business/',
             money_only: '/money/',
-            world_only: '/world/',
             technology_only: '/technology/',
-            commercial_property_only: '/commercial-property/'
+            world_only: '/world/'            
         }
 
         entertainment_filters = {
-            theatre_arts_only: '/theatre-arts/',
+            books_only: '/books/',
             celebrity_only: '/celebrity/',
+            horoscopes_only: '/horoscopes/',
+            movies_only: '/movies/',
             music_only: '/music/',
             television_only: '/television/',
-            books_only: '/books/',
-            horoscopes_only: '/horoscopes/',
-            movies_only: '/movies/'
+            theatre_arts_only: '/theatre-arts/'
         }
 
         # Configuration structure map linking absolute URLs to their respective category dictionary
@@ -181,8 +188,24 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
-                if any(slug in url_lower for slug in ['/sport/', '/entertainment/', '/business/', '/podcasts/','/politics/', '/courts/', '/county/', '/world-news/', '/irish-news/', '/weather/', '/comment/', '/lifestyle/', '/farming/']):
-                    continue
+                if any(slug in url_lower for slug in 
+                [
+                    '/sport/', 
+                    '/entertainment/', 
+                    '/business/',    
+                    
+                    '/comment/',
+                    '/courts/',
+                    '/county/',
+                    '/farming/',
+                    '/irish-news/',
+                    '/lifestyle/',
+                    '/podcasts/',
+                    '/politics/',
+                    '/weather/',
+                    '/world-news/'
+                ]):
+            continue
 
             # --- MAIN SECTION MODES ---
             if any(flag and slug not in url_lower for flag, slug in main_filters.items()):
@@ -304,7 +327,7 @@ def indo_main():
 # https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
-    ALLOWED = r"asdf|phrase 2"
+    ALLOWED = r"Liverpool|Manchester|Dublin|Roscommon"
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
@@ -326,7 +349,7 @@ def indo_sport():
 # https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
-    ALLOWED = r"Liverpool|phrase 2"
+    ALLOWED = r"Liverpool|Manchester|Dublin|Roscommon"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         ALLOWED,
