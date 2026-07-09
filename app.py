@@ -117,8 +117,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         commercial_property_only=False, county_business_only=False, irish_business_only=False, irish_news_business_only=False, 
                         money_only=False, technology_only=False, world_only=False, 
                         
-                        books_only=False, celebrity_only=False, horoscopes_only=False, 
-                        music_only=False, movies_only=False, television_only=False, theatre_arts_only=False):
+                        books_only=False, celebrity_only=False, comment_ent_only=False, county_ent_only=False, horoscopes_only=False, 
+                        irish_news_ent_only=False, music_only=False, movies_only=False, radio_only=False, television_only=False, theatre_arts_only=False):
 
 
     try:
@@ -167,9 +167,13 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         entertainment_filters = {
             '/books/': books_only,
             '/celebrity/': celebrity_only,
+            '/comment/': comment_ent_only,
+            '/county/': county_ent_only,
             '/horoscopes/': horoscopes_only,
+            '/irish-news/': irish_news_ent_only,
             '/movies/': movies_only,
             '/music/': music_only,
+            '/radio/': radio_only,
             '/television/': television_only,
             '/theatre-arts/': theatre_arts_only
         }
@@ -690,6 +694,28 @@ def indo_celebrity():
         celebrity_only=True
     )
     
+# https://rss-filter-y4fa.onrender.com/indo_comment_ent.xml
+@app.route('/indo_comment_ent.xml')
+def indo_comment_ent():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Comment",
+        comment_ent_only=True
+    )
+    
+# https://rss-filter-y4fa.onrender.com/indo_county_ent.xml
+@app.route('/indo_county_ent.xml')
+def indo_county_ent():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: County",
+        county_ent_only=True
+    )
+
 # https://rss-filter-y4fa.onrender.com/indo_horoscopes.xml
 @app.route('/indo_horoscopes.xml')
 def indo_horoscopes():
@@ -699,6 +725,17 @@ def indo_horoscopes():
         regex_pattern=BLOCKS,
         feed_title_override="Indo Entertainment: Horoscopes",
         horoscopes_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_irish_news_ent.xml
+@app.route('/indo_irish_news_ent.xml')
+def indo_irish_news_ent():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Irish News",
+        irish_news_ent_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_movies.xml
@@ -723,6 +760,17 @@ def indo_music():
         music_only=True
     )
 
+# https://rss-filter-y4fa.onrender.com/indo_radio.xml
+@app.route('/indo_radio.xml')
+def indo_radio():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/entertainment/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Entertainment: Radio",
+        radio_only=True
+    )
+    
 # https://rss-filter-y4fa.onrender.com/indo_television.xml
 @app.route('/indo_television.xml')
 def indo_television():
