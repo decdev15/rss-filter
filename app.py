@@ -277,6 +277,11 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         print("➡ BLOCKED (negative match)")
                         continue
 
+
+
+
+
+
             # =====================================================
             # XML CONSTRUCTION
             # =====================================================
@@ -286,39 +291,57 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
             img_url = ""
             
-            # 1. Try standard media content
+            # --- DEBUG LOGGING FOR BUSINESS INSIDER IMAGE TRACKING ---
+            if "businessinsider.com" in source_url and not img_url:
+                # This will print the internal keys of the first item to your Render console log
+                print("DEBUG BI ENTRY KEYS:", entry.keys())
+                if 'links' in entry:
+                    print("DEBUG BI LINKS:", entry['links'])
+
+            # 1. Direct tag parsing
             if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
+            
+            # 2. Check if feedparser assigned it straight to a flat media_content key string
+            elif 'media_content' in entry and isinstance(entry['media_content'], dict):
+                img_url = entry['media_content'].get('url', '')
+
+            # 3. Handle specific custom namespaces feedparser drops in entries
+            elif 'media_thumbnail' in entry and len(entry['media_thumbnail']) > 0:
+                img_url = entry['media_thumbnail'][0].get('url', '')
                 
-            # 2. Try common feed enclosures
+            # 4. Standard enclosure check
             elif 'enclosures' in entry and len(entry['enclosures']) > 0:
                 img_url = entry['enclosures'][0].get('url', '')
-                
-            # 3. Try standard link objects mapping images
-            elif 'links' in entry:
+
+            # 5. Fallback scan inside the standard links array mapping
+            if not img_url and 'links' in entry:
                 for l in entry['links']:
-                    if 'image' in l.get('type', '') or l.get('rel') == 'enclosure':
-                        img_url = l.get('href', '')
+                    href = l.get('href', '')
+                    rel = l.get('rel', '')
+                    type_str = l.get('type', '')
+                    # Look for anything screaming image or enclosure link
+                    if 'image' in type_str or rel == 'enclosure' or '.jpg' in href or '.png' in href:
+                        img_url = href
                         break
 
-            # 4. Deep fallback: Check if image is nested under raw keys (e.g., media_thumbnail)
-            if not img_url:
-                if 'media_thumbnail' in entry and len(entry['media_thumbnail']) > 0:
-                    img_url = entry['media_thumbnail'][0].get('url', '')
-                elif 'image' in entry:
-                    img_url = entry['image'].get('url', '')
-
-            # 5. Last resort: Extract img src if it's already embedded inside the description text itself
+            # 6. HTML string scraping backup
             if not img_url and base_desc:
                 html_img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', base_desc)
                 if html_img_match:
                     img_url = html_img_match.group(1)
 
-            # Prepend image if found and not already embedded in description text
+            # Rebuild clean final output string safely
             if img_url and img_url not in base_desc:
                 desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
             else:
                 desc_html = base_desc
+
+
+
+
+
+
 
             title_clean = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
