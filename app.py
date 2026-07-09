@@ -106,11 +106,10 @@ def debug_match(title, link, compiled_regex):
 # =============================================================
 
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
-                         politics_only=False, courts_only=False, county_only=False, business_only=False, 
+                         politics_only=False, courts_only=False, county_only=False, business_only=False, podcasts_only=False, 
                          world_news_only=False, irish_news_only=False, weather_only=False, comment_only=False, lifestyle_only=False, farming_only=False, 
                          rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, 
                          sport_podcasts_only=False, sport_irish_news_only=False, sport_county_only=False, 
-                         podcasts_only=False, 
                          irish_business_only=False, money_only=False, world_only=False, technology_only=False, commercial_property_only=False,
                          theatre_arts_only=False, celebrity_only=False, music_only=False, television_only=False, books_only=False, horoscopes_only=False, movies_only=False):
 
@@ -128,6 +127,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             courts_only: '/courts/',
             county_only: '/county/',
             business_only: '/business/',
+            podcasts_only: '/podcasts/',
             world_news_only: '/world-news/',
             irish_news_only: '/irish-news/',
             weather_only: '/weather/',
@@ -181,7 +181,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
-                if any(slug in url_lower for slug in ['/sport/', '/entertainment/', '/business/', '/politics/', '/courts/', '/county/', '/world-news/', '/irish-news/', '/weather/', '/comment/', '/lifestyle/', '/farming/']):
+                if any(slug in url_lower for slug in ['/sport/', '/entertainment/', '/business/', '/podcasts/','/politics/', '/courts/', '/county/', '/world-news/', '/irish-news/', '/weather/', '/comment/', '/lifestyle/', '/farming/']):
                     continue
 
             # --- MAIN SECTION MODES ---
@@ -399,6 +399,17 @@ def indo_county():
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: County",
         county_only=True
+    )
+    
+# https://rss-filter-y4fa.onrender.com/indo_podcasts.xml
+@app.route('/indo_podcasts.xml')
+def indo_podcasts():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Main: Podcasts",
+        podcasts_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_world_news.xml
