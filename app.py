@@ -214,16 +214,18 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- SUB-FEED & SUB-CHANNEL SPECIFIC MODES ---
             if source_url in feed_config:
                 current_map = feed_config[source_url]
-                any_flag_active = any(current_map.keys())
+                
+                # Check if ANY of the boolean flags passed into the route are actually True
+                any_flag_active = any(flag for flag in current_map.keys())
 
                 if any_flag_active:
-                    # Strict filtering: skip items missing selected sub-channel strings
+                    # Strict filtering: Only keep items matching the ACTIVE flag(s)
                     if any(flag and slug not in url_lower for flag, slug in current_map.items()):
                         continue
                 else:
-                    # Catch-all strip-out strategy for main structural categories
-                    if any(slug in url_lower for slug in current_map.values()):
-                        continue
+                    # No specific flags are True (e.g. main /indo_sport.xml feed).
+                    # Do NOT skip articles; let everything pass through to the main category stream.
+                    pass
 
             # =====================================================
             # FILTER LOGIC (TITLE + URL REGEX MATCHING)
