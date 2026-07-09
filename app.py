@@ -215,7 +215,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             if source_url in feed_config:
                 current_map = feed_config[source_url]
                 
-                # Check if ANY of the boolean flags passed into the route are actually True
+                # CORRECT CHECK: Look at the actual boolean value of the flags
                 any_flag_active = any(flag for flag in current_map.keys())
 
                 if any_flag_active:
@@ -223,9 +223,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     if any(flag and slug not in url_lower for flag, slug in current_map.items()):
                         continue
                 else:
-                    # No specific flags are True (e.g. main /indo_sport.xml feed).
-                    # Do NOT skip articles; let everything pass through to the main category stream.
-                    pass
+                    # No specific sub-flags are active (e.g. main /indo_sport.xml feed).
+                    # Strip out sub-channels that have their own dedicated routes.
+                    if any(slug in url_lower for slug in current_map.values()):
+                        continue
 
             # =====================================================
             # FILTER LOGIC (TITLE + URL REGEX MATCHING)
