@@ -195,6 +195,15 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         for entry in raw_feed.entries:
             title = entry.get('title', '')
             link = entry.get('link', '')
+            
+            if isinstance(link, list) and len(link) > 0:
+                link = link[0].get('href', '')
+            elif not link and 'links' in entry:
+                for l in entry['links']:
+                    if l.get('rel') == 'alternate' or 'href' in l:
+                        link = l.get('href', '')
+                        break            
+            
             url_lower = link.lower() if link else ""
 
             # --- OVERLAP AVOIDANCE ---
