@@ -883,7 +883,7 @@ def bi_tech():
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
         feed_title_override="Business Insider: Tech",
-        tech_only=True
+        bi_tech_only=True  # <-- Fixed parameter name
     )
 
 # https://rss-filter-y4fa.onrender.com/bi_defense.xml
@@ -894,7 +894,7 @@ def bi_defense():
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
         feed_title_override="Business Insider: Military & Defense",
-        defense_only=True
+        bi_defense_only=True  # <-- Fixed parameter name
     )
 
 # https://rss-filter-y4fa.onrender.com/bi_travel.xml
@@ -905,7 +905,7 @@ def bi_travel():
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
         feed_title_override="Business Insider: Travel",
-        travel_only=True
+        bi_travel_only=True  # <-- Fixed parameter name
     )
 
 # https://rss-filter-y4fa.onrender.com/forbes.xml
