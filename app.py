@@ -287,6 +287,9 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             img_url = ""
             if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
+            elif 'enclosures' in entry and len(entry['enclosures']) > 0:
+                # Fallback to check for RSS enclosures (common for Business Insider)
+                img_url = entry['enclosures'][0].get('url', '')
             elif 'links' in entry:
                 for l in entry['links']:
                     if 'image' in l.get('type', ''):
@@ -882,7 +885,7 @@ def bi_tech():
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
-        feed_title_override="Business Insider: Tech",
+        feed_title_override="BI: Technology",
         bi_tech_only=True  # <-- Fixed parameter name
     )
 
@@ -893,7 +896,7 @@ def bi_defense():
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
-        feed_title_override="Business Insider: Military & Defense",
+        feed_title_override="BI: Military & Defense",
         bi_defense_only=True  # <-- Fixed parameter name
     )
 
@@ -904,7 +907,7 @@ def bi_travel():
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
-        feed_title_override="Business Insider: Travel",
+        feed_title_override="BI: Travel",
         bi_travel_only=True  # <-- Fixed parameter name
     )
 
