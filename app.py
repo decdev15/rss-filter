@@ -536,7 +536,7 @@ def indo_other_sports():
         other_sports_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_podcasts.xml
+# https://rss-filter-y4fa.onrender.com/indo_sports_podcasts.xml
 @app.route('/indo_sports_podcasts.xml')
 def indo_sports_podcasts():
     BLOCKS = r"asdf|word 1"
