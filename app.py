@@ -205,7 +205,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     '/weather/',
                     '/world-news/'
                 ]):
-                continue  # Indented exactly one level deeper than the "if".  If indented differently the deployment fails
+                    continue  # Indented exactly one level deeper than the "if".  If indented differently the deployment fails
 
             # --- MAIN SECTION MODES ---
             if any(flag and slug not in url_lower for flag, slug in main_filters.items()):
