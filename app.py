@@ -31,7 +31,7 @@ G_BLOCK_NEGATIVE = (
 )
 
 G_BLOCK_OTHER = (
-    r"queer|pride|lesbian|gay|LGBQT"
+    r"test45"
 )
 
 
@@ -107,6 +107,8 @@ def debug_match(title, link, compiled_regex):
 
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
 
+                        # Irish Independent
+                        
                         comment_only=False, courts_only=False, county_only=False, farming_only=False, irish_news_only=False, 
                         lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
                         
@@ -119,8 +121,11 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         
                         books_only=False, celebrity_only=False, comment_ent_only=False, county_ent_only=False, horoscopes_only=False, 
                         irish_news_ent_only=False, lifestyle_ent_only=False, music_only=False, movies_only=False, radio_only=False, 
-                        television_only=False, theatre_arts_only=False):
+                        television_only=False, theatre_arts_only=False,
 
+                        # Business Insider
+                        
+                        bi_tech_only=False, bi_defense_only=False, bi_travel_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -223,6 +228,36 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     # Skip items if they match ANY of the sub-channels that have their own feeds
                     if any(slug in url_lower for slug in current_map.keys()):
                         continue
+
+
+            # --- BUSINESS INSIDER METADATA FILTERING ENGINE ---
+            if source_url == "https://feeds.businessinsider.com/custom/all":
+                item_categories = []
+                if hasattr(entry, 'tags'):
+                    item_categories = [tag.term for tag in entry.tags if hasattr(tag, 'term')]
+
+                insider_filters = {
+                    'Tech': bi_tech_only,
+                    'Military & Defense': bi_defense_only,
+                    'Travel': bi_travel_only
+                }
+
+                any_insider_active = any(insider_filters.values())
+
+                if any_insider_active:
+                    match_found = False
+                    for category, flag_active in insider_filters.items():
+                        if flag_active and category in item_categories:
+                            match_found = True
+                            break
+                    if not match_found:
+                        continue
+                else:
+                    if any(category in item_categories for category in insider_filters.keys()):
+                        continue
+
+
+
 
             # =====================================================
             # FILTER LOGIC (TITLE + URL REGEX MATCHING)
@@ -838,6 +873,39 @@ def business_insider():
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
         "Business Insider"
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_tech.xml
+@app.route('/bi_tech.xml')
+def bi_tech():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="Business Insider: Tech",
+        tech_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_defense.xml
+@app.route('/bi_defense.xml')
+def bi_defense():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="Business Insider: Military & Defense",
+        defense_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_travel.xml
+@app.route('/bi_travel.xml')
+def bi_travel():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="Business Insider: Travel",
+        travel_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/forbes.xml
