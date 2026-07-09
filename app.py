@@ -107,7 +107,7 @@ def debug_match(title, link, compiled_regex):
 
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
                          politics_only=False, courts_only=False, county_only=False, business_only=False, 
-                         world_news_only=False, irish_news_only=False, weather_only=False, 
+                         world_news_only=False, irish_news_only=False, weather_only=False, comment_only=False, lifestyle_only=False, farming_only=False, 
                          rugby_only=False, gaa_only=False, soccer_only=False, golf_only=False, other_sports_only=False, 
                          sport_podcasts_only=False, sport_irish_news_only=False, sport_county_only=False, 
                          podcasts_only=False, 
@@ -130,7 +130,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             business_only: '/business/',
             world_news_only: '/world-news/',
             irish_news_only: '/irish-news/',
-            weather_only: '/weather/'
+            weather_only: '/weather/',
+            comment_only:'/comment/',
+            lifestyle_only:'/lifestyle/',
+            farming_only:'/farming/'
         }
 
         # Sub-feed maps
@@ -178,7 +181,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
             # --- OVERLAP AVOIDANCE ---
             if exclude_groups_of_links and url_lower:
-                if any(slug in url_lower for slug in ['/sport/', '/entertainment/', '/business/', '/politics/', '/courts/', '/county/', '/world-news/', '/irish-news/', '/weather/']):
+                if any(slug in url_lower for slug in ['/sport/', '/entertainment/', '/business/', '/politics/', '/courts/', '/county/', '/world-news/', '/irish-news/', '/weather/', '/comment/', '/lifestyle/', '/farming/']):
                     continue
 
             # --- MAIN SECTION MODES ---
@@ -429,6 +432,39 @@ def indo_weather():
         regex_pattern=BLOCKS,
         feed_title_override="Indo Main: Weather",
         weather_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_comment.xml
+@app.route('/indo_comment.xml')
+def indo_comment():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Main: Comment",
+        comment_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_lifestyle.xml
+@app.route('/indo_lifestyle.xml')
+def indo_lifestyle():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Main: Lifestyle",
+        lifestyle_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_farming.xml
+@app.route('/indo_farming.xml')
+def indo_farming():
+    BLOCKS = r"asdf|word 1"
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=BLOCKS,
+        feed_title_override="Indo Main: Farming",
+        farming_only=True
     )
 
 
