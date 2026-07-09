@@ -285,18 +285,37 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             guid = f"{link}#{hash(title)}"
 
             img_url = ""
+            
+            # 1. Try standard media content
             if 'media_content' in entry and len(entry['media_content']) > 0:
                 img_url = entry['media_content'][0].get('url', '')
+                
+            # 2. Try common feed enclosures
             elif 'enclosures' in entry and len(entry['enclosures']) > 0:
-                # Fallback to check for RSS enclosures (common for Business Insider)
                 img_url = entry['enclosures'][0].get('url', '')
+                
+            # 3. Try standard link objects mapping images
             elif 'links' in entry:
                 for l in entry['links']:
-                    if 'image' in l.get('type', ''):
+                    if 'image' in l.get('type', '') or l.get('rel') == 'enclosure':
                         img_url = l.get('href', '')
                         break
 
-            if img_url:
+            # 4. Deep fallback: Check if image is nested under raw keys (e.g., media_thumbnail)
+            if not img_url:
+                if 'media_thumbnail' in entry and len(entry['media_thumbnail']) > 0:
+                    img_url = entry['media_thumbnail'][0].get('url', '')
+                elif 'image' in entry:
+                    img_url = entry['image'].get('url', '')
+
+            # 5. Last resort: Extract img src if it's already embedded inside the description text itself
+            if not img_url and base_desc:
+                html_img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', base_desc)
+                if html_img_match:
+                    img_url = html_img_match.group(1)
+
+            # Prepend image if found and not already embedded in description text
+            if img_url and img_url not in base_desc:
                 desc_html = f'<img src="{img_url}" style="max-width:100%; height:auto; margin-bottom:10px;" /><br/>{base_desc}'
             else:
                 desc_html = base_desc
