@@ -537,8 +537,8 @@ def indo_other_sports():
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_podcasts.xml
-@app.route('/indo_podcasts.xml')
-def indo_podcasts():
+@app.route('/indo_sports_podcasts.xml')
+def indo_sports_podcasts():
     BLOCKS = r"asdf|word 1"
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
