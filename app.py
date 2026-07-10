@@ -271,6 +271,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 any_insider_active = any(insider_filters.values())
 
                 if any_insider_active:
+                    # SUB-FEED ROUTE: Strict filtering to keep only matching active sub-channels
                     match_found = False
                     for category, flag_active in insider_filters.items():
                         if flag_active and category in item_categories:
@@ -279,7 +280,14 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     if not match_found:
                         continue
                 else:
-                    if any(category in item_categories for category in insider_filters.keys()):
+                    # MAIN FEED ROUTE: Define which specific sub-feed tags to strip out.
+                    # This ensures the main feed only drops items covered by your dedicated sub-feeds.
+                    active_sub_feed_tags = {
+                        'Artificial-intelligence', 'Careers', 'Defense', 'Economy', 
+                        'Entertainment', 'Finance', 'Health', 'Media', 'Parenting', 
+                        'Real-estate', 'Retail', 'Sports', 'Tech', 'Transportation', 'Travel'
+                    }
+                    if any(category in active_sub_feed_tags for category in item_categories):
                         continue
 
 
@@ -444,7 +452,7 @@ def indo_main_inclusive():
 # https://rss-filter-y4fa.onrender.com/indo_sport.xml
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = r"Liverpool|\\bpubs\\b"
+    BLOCKS = r"Liverpool|Philly McMahon"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
