@@ -218,15 +218,11 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     continue  
 
             # --- MAIN SECTION MODES ---
-            if 'main_filters' in globals():
-                if any(is_active and slug not in url_lower for slug, is_active in main_filters.items()):
-                    continue
-            elif 'main_filters' in locals():
-                if any(is_active and slug not in url_lower for slug, is_active in main_filters.items()):
-                    continue
+            if any(is_active and slug not in url_lower for slug, is_active in main_filters.items()):
+                continue
 
             # --- SUB-FEED & SUB-CHANNEL SPECIFIC MODES ---
-            if 'feed_config' in globals() and source_url in feed_config:
+            if source_url in feed_config:
                 current_map = feed_config[source_url]
                 
                 # Check if ANY of the sub-feed flags are True
