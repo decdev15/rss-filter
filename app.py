@@ -31,7 +31,7 @@ G_BLOCK_NEGATIVE = (
 )
 
 G_BLOCK_OTHER = (
-    r"test45"
+    r"Enoch|Trump|Farage"
 )
 
 
@@ -415,7 +415,7 @@ def indo_main():
 # https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
-    ALLOWED = r"Liverpool|Manchester|Dublin|Roscommon"
+    ALLOWED = r"Liverpool|Roscommon"
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
@@ -437,7 +437,7 @@ def indo_sport():
 # https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
-    ALLOWED = r"Liverpool|Manchester|Dublin|Roscommon"
+    ALLOWED = r"Liverpool|Roscommon"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         ALLOWED,
@@ -468,7 +468,7 @@ def indo_ent():
 # https://rss-filter-y4fa.onrender.com/indo_ent_inclusive.xml
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
-    ALLOWED = r"horan|McNally"
+    ALLOWED = r"Liverpool|Roscommon"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         ALLOWED,
