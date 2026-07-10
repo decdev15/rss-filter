@@ -248,7 +248,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             if source_url == "https://feeds.businessinsider.com/custom/all":
                 item_categories = []
                 if hasattr(entry, 'tags'):
-                    item_categories = [tag.term for tag in entry.tags if hasattr(tag, 'term')]
+                    item_categories = [tag.term.lower() for tag in entry.tags if hasattr(tag, 'term')]
 
                 # In the main xml, use "scheme="https://www.businessinsider.com/" to locate these categories
                 insider_filters = {
@@ -275,9 +275,15 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     # SUB-FEED ROUTE: Strict filtering to keep only matching active sub-channels
                     match_found = False
                     for category, flag_active in insider_filters.items():
-                        if flag_active and category in item_categories:
-                            match_found = True
-                            break
+                        if flag_active:
+                            # Special case check: Match both 'tech' and 'technology' slugs safely
+                            if category == 'tech':
+                                if 'tech' in item_categories or 'technology' in item_categories:
+                                    match_found = True
+                                    break
+                            elif category in item_categories:
+                                match_found = True
+                                break
                     if not match_found:
                         continue
                 else:
@@ -286,11 +292,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     active_sub_feed_tags = {
                         'artificial-intelligence', 'careers', 'defense', 'economy', 
                         'entertainment', 'finance', 'health', 'media', 'parenting', 
-                        'real-estate', 'retail', 'sports', 'tech', 'transportation', 'travel'
+                        'real-estate', 'retail', 'sports', 'tech', 'technology', 'transportation', 'travel'
                     }
                     if any(category in active_sub_feed_tags for category in item_categories):
                         continue
-
 
 
 
@@ -1079,7 +1084,7 @@ def bi_tech():
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
-        feed_title_override="BI: Tech",
+        feed_title_override="BI: Technology",
         bi_tech_only=True
     )
 
