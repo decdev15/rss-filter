@@ -125,7 +125,12 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
                         # Business Insider
                         
-                        bi_tech_only=False, bi_defense_only=False, bi_travel_only=False):
+                        bi_ai_only=False, bi_careers_only=False, 
+                        bi_defense_only=False, bi_economy_only=False, bi_entertainment_only=False, 
+                        bi_finance_only=False, bi_health_only=False, bi_media_only=False, 
+                        bi_parenting_only=False, bi_real_estate_only=False, bi_retail_only=False, 
+                        bi_sports_only=False, bi_tech_only=False, 
+                        bi_transportation_only=False, bi_travel_only=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -246,8 +251,20 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     item_categories = [tag.term for tag in entry.tags if hasattr(tag, 'term')]
 
                 insider_filters = {
+                    'Artificial-intelligence': bi_ai_only,
+                    'Careers': bi_careers_only,
+                    'Defense': bi_defense_only,
+                    'Economy': bi_economy_only,
+                    'Entertainment': bi_entertainment_only,
+                    'Finance': bi_finance_only,
+                    'Health': bi_health_only,
+                    'Media': bi_media_only,
+                    'Parenting': bi_parenting_only,
+                    'Real-estate': bi_real_estate_only,
+                    'Retail': bi_retail_only,
+                    'Sports': bi_sports_only,
                     'Tech': bi_tech_only,
-                    'Military & Defense': bi_defense_only,
+                    'Transportation': bi_transportation_only,
                     'Travel': bi_travel_only
                 }
 
@@ -896,6 +913,196 @@ def indo_theatre_arts():
     )
 
 
+
+
+
+
+
+########################### Business Insider Feeds
+
+    
+# https://rss-filter-y4fa.onrender.com/business_insider.xml
+@app.route('/business_insider.xml')
+def business_insider():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    return process_generic_feed(
+        "https://feeds.businessinsider.com/custom/all",
+        BLOCKS,
+        "Business Insider"
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_artificial_intelligence.xml
+@app.route('/bi_artificial_intelligence.xml')
+def bi_artificial_intelligence():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Artificial-intelligence",
+        bi_ai_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_careers.xml
+@app.route('/bi_careers.xml')
+def bi_careers():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Careers",
+        bi_careers_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_defense.xml
+@app.route('/bi_defense.xml')
+def bi_defense():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Defense",
+        bi_defense_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_economy.xml
+@app.route('/bi_economy.xml')
+def bi_economy():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Economy",
+        bi_economy_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_entertainment.xml
+@app.route('/bi_entertainment.xml')
+def bi_entertainment():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Entertainment",
+        bi_entertainment_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_finance.xml
+@app.route('/bi_finance.xml')
+def bi_finance():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Finance",
+        bi_finance_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_health.xml
+@app.route('/bi_health.xml')
+def bi_health():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Health",
+        bi_health_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_media.xml
+@app.route('/bi_media.xml')
+def bi_media():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Media",
+        bi_media_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_parenting.xml
+@app.route('/bi_parenting.xml')
+def bi_parenting():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Parenting",
+        bi_parenting_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_real_estate.xml
+@app.route('/bi_real_estate.xml')
+def bi_real_estate():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Real-estate",
+        bi_real_estate_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_retail.xml
+@app.route('/bi_retail.xml')
+def bi_retail():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Retail",
+        bi_retail_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_sports.xml
+@app.route('/bi_sports.xml')
+def bi_sports():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Sports",
+        bi_sports_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_tech.xml
+@app.route('/bi_tech.xml')
+def bi_tech():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Tech",
+        bi_tech_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_transportation.xml
+@app.route('/bi_transportation.xml')
+def bi_transportation():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Transportation",
+        bi_transportation_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/bi_travel.xml
+@app.route('/bi_travel.xml')
+def bi_travel():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=BLOCKS,
+        feed_title_override="BI: Travel",
+        bi_travel_only=True
+    )
+
+
+
+
+
+
+
+
 ########################### OTHER FEEDS
 
 # https://rss-filter-y4fa.onrender.com/athletic.xml
@@ -917,49 +1124,6 @@ def athletic_inclusive():
         ALLOWED,
         "The Athletic (FI)",
         inclusive=True
-    )
-    
-# https://rss-filter-y4fa.onrender.com/business_insider.xml
-@app.route('/business_insider.xml')
-def business_insider():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
-    return process_generic_feed(
-        "https://feeds.businessinsider.com/custom/all",
-        BLOCKS,
-        "Business Insider"
-    )
-
-# https://rss-filter-y4fa.onrender.com/bi_tech.xml
-@app.route('/bi_tech.xml')
-def bi_tech():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
-    return process_generic_feed(
-        source_url="https://feeds.businessinsider.com/custom/all",
-        regex_pattern=BLOCKS,
-        feed_title_override="BI: Technology",
-        bi_tech_only=True  # <-- Fixed parameter name
-    )
-
-# https://rss-filter-y4fa.onrender.com/bi_defense.xml
-@app.route('/bi_defense.xml')
-def bi_defense():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
-    return process_generic_feed(
-        source_url="https://feeds.businessinsider.com/custom/all",
-        regex_pattern=BLOCKS,
-        feed_title_override="BI: Military & Defense",
-        bi_defense_only=True  # <-- Fixed parameter name
-    )
-
-# https://rss-filter-y4fa.onrender.com/bi_travel.xml
-@app.route('/bi_travel.xml')
-def bi_travel():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
-    return process_generic_feed(
-        source_url="https://feeds.businessinsider.com/custom/all",
-        regex_pattern=BLOCKS,
-        feed_title_override="BI: Travel",
-        bi_travel_only=True  # <-- Fixed parameter name
     )
 
 # https://rss-filter-y4fa.onrender.com/forbes.xml
