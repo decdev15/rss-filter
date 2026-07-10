@@ -250,22 +250,23 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 if hasattr(entry, 'tags'):
                     item_categories = [tag.term for tag in entry.tags if hasattr(tag, 'term')]
 
+                # In the main xml, use "scheme="https://www.businessinsider.com/" to locate these categories
                 insider_filters = {
-                    'Artificial-intelligence': bi_ai_only,
-                    'Careers': bi_careers_only,
-                    'Defense': bi_defense_only,
-                    'Economy': bi_economy_only,
-                    'Entertainment': bi_entertainment_only,
-                    'Finance': bi_finance_only,
-                    'Health': bi_health_only,
-                    'Media': bi_media_only,
-                    'Parenting': bi_parenting_only,
-                    'Real-estate': bi_real_estate_only,
-                    'Retail': bi_retail_only,
-                    'Sports': bi_sports_only,
-                    'Tech': bi_tech_only,
-                    'Transportation': bi_transportation_only,
-                    'Travel': bi_travel_only
+                    'artificial-intelligence': bi_ai_only,
+                    'careers': bi_careers_only,
+                    'defense': bi_defense_only,
+                    'economy': bi_economy_only,
+                    'entertainment': bi_entertainment_only,
+                    'finance': bi_finance_only,
+                    'health': bi_health_only,
+                    'media': bi_media_only,
+                    'parenting': bi_parenting_only,
+                    'real-estate': bi_real_estate_only,
+                    'retail': bi_retail_only,
+                    'sports': bi_sports_only,
+                    'tech': bi_tech_only,
+                    'transportation': bi_transportation_only,
+                    'travel': bi_travel_only
                 }
 
                 any_insider_active = any(insider_filters.values())
@@ -283,9 +284,9 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     # MAIN FEED ROUTE: Define which specific sub-feed tags to strip out.
                     # This ensures the main feed only drops items covered by your dedicated sub-feeds.
                     active_sub_feed_tags = {
-                        'Artificial-intelligence', 'Careers', 'Defense', 'Economy', 
-                        'Entertainment', 'Finance', 'Health', 'Media', 'Parenting', 
-                        'Real-estate', 'Retail', 'Sports', 'Tech', 'Transportation', 'Travel'
+                        'artificial-intelligence', 'careers', 'defense', 'economy', 
+                        'entertainment', 'finance', 'health', 'media', 'parenting', 
+                        'real-estate', 'retail', 'sports', 'tech', 'transportation', 'travel'
                     }
                     if any(category in active_sub_feed_tags for category in item_categories):
                         continue
