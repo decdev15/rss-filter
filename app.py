@@ -366,7 +366,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                                 break
                     if not match_found:
                         continue
-                else:
+                elif not return_filtered_out:
                     # MAIN FEED ROUTE: Define which specific sub-feed tags to strip out.
                     # This ensures the main feed only drops items covered by your dedicated sub-feeds.
                     active_sub_feed_tags = {
@@ -1060,6 +1060,17 @@ def business_insider():
         "Business Insider"
     )
 
+# https://rss-filter-y4fa.onrender.com/business_insider_filterout.xml
+@app.route('/business_insider_filterout.xml')
+def business_insider_filterout():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    return process_generic_feed(
+        "https://feeds.businessinsider.com/custom/all",
+        BLOCKS,
+        "Business Insider Filter Out",
+        return_filtered_out=True
+    )
+
 # https://rss-filter-y4fa.onrender.com/bi_artificial_intelligence.xml
 @app.route('/bi_artificial_intelligence.xml')
 def bi_artificial_intelligence():
@@ -1228,32 +1239,7 @@ def bi_travel():
 
 
 
-
-
-
-
 ########################### OTHER FEEDS
-
-# https://rss-filter-y4fa.onrender.com/athletic.xml
-@app.route('/athletic.xml')
-def athletic():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|Liverpool|word2"
-    return process_generic_feed(
-        "https://www.nytimes.com/athletic/rss/uk",
-        BLOCKS,
-        "The Athletic"
-    )
- 
-# https://rss-filter-y4fa.onrender.com/athletic_inclusive.xml
-@app.route('/athletic_inclusive.xml')
-def athletic_inclusive():
-    ALLOWED = r"Liverpool|phrase 2"
-    return process_generic_feed(
-        "https://www.nytimes.com/athletic/rss/uk",
-        ALLOWED,
-        "The Athletic (FI)",
-        inclusive=True
-    )
 
 # https://rss-filter-y4fa.onrender.com/forbes.xml
 @app.route('/forbes.xml')
@@ -1265,6 +1251,17 @@ def forbes():
         "Forbes"
     )
 
+# https://rss-filter-y4fa.onrender.com/forbes_filterout.xml
+@app.route('/forbes_filterout.xml')
+def forbes_filterout():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    return process_generic_feed(
+        "https://www.forbes.com/feeds/popstories.xml",
+        BLOCKS,
+        "Forbes Filter Out",
+        return_filtered_out=True
+    )
+
 # https://rss-filter-y4fa.onrender.com/fortune.xml
 @app.route('/fortune.xml')
 def fortune():
@@ -1273,6 +1270,17 @@ def fortune():
         "https://fortune.com/rss",
         BLOCKS,
         "Fortune"
+    )
+
+# https://rss-filter-y4fa.onrender.com/fortune_filterout.xml
+@app.route('/fortune_filterout.xml')
+def fortune_filterout():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    return process_generic_feed(
+        "https://fortune.com/rss",
+        BLOCKS,
+        "Fortune Filter Out",
+        return_filtered_out=True
     )
     
 # https://rss-filter-y4fa.onrender.com/nyt_soccer.xml
@@ -1283,6 +1291,17 @@ def nyt_soccer():
         "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
         BLOCKS,
         "NYT Soccer"
+    )
+
+# https://rss-filter-y4fa.onrender.com/nyt_soccer_filterout.xml
+@app.route('/nyt_soccer_filterout.xml')
+def nyt_soccer_filterout():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    return process_generic_feed(
+        "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
+        BLOCKS,
+        "NYT Soccer Filter Out",
+        return_filtered_out=True
     )
     
 # https://rss-filter-y4fa.onrender.com/wired.xml
@@ -1295,6 +1314,18 @@ def wired():
         "Wired"
     )
 
+# https://rss-filter-y4fa.onrender.com/wired_filterout.xml
+@app.route('/wired_filterout.xml')
+def wired_filterout():
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    return process_generic_feed(
+        "https://www.wired.com/feed/rss",
+        BLOCKS,
+        "Wired Filter Out",
+        return_filtered_out=True
+    )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    
