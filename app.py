@@ -26,53 +26,53 @@ app = Flask(__name__)
 # Global variables
 # =============================================================
 
-G_BLOCK_NEGATIVE = (
-    r"jellyfish|struck|dangerous|investment|Geaney|verdict|argument"
-)
-
-G_BLOCK_OTHER = (
-    r"Enoch|Trump|Farage"
-)
-
-
 # G_BLOCK_NEGATIVE = (
-# r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
-# r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
-# r"struggles|diagnosis|hate|miserable|"
-# r"abused|rapes|raped|murdered|murders|killing|kills|"
-# r"fatal|fatality|fatalities|deathly|deadly|"
-# r"attack|attacks|attacked|"
-# r"assault|assaulted|assaults|"
-# r"violence|violent|"
-# r"racism|racist|ku klux Klan|kkk"
-# r"bomb|bombing|bombed|explosion|explosions|"
-# r"shooting|shot|gunfire|gunman|"
-# r"stabbed|stabbing|"
-# r"terror|terrorism|terrorist|extremism|extremist|"
-# r"hostage|hostages|"
-# r"kidnap|kidnapped|kidnapping|abduction|abducted|"
-# r"fraud|scam|scams|scamming|"
-# r"corruption|bribery|"
-# r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
-# r"tragedy|tragic|"
-# r"hospitalised|hospitalized|critical|critical condition|"
-# r"terminal|terminally ill|"
-# r"missing|missing person|"
-# r"overdose|overdosed|"
-# r"suicide|self-harm|"
-# r"grief|mourning|bereavement|"
-# r"burial|funeral|"
-# r"ordeal|burglary|aggravated|vicious|protest|vandalism"
+    # r"jellyfish|struck|dangerous|investment|Geaney|verdict|argument"
 # )
 
 # G_BLOCK_OTHER = (
-# r"euromillions|housing|insurance|tax|election|"
-# r"queer|pride|lesbian|gay|LGBQT|"
-# r"shelbourne|bohemians|league of ireland|LOI|"
-# r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
-# r"Eurobasket|"
-# r"Selena Gomez|Bieber|theatre|Lily Allen"
+    # r"Enoch|Trump|Farage"
 # )
+
+
+G_BLOCK_NEGATIVE = (
+r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
+r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
+r"struggles|diagnosis|hate|miserable|"
+r"abused|rapes|raped|murdered|murders|killing|kills|"
+r"fatal|fatality|fatalities|deathly|deadly|"
+r"attack|attacks|attacked|"
+r"assault|assaulted|assaults|"
+r"violence|violent|"
+r"racism|racist|ku klux Klan|kkk"
+r"bomb|bombing|bombed|explosion|explosions|"
+r"shooting|shot|gunfire|gunman|"
+r"stabbed|stabbing|"
+r"terror|terrorism|terrorist|extremism|extremist|"
+r"hostage|hostages|"
+r"kidnap|kidnapped|kidnapping|abduction|abducted|"
+r"fraud|scam|scams|scamming|"
+r"corruption|bribery|"
+r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
+r"tragedy|tragic|"
+r"hospitalised|hospitalized|critical|critical condition|"
+r"terminal|terminally ill|"
+r"missing|missing person|"
+r"overdose|overdosed|"
+r"suicide|self-harm|"
+r"grief|mourning|bereavement|"
+r"burial|funeral|"
+r"ordeal|burglary|aggravated|vicious|protest|vandalism"
+)
+
+G_BLOCK_OTHER = (
+r"euromillions|housing|insurance|tax|election|"
+r"queer|pride|lesbian|gay|LGBQT|"
+r"shelbourne|bohemians|league of ireland|LOI|"
+r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
+r"Eurobasket|"
+r"Selena Gomez|Bieber|theatre|Lily Allen"
+)
 
 # =============================================================
 # DEBUG HELPER
