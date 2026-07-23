@@ -287,7 +287,12 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             url_lower = link.lower() if link else ""
 
             # --- OVERLAP AVOIDANCE ---
-            if exclude_groups_of_links and url_lower:
+            # Only strip items belonging to a sub-section when we're building the
+            # "kept" (main) feed. When we're building the filtered-out feed, we
+            # deliberately let sub-section items through so that anything blocked
+            # by the regex still shows up in the filterout feed, regardless of
+            # which section it belongs to.
+            if exclude_groups_of_links and url_lower and not return_filtered_out:
                 if any(slug in url_lower for slug in 
                 [
                     '/sport/', '/entertainment/', '/business/',    
@@ -312,7 +317,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     # Strict filtering: Only keep items matching the active sub-channel(s)
                     if any(is_active and slug not in url_lower for slug, is_active in current_map.items()):
                         continue
-                else:
+                elif not return_filtered_out:
                     # Catch-all strip-out strategy for the main section route:
                     # Skip items if they match ANY of the sub-channels that have their own feeds
                     if any(slug in url_lower for slug in current_map.keys()):
@@ -671,17 +676,6 @@ def indo_comment():
         comment_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_comment_filterout.xml
-@app.route('/indo_comment_filterout.xml')
-def indo_comment_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Comment Filtered Out",
-        comment_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_courts.xml
 @app.route('/indo_courts.xml')
 def indo_courts():
@@ -690,17 +684,6 @@ def indo_courts():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Main: Courts",
         courts_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_courts_filterout.xml
-@app.route('/indo_courts_filterout.xml')
-def indo_courts_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Courts Filtered Out",
-        courts_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_county.xml
@@ -713,17 +696,6 @@ def indo_county():
         county_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_county_filterout.xml
-@app.route('/indo_county_filterout.xml')
-def indo_county_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: County Filtered Out",
-        county_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_farming.xml
 @app.route('/indo_farming.xml')
 def indo_farming():
@@ -732,17 +704,6 @@ def indo_farming():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Main: Farming",
         farming_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_farming_filterout.xml
-@app.route('/indo_farming_filterout.xml')
-def indo_farming_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Farming Filtered Out",
-        farming_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_irish_news.xml
@@ -755,17 +716,6 @@ def indo_irish_news():
         irish_news_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_irish_news_filterout.xml
-@app.route('/indo_irish_news_filterout.xml')
-def indo_irish_news_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Irish News Filtered Out",
-        irish_news_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_lifestyle.xml
 @app.route('/indo_lifestyle.xml')
 def indo_lifestyle():
@@ -774,17 +724,6 @@ def indo_lifestyle():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Main: Lifestyle",
         lifestyle_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_lifestyle_filterout.xml
-@app.route('/indo_lifestyle_filterout.xml')
-def indo_lifestyle_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Lifestyle Filtered Out",
-        lifestyle_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_podcasts.xml
@@ -797,17 +736,6 @@ def indo_podcasts():
         podcasts_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_podcasts_filterout.xml
-@app.route('/indo_podcasts_filterout.xml')
-def indo_podcasts_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Podcasts Filtered Out",
-        podcasts_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_politics.xml
 @app.route('/indo_politics.xml')
 def indo_politics():
@@ -816,17 +744,6 @@ def indo_politics():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Main: Politics",
         politics_only=True 
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_politics_filterout.xml
-@app.route('/indo_politics_filterout.xml')
-def indo_politics_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Politics Filtered Out",
-        politics_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_weather.xml
@@ -839,17 +756,6 @@ def indo_weather():
         weather_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_weather_filterout.xml
-@app.route('/indo_weather_filterout.xml')
-def indo_weather_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: Weather Filtered Out",
-        weather_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_world_news.xml
 @app.route('/indo_world_news.xml')
 def indo_world_news():
@@ -858,17 +764,6 @@ def indo_world_news():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Main: World News",
         world_news_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_world_news_filterout.xml
-@app.route('/indo_world_news_filterout.xml')
-def indo_world_news_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Main: World News Filtered Out",
-        world_news_only=True,
-        return_filtered_out=True
     )
 
 
@@ -884,17 +779,6 @@ def indo_sport_county():
         sport_county_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_sport_county_filterout.xml
-@app.route('/indo_sport_county_filterout.xml')
-def indo_sport_county_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: County Filtered Out",
-        sport_county_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_soccer.xml
 @app.route('/indo_soccer.xml')
 def indo_soccer():
@@ -903,17 +787,6 @@ def indo_soccer():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Sport: Soccer",
         soccer_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_soccer_filterout.xml
-@app.route('/indo_soccer_filterout.xml')
-def indo_soccer_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: Soccer Filtered Out",
-        soccer_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_gaa.xml
@@ -926,17 +799,6 @@ def indo_gaa():
         gaa_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_gaa_filterout.xml
-@app.route('/indo_gaa_filterout.xml')
-def indo_gaa_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: GAA Filtered Out",
-        gaa_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_golf.xml
 @app.route('/indo_golf.xml')
 def indo_golf():
@@ -945,17 +807,6 @@ def indo_golf():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Sport: Golf",
         golf_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_golf_filterout.xml
-@app.route('/indo_golf_filterout.xml')
-def indo_golf_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: Golf Filtered Out",
-        golf_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_sport_irish_news.xml
@@ -968,17 +819,6 @@ def indo_sport_irish_news():
         sport_irish_news_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_sport_irish_news_filterout.xml
-@app.route('/indo_sport_irish_news_filterout.xml')
-def indo_sport_irish_news_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: Irish News Filtered Out",
-        sport_irish_news_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_other_sports.xml
 @app.route('/indo_other_sports.xml')
 def indo_other_sports():
@@ -987,17 +827,6 @@ def indo_other_sports():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Sport: Other Sports",
         other_sports_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_other_sports_filterout.xml
-@app.route('/indo_other_sports_filterout.xml')
-def indo_other_sports_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: Other Sports Filtered Out",
-        other_sports_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_sports_podcasts.xml
@@ -1010,17 +839,6 @@ def indo_sports_podcasts():
         sport_podcasts_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_sports_podcasts_filterout.xml
-@app.route('/indo_sports_podcasts_filterout.xml')
-def indo_sports_podcasts_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: Podcasts Filtered Out",
-        sport_podcasts_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_rugby.xml
 @app.route('/indo_rugby.xml')
 def indo_rugby():
@@ -1029,17 +847,6 @@ def indo_rugby():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Sport: Rugby",
         rugby_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_rugby_filterout.xml
-@app.route('/indo_rugby_filterout.xml')
-def indo_rugby_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Sport: Rugby Filtered Out",
-        rugby_only=True,
-        return_filtered_out=True
     )
 
 
@@ -1055,17 +862,6 @@ def indo_commercial_property():
         commercial_property_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_commercial_property_filterout.xml
-@app.route('/indo_commercial_property_filterout.xml')
-def indo_commercial_property_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: Commercial Property Filtered Out",
-        commercial_property_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_county_business.xml
 @app.route('/indo_county_business.xml')
 def indo_county_business():
@@ -1074,17 +870,6 @@ def indo_county_business():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Business: County",
         county_business_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_county_business_filterout.xml
-@app.route('/indo_county_business_filterout.xml')
-def indo_county_business_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: County Filtered Out",
-        county_business_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_irish_business.xml
@@ -1097,17 +882,6 @@ def indo_irish_business():
         irish_business_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_irish_business_filterout.xml
-@app.route('/indo_irish_business_filterout.xml')
-def indo_irish_business_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: Irish Filtered Out",
-        irish_business_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_irish_news_business.xml
 @app.route('/indo_irish_news_business.xml')
 def indo_irish_news_business():
@@ -1116,17 +890,6 @@ def indo_irish_news_business():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Business: Irish News",
         irish_news_business_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_irish_news_business_filterout.xml
-@app.route('/indo_irish_news_business_filterout.xml')
-def indo_irish_news_business_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: Irish News Filtered Out",
-        irish_news_business_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_money.xml
@@ -1139,17 +902,6 @@ def indo_money():
         money_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_money_filterout.xml
-@app.route('/indo_money_filterout.xml')
-def indo_money_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: Money Filtered Out",
-        money_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_technology.xml
 @app.route('/indo_technology.xml')
 def indo_technology():
@@ -1160,17 +912,6 @@ def indo_technology():
         technology_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_technology_filterout.xml
-@app.route('/indo_technology_filterout.xml')
-def indo_technology_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: Technology Filtered Out",
-        technology_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_world_business.xml
 @app.route('/indo_world_business.xml')
 def indo_world_business():
@@ -1179,17 +920,6 @@ def indo_world_business():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Business: World",
         world_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_world_business_filterout.xml
-@app.route('/indo_world_business_filterout.xml')
-def indo_world_business_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Business: World Filtered Out",
-        world_only=True,
-        return_filtered_out=True
     )
 
 
@@ -1205,17 +935,6 @@ def indo_books():
         books_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_books_filterout.xml
-@app.route('/indo_books_filterout.xml')
-def indo_books_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Books Filtered Out",
-        books_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_celebrity.xml
 @app.route('/indo_celebrity.xml')
 def indo_celebrity():
@@ -1224,17 +943,6 @@ def indo_celebrity():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Entertainment: Celebrity",
         celebrity_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_celebrity_filterout.xml
-@app.route('/indo_celebrity_filterout.xml')
-def indo_celebrity_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Celebrity Filtered Out",
-        celebrity_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_comment_ent.xml
@@ -1247,17 +955,6 @@ def indo_comment_ent():
         comment_ent_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_comment_ent_filterout.xml
-@app.route('/indo_comment_ent_filterout.xml')
-def indo_comment_ent_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Comment Filtered Out",
-        comment_ent_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_county_ent.xml
 @app.route('/indo_county_ent.xml')
 def indo_county_ent():
@@ -1266,17 +963,6 @@ def indo_county_ent():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Entertainment: County",
         county_ent_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_county_ent_filterout.xml
-@app.route('/indo_county_ent_filterout.xml')
-def indo_county_ent_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: County Filtered Out",
-        county_ent_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_horoscopes.xml
@@ -1289,17 +975,6 @@ def indo_horoscopes():
         horoscopes_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_horoscopes_filterout.xml
-@app.route('/indo_horoscopes_filterout.xml')
-def indo_horoscopes_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Horoscopes Filtered Out",
-        horoscopes_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_irish_news_ent.xml
 @app.route('/indo_irish_news_ent.xml')
 def indo_irish_news_ent():
@@ -1308,17 +983,6 @@ def indo_irish_news_ent():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Entertainment: Irish News",
         irish_news_ent_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_irish_news_ent_filterout.xml
-@app.route('/indo_irish_news_ent_filterout.xml')
-def indo_irish_news_ent_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Irish News Filtered Out",
-        irish_news_ent_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_lifestyle_ent.xml
@@ -1331,17 +995,6 @@ def indo_lifestyle_ent():
         lifestyle_ent_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_lifestyle_ent_filterout.xml
-@app.route('/indo_lifestyle_ent_filterout.xml')
-def indo_lifestyle_ent_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Lifestyle Filtered Out",
-        lifestyle_ent_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_movies.xml
 @app.route('/indo_movies.xml')
 def indo_movies():
@@ -1350,17 +1003,6 @@ def indo_movies():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Entertainment: Movies",
         movies_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_movies_filterout.xml
-@app.route('/indo_movies_filterout.xml')
-def indo_movies_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Movies Filtered Out",
-        movies_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_music.xml
@@ -1373,17 +1015,6 @@ def indo_music():
         music_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_music_filterout.xml
-@app.route('/indo_music_filterout.xml')
-def indo_music_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Music Filtered Out",
-        music_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_radio.xml
 @app.route('/indo_radio.xml')
 def indo_radio():
@@ -1392,17 +1023,6 @@ def indo_radio():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Entertainment: Radio",
         radio_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_radio_filterout.xml
-@app.route('/indo_radio_filterout.xml')
-def indo_radio_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Radio Filtered Out",
-        radio_only=True,
-        return_filtered_out=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_television.xml
@@ -1415,17 +1035,6 @@ def indo_television():
         television_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_television_filterout.xml
-@app.route('/indo_television_filterout.xml')
-def indo_television_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Television Filtered Out",
-        television_only=True,
-        return_filtered_out=True
-    )
-
 # https://rss-filter-y4fa.onrender.com/indo_theatre_arts.xml
 @app.route('/indo_theatre_arts.xml')
 def indo_theatre_arts():
@@ -1435,18 +1044,6 @@ def indo_theatre_arts():
         feed_title_override="Indo Entertainment: Theatre & Arts",
         theatre_arts_only=True
     )
-
-# https://rss-filter-y4fa.onrender.com/indo_theatre_arts_filterout.xml
-@app.route('/indo_theatre_arts_filterout.xml')
-def indo_theatre_arts_filterout():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
-        feed_title_override="Indo Entertainment: Theatre & Arts Filtered Out",
-        theatre_arts_only=True,
-        return_filtered_out=True
-    )
-
 
 
 
