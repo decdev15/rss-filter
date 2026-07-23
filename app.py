@@ -133,18 +133,17 @@ G_BLOCK_NEGATIVE = (
     # V
     r"vandal|vandalise|vandalised|vandalism|vandals|"
     r"vicious|viciously|"
+    r"victim|victimised|"
     r"violence|violent|violently|"
     # W
     r"war|warfare|warring|wars"
     r")\b"
 )
 G_BLOCK_OTHER = (
-r"euromillions|housing|insurance|tax|election|"
 r"queer|pride|lesbian|gay|LGBQT|"
 r"shelbourne|bohemians|league of ireland|LOI|"
-r"Lowe|Schmidt|Cian Tracey|Ian Madigan|Leinster Rugby|Munster Rugby|Joey Carberry|Ronan O'Gara|Wallabies|Springboks|Prendergast|"
 r"Eurobasket|"
-r"Selena Gomez|Bieber|theatre|Lily Allen"
+r"Selena Gomez|Bieber|Lily Allen"
 )
 
 # =============================================================
