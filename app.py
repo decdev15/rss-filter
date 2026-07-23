@@ -36,35 +36,108 @@ app = Flask(__name__)
 
 
 G_BLOCK_NEGATIVE = (
-r"Garda|Gardai|abuse|rape|rapist|murder|war|Israel|Palestine|Ukraine|Missiles|Trump|Military|strikes|crime|death|dead|dies|stabbing|killed|crisis|"
-r"dire|blood|safety|cruelty|paedophile|paedophilia|offences|stolen|prison|inmate|criminal|demise|rolf harris|jimmy savile|anger|angry|"
-r"struggles|diagnosis|hate|miserable|"
-r"abused|rapes|raped|murdered|murders|killing|kills|"
-r"fatal|fatality|fatalities|deathly|deadly|"
-r"attack|attacks|attacked|"
-r"assault|assaulted|assaults|"
-r"violence|violent|"
-r"racism|racist|ku klux Klan|kkk"
-r"bomb|bombing|bombed|explosion|explosions|"
-r"shooting|shot|gunfire|gunman|"
-r"stabbed|stabbing|"
-r"terror|terrorism|terrorist|extremism|extremist|"
-r"hostage|hostages|"
-r"kidnap|kidnapped|kidnapping|abduction|abducted|"
-r"fraud|scam|scams|scamming|"
-r"corruption|bribery|"
-r"emergency|disaster|catastrophe|collapse|collapsed|collapsing|devastation|"
-r"tragedy|tragic|"
-r"hospitalised|hospitalized|critical|critical condition|"
-r"terminal|terminally ill|"
-r"missing|missing person|"
-r"overdose|overdosed|"
-r"suicide|self-harm|"
-r"grief|mourning|bereavement|"
-r"burial|funeral|"
-r"ordeal|burglary|aggravated|vicious|protest|vandalism"
+    r"\b("
+    # A
+    r"abduct|abducted|abducting|abduction|abductions|abductor|abductors|"
+    r"abuse|abused|abuser|abusers|abuses|abusing|abusive|"
+    r"aggravate|aggravated|aggravating|aggravation|"
+    r"anger|angered|angering|angers|angry|"
+    r"assault|assaulted|assaulting|assaults|"
+    r"attack|attacked|attacker|attackers|attacking|attacks|"
+    # B
+    r"bereaved|bereavement|bereavements|"
+    r"bleed|bleeding|bloodshed|bloody|"
+    r"bomb|bombed|bomber|bombers|bombing|bombings|bombs|"
+    r"bribe|bribery|bribes|bribing|"
+    r"burglar|burglaries|burglars|burglary|burgled|"
+    r"burial|burials|buried|bury|burying|"
+    # C
+    r"catastrophe|catastrophes|catastrophic|"
+    r"collapse|collapsed|collapses|collapsing|"
+    r"corrupt|corrupted|corrupting|corruption|corrupts|"
+    r"crime|crimes|criminal|criminals|"
+    r"crisis|crises|"
+    r"critical|critical condition|critically|"
+    r"cruel|cruelly|cruelty|"
+    # D
+    r"dead|deadliest|deadly|"
+    r"death|deathly|deaths|"
+    r"demise|"
+    r"devastate|devastated|devastating|devastation|"
+    r"diagnose|diagnosed|diagnoses|diagnosing|diagnosis|"
+    r"die|died|dies|dying|"
+    r"dire|"
+    r"disaster|disastrous|disasters|"
+    # E
+    r"emergencies|emergency|"
+    r"explode|exploded|explodes|exploding|explosion|explosions|explosive|explosives|"
+    r"extremism|extremist|extremists|"
+    # F
+    r"fatal|fatalities|fatality|fatally|"
+    r"fraud|fraudster|fraudsters|fraudulent|fraudulently|frauds|"
+    r"funeral|funerals|"
+    # G
+    r"garda|gardai|"
+    r"grief|grieving|grieve|grieves|"
+    r"gunfire|gunman|gunmen|gunshot|gunshots|"
+    # H
+    r"hate|hated|hateful|hater|haters|hates|hating|hatred|"
+    r"hospitalise|hospitalised|hospitalises|hospitalising|hospitalize|hospitalized|hospitalizes|hospitalizing|"
+    r"hostage|hostages|"
+    # I
+    r"inmate|inmates|"
+    r"israel|israeli|"
+    # J
+    r"jimmy savile|"
+    # K
+    r"kidnap|kidnapped|kidnapper|kidnappers|kidnapping|kidnappings|kidnaps|"
+    r"kill|killed|killer|killers|killing|killings|kills|"
+    r"kkk|ku klux klan|"
+    # M
+    r"militant|militants|military|"
+    r"miserable|miserably|misery|"
+    r"missile|missiles|"
+    r"missing|missing person|missing persons|"
+    r"mourn|mourned|mourner|mourners|mourning|mourns|"
+    r"murder|murdered|murderer|murderers|murdering|murderous|murders|"
+    # O
+    r"offence|offences|offend|offended|offender|offenders|offending|offends|"
+    r"ordeal|ordeals|"
+    r"overdose|overdosed|overdoses|overdosing|"
+    # P
+    r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|"
+    r"palestine|palestinian|"
+    r"prison|prisoner|prisoners|prisons|"
+    r"protest|protested|protester|protesters|protesting|protests|"
+    # R
+    r"racism|racist|racists|"
+    r"rape|raped|raper|rapes|raping|rapist|rapists|"
+    r"rolf harris|"
+    # S
+    r"unsafe|safeties|safety|"
+    r"scam|scammed|scammer|scammers|scamming|scams|"
+    r"self-harm|self-harming|self-harmed|"
+    r"shoot|shooter|shooters|shooting|shootings|shoots|shot|"
+    r"stab|stabbed|stabber|stabbers|stabbing|stabbings|stabs|"
+    r"steal|stealing|steals|stolen|"
+    r"strike|striker|strikers|striking|strikes|struck|"
+    r"struggle|struggled|struggles|struggling|"
+    r"suicidal|suicide|suicides|"
+    # T
+    r"terminal|terminally|terminally ill|"
+    r"terror|terrorism|terrorist|terrorists|terrorise|terrorised|terrorize|terrorized|"
+    r"tragedy|tragic|tragically|"
+    r"trump|"
+    # U
+    r"ukraine|ukrainian|"
+    # V
+    r"vandal|vandalise|vandalised|vandalism|vandals|"
+    r"vicious|viciously|"
+    r"violence|violent|violently|"
+    # W
+    r"war|warfare|warring|wars"
+    r")\b"
 )
-
 G_BLOCK_OTHER = (
 r"euromillions|housing|insurance|tax|election|"
 r"queer|pride|lesbian|gay|LGBQT|"
