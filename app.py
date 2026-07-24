@@ -31,7 +31,7 @@ app = Flask(__name__)
     # r"jellyfish|struck|dangerous|investment|Geaney|verdict|argument"
 # )
 
-# G_BLOCK_OTHER = (
+# G_BLOCK_AVOID = (
     # r"Enoch|Trump|Farage"
 # )
 
@@ -40,54 +40,34 @@ app = Flask(__name__)
 G_BLOCK_NEGATIVE = (
     r"\b("
     # A
-    r"abandon|abandoned|abandons|"
     r"abduct|abducted|abducting|abduction|abductions|abductor|abductors|"
     r"abuse|abused|abuser|abusers|abuses|abusing|abusive|"
-    r"accident|acid|accidental|"
-    r"accuse|accused|accusing|accuses|"
     r"adjourned|adjourn|"
-    r"aggravate|aggravated|aggravating|aggravation|"
-    r"anger|angered|angering|angers|angry|"
     r"anti-social|"
-    r"appeal|appealed|"
-    r"arrest|arrested|arrests"
+    r"arrested|arrests|"
     r"arson|arsonists|arsonist|"
     r"assault|assaulted|assaulting|assaults|"
-    r"attack|attacked|attacker|attackers|attacking|attacks|"
-    r"axe"
     # B
-    r"backlash|"
-    r"bail|"
     r"balaclava|balaclavas|balaclava-clad|"
-    r"ban|banned|bans|"
     r"bereaved|bereavement|bereavements|"
     r"bleed|bleeding|bloodshed|bloody|"
     r"bomb|bombed|bomber|bombers|bombing|bombings|bombs|"
     r"boy racer|boy racers|"
-    r"breach|"
     r"bribe|bribery|bribes|bribing|"
     r"burglar|burglaries|burglars|burglary|burgled|break-in|break-ins|"
-    r"burial|burials|buried|bury|burying|"
+    r"burial|burials|buried|"
     # C
     r"cancer|cancerous|leukemia|"
-    r"careless|wreckless|"
     r"catastrophe|catastrophes|catastrophic|"
     r"chaos|chaotic|"
-    r"charges|charged|"
-    r"co-accused|co-defendent|"
-    r"collapse|collapsed|collapses|collapsing|"
+    r"co-accused|co-defendant|"
     r"community service|"
-    r"concerns|concerns|concerned|"
     r"confront|confrontation|confronting|"
-    r"conviction|convictions|"
-    r"controversial|controversy|"
     r"corrupt|corrupted|corrupting|corruption|corrupts|"
-    r"courts|court"
-    r"crash|crashes|"
     r"crime|crimes|criminal|criminals|"
     r"crisis|crises|"
-    r"critical|critical condition|critically|"
-    r"cruel|cruelly|cruelty|"
+    r"critical condition|"
+    r"cruelty|"
     # D
     r"dead|deadliest|deadly|"
     r"death|deathly|deaths|in memory|in memorial|"
@@ -99,87 +79,59 @@ G_BLOCK_NEGATIVE = (
     r"die|died|dies|dying|"
     r"dire|"
     r"disabled|disability|disabilities|"
-    r"disaster|disastrous|disasters|"
-    r"dispute|"
-    r"disqualification|disqualified|"
-    r"drug|drugs|drugged|drunk|"
-    r"dumped|dump|"
+    r"drugged|"
     # E
     r"emergencies|emergency|"
-    r"explode|exploded|explodes|exploding|explosion|explosions|explosive|explosives|"
-    r"exposed|expose|"
+    r"explosives|"
     r"extremism|extremist|extremists|"
     # F
-    r"failure|failures|failed|fail|"
     r"fatal|fatalities|fatality|fatally|"
-    r"fear|fears|"
-    r"fight|fighting|"
-    r"fire|firing|fires|firearm|firearms|"
+    r"firearm|firearms|"
     r"flooding|flood|floods|"
     r"fraud|fraudster|fraudsters|fraudulent|fraudulently|frauds|"
     r"fright|frighten|frightening|"
     r"funeral|funerals|"
     # G
-    r"garda|gardai|"
     r"grief|grieving|grieve|grieves|"
     r"gunfire|gunman|gunmen|gunshot|gunshots|"
     # H
-    r"hammer|"
     r"harm|harmful|harmed|"
-    r"hate|hated|hateful|hater|haters|hates|hating|hatred|"
-    r"hit|struck|"
+    r"hateful|hater|haters|hatred|"
     r"hospitalise|hospitalised|hospitalises|hospitalising|hospitalize|hospitalized|hospitalizes|hospitalizing|"
     r"hostage|hostages|"
     r"hunger|"
     # I
     r"illness|ill|"
-    r"incident|"
-    r"injured|injury|injuries|"
-    r"inquest|"
     r"inmate|inmates|"
     r"intruder|intrude|"
     r"investigation|investigate|investigates|"
     # J
-    r"jailed|jail|jails|"
+    r"jailed|jails|jailing|"
     # K
     r"kidnap|kidnapped|kidnapper|kidnappers|kidnapping|kidnappings|kidnaps|"
     r"kill|killed|killer|killers|killing|killings|kills|"
     r"knife|knives|knifed|"
     r"kkk|ku klux klan|"
     # L 
-    r"left waiting|"
-    r"life-saving|"
     # M
-    r"mental|mental health|"
-    r"militant|militants|military|"
     r"miserable|miserably|misery|"
     r"missile|missiles|"
     r"missing|missing person|missing persons|last seen|"
     r"mourn|mourned|mourner|mourners|mourning|mourns|"
     r"murder|murdered|murderer|murderers|murdering|murderous|murders|"
     # N
-    r"Nuclear|"
     # O
     r"offence|offences|offend|offended|offender|offenders|offending|offends|"
-    r"opposition|"
     r"ordeal|ordeals|"
     r"overdose|overdosed|overdoses|overdosing|"
     # P
     r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|Epstein|rolf harris|Cosby|house of horrors|savile"
-    r"palestine|palestinian|"
-    r"pressure|"
     r"prison|prisoner|prisoners|prisons|imprisoned|"
-    r"problem|problems|problematic|"
     r"protest|protested|protester|protesters|protesting|protests|"
-    r"punches|punched|punch"
     # R
     r"racism|racist|racists|"
     r"rape|raped|raper|rapes|raping|rapist|rapists|"
-    r"regulations|"
-    r"rejected|rejects|reject|"
-    r"rescue|rescued|rescuers|rescues|"
-    r"restrictions|restrict|restricts   |"
-    r"risks|risk|risked|risking|"
+    r"reckless|"
     r"rubbish|"
     # S
     r"sadist|sadistic|sadism|"
@@ -187,25 +139,21 @@ G_BLOCK_NEGATIVE = (
     r"scam|scammed|scammer|scammers|scamming|scams|"
     r"scourge|"
     r"self-harm|self-harming|self-harmed|"
-    r"seized|seize|seizure|"
+    r"seizure|"
     r"sentences|sentencing|"
     r"sewage|"
     r"shock|shocking|"
-    r"shoot|shooter|shooters|shooting|shootings|shoots|shot|"
-    r"slammed|slams|slamming|"
     r"slapping|slap|slapped|"
     r"spectre|"
-    r"speeding|"
+    r"sportswashing|"
     r"stab|stabbed|stabber|stabbers|stabbing|stabbings|stabs|"
     r"steal|stealing|steals|stolen|"
     r"stranded|"
     r"strangling|strangled|strangle|"
-    r"strike|striker|strikers|striking|strikes|struck|"
     r"struggle|struggled|struggles|struggling|"
     r"suicidal|suicide|suicides|pieta|darkness into light|"
     r"syndrome|syndromes|"
     # T
-    r"tension|tensions|"
     r"terminal|terminally|terminally ill|"
     r"terror|terrorism|terrorist|terrorists|terrorise|terrorised|terrorize|terrorized|"
     r"theft|thefts|thieves|thief|thieving|"
@@ -213,20 +161,16 @@ G_BLOCK_NEGATIVE = (
     r"torture|tortured|tortures|torturing|"
     r"trafficking|trafficked|"
     r"tragedy|tragic|tragically|"
-    r"trial|"
-    r"trump|melania|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|"
     # U
-    r"ukraine|ukrainian|"
     r"uninsured|"
     r"unkempt|"
-    r"urgent|urgency|"
     # V
     r"vandal|vandalise|vandalised|vandalism|vandals|"
     r"vicious|viciously|"
     r"victim|victims|victimised|"
     r"violence|violent|violently|"
     # W
-    r"war|warfare|warring|wars|warship|warships|"
+    r"warfare|warship|warships|"
     r"warrant|"
     r"warning|warn|warns|"
     r"weapon|weapons|weaponise|"
@@ -239,40 +183,44 @@ G_BLOCK_NEGATIVE = (
 # Business Insider, and Fortune, and Forbes - These are business therefore create new filter for them e.g. remove filters for kill, shot, hates, 
 
 
+# TODO these should always be unambiguous per above
 
-
-G_BLOCK_OTHER = (
-r"acute|"
+G_BLOCK_AVOID = (
+# America
+    r"white house|homeland|security|Pentagon|"
 r"Around the districts|"
-r"basketball|"
-r"camogie|"
-r"charity|charities|fund-raising|fundraisers|"
-r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|"
+# Charities
+    r"charity|charities|fund-raising|fundraisers|"
 r"council housing|council houses|"
 r"Eurobasket|"
 r"e-scooters|"
 r"fines|levies|"
 r"gridlock|"
-r"guilty|"
-r"|Infantino|Hitler|Andrew Tate|"
 r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
-r"israel|israeli|Gaza|Palestine|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
-r"legal|legality|legalities|law|laws|subpoenas|subpoena|"
+# League of Ireland football
+    r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|"
+r"legal|legality|legalities|subpoenas|subpoena|"
 r"lotto|lottery|euromillions|"
-r"Madeleine McCann|Ann Widdecombe|Starmer|Burnham|"
+# People: I want to avoid, good or bad
+    r"|Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|"    
 r"period drama|"
-r"politics|politician|politicians|referendum|"
-r"probe|probing|"
-r"public consultation|"
+# Places
+    r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
+# Politics   
+        r"trump|fianna fail|fianna gael|labour party|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|politics|politician|politicians|referendum|"
 r"queer|pride|lesbian|gay|LGBQT|"
-r"Russia|Russian|Putin|Zelensky|Ukraine|Kiev|Moscow|Petersburg|"
-r"touching tribute|"
-r"Selena Gomez|Bieber|Lily Allen|"
-r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|"
-r"softball|"
+# Religion
+    r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|"
 r"solicitor|solicitors|"
-r"tax|taxes|"
-r"white house|homeland|security|Pentagon"
+# Sports
+    r"softball|camogie|basketball|"
+r"tax|taxes"
+)
+
+
+G_BLOCK_SPORT = (
+    r"\b("
+    r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
 )
 
 # =============================================================
@@ -658,7 +606,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 # https://rss-filter-y4fa.onrender.com/indo_main.xml 
 @app.route('/indo_main.xml')
 def indo_main():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/rss",
         BLOCKS,
@@ -688,7 +636,7 @@ def indo_main():
 # https://rss-filter-y4fa.onrender.com/indo_main_filterout_1.xml
 @app.route('/indo_main_filterout_1.xml')
 def indo_main_filterout_1():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/rss",
         BLOCKS,
@@ -712,7 +660,7 @@ def indo_main_inclusive():
 # https://rss-filter-y4fa.onrender.com/indo_sport.xml
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
@@ -722,7 +670,7 @@ def indo_sport():
 # https://rss-filter-y4fa.onrender.com/indo_sport_filterout_1.xml
 @app.route('/indo_sport_filterout_1.xml')
 def indo_sport_filterout_1():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
@@ -745,7 +693,7 @@ def indo_sport_inclusive():
 # https://rss-filter-y4fa.onrender.com/indo_business.xml
 @app.route('/indo_business.xml')
 def indo_business():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/business/rss",
         BLOCKS,
@@ -755,7 +703,7 @@ def indo_business():
 # https://rss-filter-y4fa.onrender.com/indo_business_filterout_1.xml
 @app.route('/indo_business_filterout_1.xml')
 def indo_business_filterout_1():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/business/rss",
         BLOCKS,
@@ -768,7 +716,7 @@ def indo_business_filterout_1():
 # https://rss-filter-y4fa.onrender.com/indo_ent.xml
 @app.route('/indo_ent.xml')
 def indo_ent():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
@@ -778,7 +726,7 @@ def indo_ent():
 # https://rss-filter-y4fa.onrender.com/indo_ent_filterout_1.xml
 @app.route('/indo_ent_filterout_1.xml')
 def indo_ent_filterout_1():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
@@ -806,7 +754,7 @@ def indo_ent_inclusive():
 def indo_comment():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Comment",
         comment_only=True
     )
@@ -816,7 +764,7 @@ def indo_comment():
 def indo_courts():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Courts",
         courts_only=True
     )
@@ -826,7 +774,7 @@ def indo_courts():
 def indo_county():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: County",
         county_only=True
     )
@@ -836,7 +784,7 @@ def indo_county():
 def indo_farming():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Farming",
         farming_only=True
     )
@@ -846,7 +794,7 @@ def indo_farming():
 def indo_irish_news():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Irish News",
         irish_news_only=True
     )
@@ -856,7 +804,7 @@ def indo_irish_news():
 def indo_lifestyle():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Lifestyle",
         lifestyle_only=True
     )
@@ -866,7 +814,7 @@ def indo_lifestyle():
 def indo_podcasts():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Podcasts",
         podcasts_only=True
     )
@@ -876,7 +824,7 @@ def indo_podcasts():
 def indo_politics():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Politics",
         politics_only=True 
     )
@@ -886,7 +834,7 @@ def indo_politics():
 def indo_weather():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: Weather",
         weather_only=True
     )
@@ -896,7 +844,7 @@ def indo_weather():
 def indo_world_news():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: World News",
         world_news_only=True
     )
@@ -909,7 +857,7 @@ def indo_world_news():
 def indo_sport_county():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: County",
         sport_county_only=True
     )
@@ -919,7 +867,7 @@ def indo_sport_county():
 def indo_soccer():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Soccer",
         soccer_only=True
     )
@@ -929,7 +877,7 @@ def indo_soccer():
 def indo_gaa():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: GAA",
         gaa_only=True
     )
@@ -939,7 +887,7 @@ def indo_gaa():
 def indo_golf():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Golf",
         golf_only=True
     )
@@ -949,7 +897,7 @@ def indo_golf():
 def indo_sport_irish_news():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Irish News",
         sport_irish_news_only=True
     )
@@ -959,7 +907,7 @@ def indo_sport_irish_news():
 def indo_other_sports():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Other Sports",
         other_sports_only=True
     )
@@ -969,7 +917,7 @@ def indo_other_sports():
 def indo_sports_podcasts():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Podcasts",
         sport_podcasts_only=True
     )
@@ -979,7 +927,7 @@ def indo_sports_podcasts():
 def indo_rugby():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Rugby",
         rugby_only=True
     )
@@ -989,7 +937,7 @@ def indo_rugby():
 def indo_horse_racing():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Sport: Horse Racing",
         horse_racing_only=True
     )
@@ -1002,7 +950,7 @@ def indo_horse_racing():
 def indo_commercial_property():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: Commercial Property",
         commercial_property_only=True
     )
@@ -1012,7 +960,7 @@ def indo_commercial_property():
 def indo_county_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: County",
         county_business_only=True
     )
@@ -1022,7 +970,7 @@ def indo_county_business():
 def indo_irish_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: Irish",
         irish_business_only=True
     )
@@ -1032,7 +980,7 @@ def indo_irish_business():
 def indo_irish_news_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: Irish News",
         irish_news_business_only=True
     )
@@ -1042,7 +990,7 @@ def indo_irish_news_business():
 def indo_money():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: Money",
         money_only=True
     )
@@ -1052,7 +1000,7 @@ def indo_money():
 def indo_technology():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: Technology",
         technology_only=True
     )
@@ -1062,7 +1010,7 @@ def indo_technology():
 def indo_world_business():
     return process_generic_feed(
         source_url="https://www.independent.ie/business/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Business: World",
         world_only=True
     )
@@ -1075,7 +1023,7 @@ def indo_world_business():
 def indo_books():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Books",
         books_only=True
     )
@@ -1085,7 +1033,7 @@ def indo_books():
 def indo_celebrity():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Celebrity",
         celebrity_only=True
     )
@@ -1095,7 +1043,7 @@ def indo_celebrity():
 def indo_comment_ent():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Comment",
         comment_ent_only=True
     )
@@ -1105,7 +1053,7 @@ def indo_comment_ent():
 def indo_county_ent():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: County",
         county_ent_only=True
     )
@@ -1115,7 +1063,7 @@ def indo_county_ent():
 def indo_horoscopes():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Horoscopes",
         horoscopes_only=True
     )
@@ -1125,7 +1073,7 @@ def indo_horoscopes():
 def indo_irish_news_ent():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Irish News",
         irish_news_ent_only=True
     )
@@ -1135,7 +1083,7 @@ def indo_irish_news_ent():
 def indo_lifestyle_ent():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Lifestyle",
         lifestyle_ent_only=True
     )
@@ -1145,7 +1093,7 @@ def indo_lifestyle_ent():
 def indo_movies():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Movies",
         movies_only=True
     )
@@ -1155,7 +1103,7 @@ def indo_movies():
 def indo_music():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Music",
         music_only=True
     )
@@ -1165,7 +1113,7 @@ def indo_music():
 def indo_radio():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Radio",
         radio_only=True
     )
@@ -1175,7 +1123,7 @@ def indo_radio():
 def indo_television():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Television",
         television_only=True
     )
@@ -1185,7 +1133,7 @@ def indo_television():
 def indo_theatre_arts():
     return process_generic_feed(
         source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Theatre & Arts",
         theatre_arts_only=True
     )
@@ -1198,7 +1146,7 @@ def indo_theatre_arts():
 # https://rss-filter-y4fa.onrender.com/business_insider.xml
 @app.route('/business_insider.xml')
 def business_insider():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
@@ -1208,7 +1156,7 @@ def business_insider():
 # https://rss-filter-y4fa.onrender.com/business_insider_filterout.xml
 @app.route('/business_insider_filterout.xml')
 def business_insider_filterout():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
@@ -1219,7 +1167,7 @@ def business_insider_filterout():
 # https://rss-filter-y4fa.onrender.com/bi_artificial_intelligence.xml
 @app.route('/bi_artificial_intelligence.xml')
 def bi_artificial_intelligence():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1230,7 +1178,7 @@ def bi_artificial_intelligence():
 # https://rss-filter-y4fa.onrender.com/bi_careers.xml
 @app.route('/bi_careers.xml')
 def bi_careers():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1241,7 +1189,7 @@ def bi_careers():
 # https://rss-filter-y4fa.onrender.com/bi_defense.xml
 @app.route('/bi_defense.xml')
 def bi_defense():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1252,7 +1200,7 @@ def bi_defense():
 # https://rss-filter-y4fa.onrender.com/bi_economy.xml
 @app.route('/bi_economy.xml')
 def bi_economy():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1263,7 +1211,7 @@ def bi_economy():
 # https://rss-filter-y4fa.onrender.com/bi_entertainment.xml
 @app.route('/bi_entertainment.xml')
 def bi_entertainment():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1274,7 +1222,7 @@ def bi_entertainment():
 # https://rss-filter-y4fa.onrender.com/bi_finance.xml
 @app.route('/bi_finance.xml')
 def bi_finance():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1285,7 +1233,7 @@ def bi_finance():
 # https://rss-filter-y4fa.onrender.com/bi_health.xml
 @app.route('/bi_health.xml')
 def bi_health():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1296,7 +1244,7 @@ def bi_health():
 # https://rss-filter-y4fa.onrender.com/bi_media.xml
 @app.route('/bi_media.xml')
 def bi_media():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1307,7 +1255,7 @@ def bi_media():
 # https://rss-filter-y4fa.onrender.com/bi_parenting.xml
 @app.route('/bi_parenting.xml')
 def bi_parenting():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1318,7 +1266,7 @@ def bi_parenting():
 # https://rss-filter-y4fa.onrender.com/bi_real_estate.xml
 @app.route('/bi_real_estate.xml')
 def bi_real_estate():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1329,7 +1277,7 @@ def bi_real_estate():
 # https://rss-filter-y4fa.onrender.com/bi_retail.xml
 @app.route('/bi_retail.xml')
 def bi_retail():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1340,7 +1288,7 @@ def bi_retail():
 # https://rss-filter-y4fa.onrender.com/bi_sports.xml
 @app.route('/bi_sports.xml')
 def bi_sports():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1351,7 +1299,7 @@ def bi_sports():
 # https://rss-filter-y4fa.onrender.com/bi_tech.xml
 @app.route('/bi_tech.xml')
 def bi_tech():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1362,7 +1310,7 @@ def bi_tech():
 # https://rss-filter-y4fa.onrender.com/bi_transportation.xml
 @app.route('/bi_transportation.xml')
 def bi_transportation():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1373,7 +1321,7 @@ def bi_transportation():
 # https://rss-filter-y4fa.onrender.com/bi_travel.xml
 @app.route('/bi_travel.xml')
 def bi_travel():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1389,7 +1337,7 @@ def bi_travel():
 # https://rss-filter-y4fa.onrender.com/forbes.xml
 @app.route('/forbes.xml')
 def forbes():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.forbes.com/feeds/popstories.xml",
         BLOCKS,
@@ -1399,7 +1347,7 @@ def forbes():
 # https://rss-filter-y4fa.onrender.com/forbes_filterout.xml
 @app.route('/forbes_filterout.xml')
 def forbes_filterout():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.forbes.com/feeds/popstories.xml",
         BLOCKS,
@@ -1410,7 +1358,7 @@ def forbes_filterout():
 # https://rss-filter-y4fa.onrender.com/fortune.xml
 @app.route('/fortune.xml')
 def fortune():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://fortune.com/rss",
         BLOCKS,
@@ -1420,7 +1368,7 @@ def fortune():
 # https://rss-filter-y4fa.onrender.com/fortune_filterout.xml
 @app.route('/fortune_filterout.xml')
 def fortune_filterout():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://fortune.com/rss",
         BLOCKS,
@@ -1431,7 +1379,7 @@ def fortune_filterout():
 # https://rss-filter-y4fa.onrender.com/nyt_soccer.xml
 @app.route('/nyt_soccer.xml')
 def nyt_soccer():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
         BLOCKS,
@@ -1441,7 +1389,7 @@ def nyt_soccer():
 # https://rss-filter-y4fa.onrender.com/nyt_soccer_filterout.xml
 @app.route('/nyt_soccer_filterout.xml')
 def nyt_soccer_filterout():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
         BLOCKS,
@@ -1452,7 +1400,7 @@ def nyt_soccer_filterout():
 # https://rss-filter-y4fa.onrender.com/wired.xml
 @app.route('/wired.xml')
 def wired():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.wired.com/feed/rss",
         BLOCKS,
@@ -1462,7 +1410,7 @@ def wired():
 # https://rss-filter-y4fa.onrender.com/wired_filterout.xml
 @app.route('/wired_filterout.xml')
 def wired_filterout():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}|word1|word2"
     return process_generic_feed(
         "https://www.wired.com/feed/rss",
         BLOCKS,
