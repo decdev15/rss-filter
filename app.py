@@ -190,6 +190,7 @@ G_BLOCK_NEGATIVE = (
     r"stab|stabbed|stabber|stabbers|stabbing|stabbings|stabs|"
     r"steal|stealing|steals|stolen|"
     r"stranded|"
+    r"strangling|strangled|strangle|"
     r"strike|striker|strikers|striking|strikes|struck|"
     r"struggle|struggled|struggles|struggling|"
     r"suicidal|suicide|suicides|pieta|darkness into light|"
@@ -223,6 +224,12 @@ G_BLOCK_NEGATIVE = (
     r"worrying|worry"
     r")\b"
 )
+
+# Business Insider, and Fortune, and Forbes - These are business therefore create new filter for them e.g. remove filters for kill, shot, hates, 
+
+
+
+
 G_BLOCK_OTHER = (
 r"Around the districts|"
 r"basketball|"
@@ -483,7 +490,12 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # =====================================================
             base_desc = entry.get('summary', entry.get('description', ''))
             pub_date = entry.get('published', entry.get('updated', ''))
-            guid = f"{link}#{hash(title)}"
+            # Use a deterministic hash (not Python's built-in hash(), which is
+            # randomised per process) so guids stay stable across restarts/cold-starts -
+            # otherwise Render spinning the app down and back up would make every
+            # article look "new" again to feed readers.
+            title_hash = hashlib.md5(title.encode('utf-8')).hexdigest()
+            guid = f"{link}#{title_hash}"
 
             img_url = ""
             
@@ -650,8 +662,8 @@ def indo_main():
     # Because /indo_main.xml never modifies or saves the data on your server, filtering an article out of indo_main has zero impact on indo_politics.
     # Every sub-feed gets a clean slate directly from the source every single time it runs.
 
-# https://rss-filter-y4fa.onrender.com/indo_main_filterout.xml
-@app.route('/indo_main_filterout.xml')
+# https://rss-filter-y4fa.onrender.com/indo_main_filterout_1.xml
+@app.route('/indo_main_filterout_1.xml')
 def indo_main_filterout():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
@@ -684,8 +696,8 @@ def indo_sport():
         "Indo Sport"
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_sport_filterout.xml
-@app.route('/indo_sport_filterout.xml')
+# https://rss-filter-y4fa.onrender.com/indo_sport_filterout_1.xml
+@app.route('/indo_sport_filterout_1.xml')
 def indo_sport_filterout():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
@@ -717,8 +729,8 @@ def indo_business():
         "Indo Business"
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_business_filterout.xml
-@app.route('/indo_business_filterout.xml')
+# https://rss-filter-y4fa.onrender.com/indo_business_filterout_1.xml
+@app.route('/indo_business_filterout_1.xml')
 def indo_business_filterout():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
@@ -740,8 +752,8 @@ def indo_ent():
         "Indo Entertainment"
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_ent_filterout.xml
-@app.route('/indo_ent_filterout.xml')
+# https://rss-filter-y4fa.onrender.com/indo_ent_filterout_1.xml
+@app.route('/indo_ent_filterout_1.xml')
 def indo_ent_filterout():
     BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
@@ -1174,7 +1186,7 @@ def business_insider_filterout():
 # https://rss-filter-y4fa.onrender.com/bi_artificial_intelligence.xml
 @app.route('/bi_artificial_intelligence.xml')
 def bi_artificial_intelligence():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1185,7 +1197,7 @@ def bi_artificial_intelligence():
 # https://rss-filter-y4fa.onrender.com/bi_careers.xml
 @app.route('/bi_careers.xml')
 def bi_careers():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1196,7 +1208,7 @@ def bi_careers():
 # https://rss-filter-y4fa.onrender.com/bi_defense.xml
 @app.route('/bi_defense.xml')
 def bi_defense():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1207,7 +1219,7 @@ def bi_defense():
 # https://rss-filter-y4fa.onrender.com/bi_economy.xml
 @app.route('/bi_economy.xml')
 def bi_economy():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1218,7 +1230,7 @@ def bi_economy():
 # https://rss-filter-y4fa.onrender.com/bi_entertainment.xml
 @app.route('/bi_entertainment.xml')
 def bi_entertainment():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1229,7 +1241,7 @@ def bi_entertainment():
 # https://rss-filter-y4fa.onrender.com/bi_finance.xml
 @app.route('/bi_finance.xml')
 def bi_finance():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1240,7 +1252,7 @@ def bi_finance():
 # https://rss-filter-y4fa.onrender.com/bi_health.xml
 @app.route('/bi_health.xml')
 def bi_health():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1251,7 +1263,7 @@ def bi_health():
 # https://rss-filter-y4fa.onrender.com/bi_media.xml
 @app.route('/bi_media.xml')
 def bi_media():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1262,7 +1274,7 @@ def bi_media():
 # https://rss-filter-y4fa.onrender.com/bi_parenting.xml
 @app.route('/bi_parenting.xml')
 def bi_parenting():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1273,7 +1285,7 @@ def bi_parenting():
 # https://rss-filter-y4fa.onrender.com/bi_real_estate.xml
 @app.route('/bi_real_estate.xml')
 def bi_real_estate():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1284,7 +1296,7 @@ def bi_real_estate():
 # https://rss-filter-y4fa.onrender.com/bi_retail.xml
 @app.route('/bi_retail.xml')
 def bi_retail():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1295,7 +1307,7 @@ def bi_retail():
 # https://rss-filter-y4fa.onrender.com/bi_sports.xml
 @app.route('/bi_sports.xml')
 def bi_sports():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1306,7 +1318,7 @@ def bi_sports():
 # https://rss-filter-y4fa.onrender.com/bi_tech.xml
 @app.route('/bi_tech.xml')
 def bi_tech():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1317,7 +1329,7 @@ def bi_tech():
 # https://rss-filter-y4fa.onrender.com/bi_transportation.xml
 @app.route('/bi_transportation.xml')
 def bi_transportation():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1328,7 +1340,7 @@ def bi_transportation():
 # https://rss-filter-y4fa.onrender.com/bi_travel.xml
 @app.route('/bi_travel.xml')
 def bi_travel():
-    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}"
+    BLOCKS = f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
