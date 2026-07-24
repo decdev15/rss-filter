@@ -900,7 +900,7 @@ def indo_county_wexford():
         source_url="https://www.independent.ie/rss",
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: County: Wexford",
-        county_only=True
+        county_wexford_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_county_wicklow.xml
@@ -910,7 +910,7 @@ def indo_county_wicklow():
         source_url="https://www.independent.ie/rss",
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: County: Wicklow",
-        county_only=True
+        county_wicklow_only=True
     )
     
 # https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
@@ -920,7 +920,7 @@ def indo_county_kerry():
         source_url="https://www.independent.ie/rss",
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: County: Kerry",
-        county_only=True
+        county_kerry_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
@@ -930,7 +930,7 @@ def indo_county_louth():
         source_url="https://www.independent.ie/rss",
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Main: County: Louth",
-        county_only=True
+        county_louth_only=True
     )    
 
 
