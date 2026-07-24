@@ -39,7 +39,10 @@ app = Flask(__name__)
 # Global block word patterns
 G_CHARITIES = r"charity|charities|fund-raising|fundraisers"
 G_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
-G_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman" 
+G_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers" 
+G_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
+G_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
+G_HOUSING = r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential"
 
 # TODO These should be words that are always negative in every context.  Use other blocks where there is ambiguity e.g. "hits" can be music hits or an attack
 G_BLOCK_NEGATIVE = (
@@ -142,7 +145,7 @@ r"\b("
     # S
     r"sadist|sadistic|sadism|"
     r"safeties|safety|unsafe|"
-    r"scam|scammed|scammer|scammers|scamming|scams|"
+    f"{G_SCAMS}|"
     r"scourge|"
     r"self-harm|self-harming|self-harmed|"
     r"seizure|"
@@ -205,7 +208,8 @@ r"\b("
     r"e-scooters|"
     r"fines|levies|"
     r"gridlock|"
-    r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
+    f"{G_HOUSING}|"
+    f"inflation|inflationary|"
     # League of Ireland football
     f"{G_LOI}|"
     r"legal|legality|legalities|subpoenas|subpoena|"
@@ -213,7 +217,7 @@ r"\b("
     # People: I want to avoid articles about, good or bad
     f"{G_PEOPLE}|"
     # Places
-    r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
+    f"{G_PLACES}|"
     # Politics   
     r"trump|fianna fail|fianna gael|labour party|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|politics|politician|politicians|referendum|"
     r"queer|pride|lesbian|gay|LGBQT|"
@@ -235,6 +239,7 @@ r"\b("
     f"{G_LOI}|"
     # People: I want to avoid articles about, good or bad
     f"{G_PEOPLE}|"
+    f"{G_PLACES}|"
     r"zzzz"
 r")\b"
 )
@@ -243,8 +248,10 @@ r")\b"
 G_BLOCK_ENTERTAINMENT = (
 r"\b("
     r"aaaa|"
+    f"{G_HOUSING}|"
     # People: I want to avoid articles about, good or bad
     f"{G_PEOPLE}|"
+    f"{G_PLACES}|"
     r"period drama|"
     r"zzzz"
 r")\b"
@@ -257,8 +264,12 @@ r"\b("
     r"Budget|Budgets|"
     # Charities
     f"{G_CHARITIES}|"
+    f"{G_HOUSING}|"
+    f"inflation|inflationary|"
     # People: I want to avoid articles about, good or bad
     f"{G_PEOPLE}|"
+    f"{G_PLACES}|"
+    f"{G_SCAMS}|"
     r"zzzz"
 r")\b"
 )
