@@ -5,6 +5,7 @@ import requests
 import time
 import sys
 import logging
+import hashlib
 from flask import Flask, Response
 
 app = Flask(__name__)
