@@ -36,9 +36,15 @@ app = Flask(__name__)
 # )
 
 
+# Global block word patterns
+G_CHARITIES = r"charity|charities|fund-raising|fundraisers"
+G_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
+G_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman" 
+
 # TODO These should be words that are always negative in every context.  Use other blocks where there is ambiguity e.g. "hits" can be music hits or an attack
 G_BLOCK_NEGATIVE = (
 r"\b("
+    r"aaaa|"
     # A
     r"abduct|abducted|abducting|abduction|abductions|abductor|abductors|"
     r"abuse|abused|abuser|abusers|abuses|abusing|abusive|"
@@ -176,7 +182,8 @@ r"\b("
     r"weapon|weapons|weaponise|"
     r"woe|woes|"
     r"wildfire|wildfires|fire|fires|firing|"
-    r"worrying|worry"
+    r"worrying|worry|"
+    r"zzzz"
 r")\b"
 )
 
@@ -187,11 +194,12 @@ r")\b"
 
 G_BLOCK_AVOID = (
 r"\b("
+    r"aaaa|"
     # America
-    r"white house|homeland|security|Pentagon|"
+    r"white house|Pentagon|"
     r"Around the districts|"
     # Charities
-    r"charity|charities|fund-raising|fundraisers|"
+    f"{G_CHARITIES}|"
     r"council housing|council houses|"
     r"Eurobasket|"
     r"e-scooters|"
@@ -199,12 +207,11 @@ r"\b("
     r"gridlock|"
     r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
     # League of Ireland football
-    r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|"
+    f"{G_LOI}|"
     r"legal|legality|legalities|subpoenas|subpoena|"
     r"lotto|lottery|euromillions|"
     # People: I want to avoid articles about, good or bad
-    r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|"    
-    r"period drama|"
+    f"{G_PEOPLE}|"
     # Places
     r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
     # Politics   
@@ -215,29 +222,44 @@ r"\b("
     r"solicitor|solicitors|"
     # Sports
     r"softball|camogie|basketball|"
-    r"tax|taxes"
+    r"tax|taxes|"
+    r"zzzz"
 r")\b"
 )
 
 
 G_BLOCK_SPORT = (
 r"\b("
+    r"aaaa|"
     # league of Ireland 
-    r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
+    f"{G_LOI}|"
+    # People: I want to avoid articles about, good or bad
+    f"{G_PEOPLE}|"
+    r"zzzz"
 r")\b"
 )
 
 
 G_BLOCK_ENTERTAINMENT = (
 r"\b("
-    r"XXXX"
+    r"aaaa|"
+    # People: I want to avoid articles about, good or bad
+    f"{G_PEOPLE}|"
+    r"period drama|"
+    r"zzzz"
 r")\b"
 )
 
 
 G_BLOCK_BUSINESS = (
 r"\b("
-    r"Budget|Budgets"
+    r"aaaa|"
+    r"Budget|Budgets|"
+    # Charities
+    f"{G_CHARITIES}|"
+    # People: I want to avoid articles about, good or bad
+    f"{G_PEOPLE}|"
+    r"zzzz"
 r")\b"
 )
 
