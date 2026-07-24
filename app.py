@@ -186,6 +186,7 @@ G_BLOCK_NEGATIVE = (
 # TODO these should always be unambiguous per above
 
 G_BLOCK_AVOID = (
+r"\b("
 # America
     r"white house|homeland|security|Pentagon|"
 r"Around the districts|"
@@ -215,6 +216,7 @@ r"solicitor|solicitors|"
 # Sports
     r"softball|camogie|basketball|"
 r"tax|taxes"
+r")\b"
 )
 
 
