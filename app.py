@@ -36,6 +36,7 @@ app = Flask(__name__)
 # )
 
 
+# TODO These should be words that are always negative in every context.  Use other blocks where there is ambiguity e.g. "hits" can be music hits or an attack
 G_BLOCK_NEGATIVE = (
     r"\b("
     # A
@@ -53,6 +54,7 @@ G_BLOCK_NEGATIVE = (
     r"arson|arsonists|arsonist|"
     r"assault|assaulted|assaulting|assaults|"
     r"attack|attacked|attacker|attackers|attacking|attacks|"
+    r"axe"
     # B
     r"backlash|"
     r"bail|"
@@ -70,6 +72,7 @@ G_BLOCK_NEGATIVE = (
     r"cancer|cancerous|leukemia|"
     r"careless|wreckless|"
     r"catastrophe|catastrophes|catastrophic|"
+    r"chaos|chaotic|"
     r"charges|charged|"
     r"co-accused|co-defendent|"
     r"collapse|collapsed|collapses|collapsing|"
@@ -92,6 +95,7 @@ G_BLOCK_NEGATIVE = (
     r"demise|"
     r"devastate|devastated|devastating|devastation|"
     r"diagnose|diagnosed|diagnoses|diagnosing|diagnosis|"
+    r"diarrhoea|"
     r"die|died|dies|dying|"
     r"dire|"
     r"disabled|disability|disabilities|"
@@ -120,10 +124,13 @@ G_BLOCK_NEGATIVE = (
     r"grief|grieving|grieve|grieves|"
     r"gunfire|gunman|gunmen|gunshot|gunshots|"
     # H
+    r"hammer|"
     r"harm|harmful|harmed|"
     r"hate|hated|hateful|hater|haters|hates|hating|hatred|"
+    r"hit|struck|"
     r"hospitalise|hospitalised|hospitalises|hospitalising|hospitalize|hospitalized|hospitalizes|hospitalizing|"
     r"hostage|hostages|"
+    r"hunger|"
     # I
     r"illness|ill|"
     r"incident|"
@@ -132,10 +139,8 @@ G_BLOCK_NEGATIVE = (
     r"inmate|inmates|"
     r"intruder|intrude|"
     r"investigation|investigate|investigates|"
-    r"israel|israeli|"
     # J
     r"jailed|jail|jails|"
-    r"jimmy savile|"
     # K
     r"kidnap|kidnapped|kidnapper|kidnappers|kidnapping|kidnappings|kidnaps|"
     r"kill|killed|killer|killers|killing|killings|kills|"
@@ -152,13 +157,15 @@ G_BLOCK_NEGATIVE = (
     r"missing|missing person|missing persons|last seen|"
     r"mourn|mourned|mourner|mourners|mourning|mourns|"
     r"murder|murdered|murderer|murderers|murdering|murderous|murders|"
+    # N
+    r"Nuclear|"
     # O
     r"offence|offences|offend|offended|offender|offenders|offending|offends|"
     r"opposition|"
     r"ordeal|ordeals|"
     r"overdose|overdosed|overdoses|overdosing|"
     # P
-    r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|"
+    r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|Epstein|rolf harris|Cosby|house of horrors|savile"
     r"palestine|palestinian|"
     r"pressure|"
     r"prison|prisoner|prisoners|prisons|imprisoned|"
@@ -173,9 +180,9 @@ G_BLOCK_NEGATIVE = (
     r"rescue|rescued|rescuers|rescues|"
     r"restrictions|restrict|restricts   |"
     r"risks|risk|risked|risking|"
-    r"rolf harris|"
     r"rubbish|"
     # S
+    r"sadist|sadistic|sadism|"
     r"safeties|safety|unsafe|"
     r"scam|scammed|scammer|scammers|scamming|scams|"
     r"scourge|"
@@ -183,6 +190,7 @@ G_BLOCK_NEGATIVE = (
     r"seized|seize|seizure|"
     r"sentences|sentencing|"
     r"sewage|"
+    r"shock|shocking|"
     r"shoot|shooter|shooters|shooting|shootings|shoots|shot|"
     r"slammed|slams|slamming|"
     r"slapping|slap|slapped|"
@@ -203,6 +211,7 @@ G_BLOCK_NEGATIVE = (
     r"theft|thefts|thieves|thief|thieving|"
     r"threat|threaten|threatens|"
     r"torture|tortured|tortures|torturing|"
+    r"trafficking|trafficked|"
     r"tragedy|tragic|tragically|"
     r"trial|"
     r"trump|melania|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|"
@@ -217,9 +226,10 @@ G_BLOCK_NEGATIVE = (
     r"victim|victims|victimised|"
     r"violence|violent|violently|"
     # W
-    r"war|warfare|warring|wars|"
+    r"war|warfare|warring|wars|warship|warships|"
     r"warrant|"
     r"warning|warn|warns|"
+    r"weapon|weapons|weaponise|"
     r"woe|woes"
     r"wildfire|wildfires|fire|fires|firing|"
     r"worrying|worry"
@@ -232,6 +242,7 @@ G_BLOCK_NEGATIVE = (
 
 
 G_BLOCK_OTHER = (
+r"acute|"
 r"Around the districts|"
 r"basketball|"
 r"camogie|"
@@ -240,18 +251,28 @@ r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|
 r"council housing|council houses|"
 r"Eurobasket|"
 r"e-scooters|"
+r"fines|levies|"
 r"gridlock|"
+r"guilty|"
+r"|Infantino|Hitler|Andrew Tate|"
 r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
-r"legal|legality|legalities|"
+r"israel|israeli|Gaza|Palestine|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
+r"legal|legality|legalities|law|laws|subpoenas|subpoena|"
 r"lotto|lottery|euromillions|"
+r"Madeleine McCann|Ann Widdecombe|Starmer|Burnham|"
 r"period drama|"
+r"politics|politician|politicians|referendum|"
+r"probe|probing|"
 r"public consultation|"
 r"queer|pride|lesbian|gay|LGBQT|"
+r"Russia|Russian|Putin|Zelensky|Ukraine|Kiev|Moscow|Petersburg|"
 r"touching tribute|"
 r"Selena Gomez|Bieber|Lily Allen|"
 r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|"
 r"softball|"
-r"solicitor|solicitors"
+r"solicitor|solicitors|"
+r"tax|taxes|"
+r"white house|homeland|security|Pentagon"
 )
 
 # =============================================================
@@ -294,7 +315,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         
                         sport_county_only=False, soccer_only=False, gaa_only=False, golf_only=False, 
                         sport_irish_news_only=False, other_sports_only=False, sport_podcasts_only=False, 
-                        rugby_only=False, 
+                        rugby_only=False, horse_racing_only=False,
                         
                         commercial_property_only=False, county_business_only=False, irish_business_only=False, irish_news_business_only=False, 
                         money_only=False, technology_only=False, world_only=False, 
@@ -345,7 +366,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/irish-news/': sport_irish_news_only,
             '/other-sports/': other_sports_only,
             '/podcasts/': sport_podcasts_only,
-            '/rugby/': rugby_only
+            '/rugby/': rugby_only,
+            '/horse-racing/': horse_racing_only
         }
 
         business_filters = {
@@ -960,6 +982,16 @@ def indo_rugby():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
         feed_title_override="Indo Sport: Rugby",
         rugby_only=True
+    )
+    
+# https://rss-filter-y4fa.onrender.com/indo_horse_racing.xml
+@app.route('/indo_horse_racing.xml')
+def indo_horse_racing():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_OTHER}",
+        feed_title_override="Indo Sport: Horse Racing",
+        horse_racing_only=True
     )
 
 
