@@ -125,7 +125,7 @@ G_BLOCK_NEGATIVE = (
     r"ordeal|ordeals|"
     r"overdose|overdosed|overdoses|overdosing|"
     # P
-    r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|Epstein|rolf harris|Cosby|house of horrors|savile"
+    r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|Epstein|rolf harris|Cosby|house of horrors|savile|"
     r"prison|prisoner|prisoners|prisons|imprisoned|"
     r"protest|protested|protester|protesters|protesting|protests|"
     # R
@@ -174,7 +174,7 @@ G_BLOCK_NEGATIVE = (
     r"warrant|"
     r"warning|warn|warns|"
     r"weapon|weapons|weaponise|"
-    r"woe|woes"
+    r"woe|woes|"
     r"wildfire|wildfires|fire|fires|firing|"
     r"worrying|worry"
     r")\b"
@@ -187,35 +187,35 @@ G_BLOCK_NEGATIVE = (
 
 G_BLOCK_AVOID = (
 r"\b("
-# America
+    # America
     r"white house|homeland|security|Pentagon|"
-r"Around the districts|"
-# Charities
+    r"Around the districts|"
+    # Charities
     r"charity|charities|fund-raising|fundraisers|"
-r"council housing|council houses|"
-r"Eurobasket|"
-r"e-scooters|"
-r"fines|levies|"
-r"gridlock|"
-r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
-# League of Ireland football
+    r"council housing|council houses|"
+    r"Eurobasket|"
+    r"e-scooters|"
+    r"fines|levies|"
+    r"gridlock|"
+    r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
+    # League of Ireland football
     r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|"
-r"legal|legality|legalities|subpoenas|subpoena|"
-r"lotto|lottery|euromillions|"
-# People: I want to avoid, good or bad
-    r"|Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|"    
-r"period drama|"
-# Places
+    r"legal|legality|legalities|subpoenas|subpoena|"
+    r"lotto|lottery|euromillions|"
+    # People: I want to avoid articles about, good or bad
+    r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|"    
+    r"period drama|"
+    # Places
     r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
-# Politics   
-        r"trump|fianna fail|fianna gael|labour party|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|politics|politician|politicians|referendum|"
-r"queer|pride|lesbian|gay|LGBQT|"
-# Religion
+    # Politics   
+    r"trump|fianna fail|fianna gael|labour party|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|politics|politician|politicians|referendum|"
+    r"queer|pride|lesbian|gay|LGBQT|"
+    # Religion
     r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|"
-r"solicitor|solicitors|"
-# Sports
+    r"solicitor|solicitors|"
+    # Sports
     r"softball|camogie|basketball|"
-r"tax|taxes"
+    r"tax|taxes"
 r")\b"
 )
 
@@ -224,6 +224,21 @@ G_BLOCK_SPORT = (
     r"\b("
     r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
 )
+
+# =============================================================
+# INCLUSIVE FEED CARVE-OUT
+# =============================================================
+# Any article matching a section's "allow list" (e.g. Liverpool|Roscommon)
+# is meant to live ONLY in that section's dedicated *_inclusive.xml feed -
+# never in the main "kept" feed, never in the filterout feed, and never in
+# any of that section's sub-feeds. This maps each source RSS URL to the
+# allow-list pattern used by its *_inclusive route.
+INCLUSIVE_PATTERNS = {
+    "https://www.independent.ie/rss": r"Liverpool|Roscommon",
+    "https://www.independent.ie/sport/rss": r"Liverpool|Roscommon",
+    "https://www.independent.ie/entertainment/rss": r"Liverpool|Roscommon",
+    "https://www.independent.ie/business/rss": r"Liverpool|Roscommon",
+}
 
 # =============================================================
 # DEBUG HELPER
@@ -293,6 +308,16 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         compiled_regex = re.compile(regex_pattern, re.IGNORECASE) if regex_pattern else None
         items_xml = []
         filtered_out_items_xml = []
+
+        # An inclusive-mode call (the *_inclusive.xml routes) IS the allow-list
+        # feed, so it should not exclude its own matches. Every other route
+        # sharing this source_url excludes them so they only ever appear here.
+        inclusive_carveout_pattern = INCLUSIVE_PATTERNS.get(source_url)
+        compiled_inclusive_carveout = (
+            re.compile(inclusive_carveout_pattern, re.IGNORECASE)
+            if (inclusive_carveout_pattern and not inclusive)
+            else None
+        )
 
         # --- MAP STRING ENDPOINTS TO ACCURATE VALUE/SLUG PAIRS ---
         main_filters = {
@@ -366,13 +391,22 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             
             url_lower = link.lower() if link else ""
 
+            # --- INCLUSIVE FEED CARVE-OUT ---
+            # If this article matches this section's allow-list pattern, it belongs
+            # exclusively to the *_inclusive.xml feed - skip it here (main, filterout,
+            # and every sub-feed for this section).
+            if compiled_inclusive_carveout and (
+                compiled_inclusive_carveout.search(title) or compiled_inclusive_carveout.search(url_lower)
+            ):
+                continue
+                
             # --- OVERLAP AVOIDANCE ---
             # Only strip items belonging to a sub-section when we're building the
             # "kept" (main) feed. When we're building the filtered-out feed, we
             # deliberately let sub-section items through so that anything blocked
             # by the regex still shows up in the filterout feed, regardless of
             # which section it belongs to.
-            if exclude_groups_of_links and url_lower and not return_filtered_out:
+            if exclude_groups_of_links and url_lower and not return_filtered_out and not inclusive:
                 if any(slug in url_lower for slug in 
                 [
                     '/sport/', '/entertainment/', '/business/',    
@@ -397,7 +431,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     # Strict filtering: Only keep items matching the active sub-channel(s)
                     if any(is_active and slug not in url_lower for slug, is_active in current_map.items()):
                         continue
-                elif not return_filtered_out:
+                elif not return_filtered_out and not inclusive:
                     # Catch-all strip-out strategy for the main section route:
                     # Skip items if they match ANY of the sub-channels that have their own feeds
                     if any(slug in url_lower for slug in current_map.keys()):
@@ -446,7 +480,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                                 break
                     if not match_found:
                         continue
-                elif not return_filtered_out:
+                elif not return_filtered_out and not inclusive:
                     # MAIN FEED ROUTE: Define which specific sub-feed tags to strip out.
                     # This ensures the main feed only drops items covered by your dedicated sub-feeds.
                     active_sub_feed_tags = {
