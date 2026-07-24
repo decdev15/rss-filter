@@ -38,8 +38,9 @@ app = Flask(__name__)
 
 # Global block word patterns
 G_CHARITIES = r"charity|charities|fund-raising|fundraisers"
+G_LGBQT = r"queer|lesbian|gay|LGBQT"
 G_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
-G_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers" 
+G_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan" 
 G_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
 G_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
 G_HOUSING = r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential"
@@ -56,6 +57,7 @@ r"\b("
     r"arrested|arrests|"
     r"arson|arsonists|arsonist|"
     r"assault|assaulted|assaulting|assaults|"
+    r"asylum|"
     # B
     r"balaclava|balaclavas|balaclava-clad|"
     r"bereaved|bereavement|bereavements|"
@@ -204,6 +206,7 @@ r"\b("
     # Charities
     f"{G_CHARITIES}|"
     r"council housing|council houses|"
+    r"divorce|divorcee|"
     r"Eurobasket|"
     r"e-scooters|"
     r"fines|levies|"
@@ -220,7 +223,7 @@ r"\b("
     f"{G_PLACES}|"
     # Politics   
     r"trump|fianna fail|fianna gael|labour party|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|politics|politician|politicians|referendum|"
-    r"queer|pride|lesbian|gay|LGBQT|"
+    f"{G_LGBQT}|"
     # Religion
     r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|"
     r"solicitor|solicitors|"
@@ -235,6 +238,7 @@ r")\b"
 G_BLOCK_SPORT = (
 r"\b("
     r"aaaa|"
+    f"{G_LGBQT}|"
     # league of Ireland 
     f"{G_LOI}|"
     # People: I want to avoid articles about, good or bad
@@ -248,11 +252,17 @@ r")\b"
 G_BLOCK_ENTERTAINMENT = (
 r"\b("
     r"aaaa|"
+    r"asylum|"
+    r"divorce|divorcee|"
+    r"DWTS|dancing with the stars|"
     f"{G_HOUSING}|"
+    f"{G_LGBQT}|"
     # People: I want to avoid articles about, good or bad
     f"{G_PEOPLE}|"
     f"{G_PLACES}|"
     r"period drama|"
+    r"top TV|"
+    r"what to watch on tv|"
     r"zzzz"
 r")\b"
 )
@@ -266,6 +276,7 @@ r"\b("
     f"{G_CHARITIES}|"
     f"{G_HOUSING}|"
     f"inflation|inflationary|"
+    f"{G_LGBQT}|"
     # People: I want to avoid articles about, good or bad
     f"{G_PEOPLE}|"
     f"{G_PLACES}|"
@@ -328,7 +339,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
                         # Irish Independent
                         
-                        comment_only=False, courts_only=False, county_only=False, farming_only=False, irish_news_only=False, 
+                        comment_only=False, courts_only=False, county_only=False, county_wexford_only=False, county_wicklow_only=False, county_kerry_only=False, county_louth_only=False, farming_only=False, irish_news_only=False, 
                         lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
                         
                         sport_county_only=False, soccer_only=False, gaa_only=False, golf_only=False, 
@@ -377,6 +388,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/comment/': comment_only,
             '/courts/': courts_only,
             '/county/': county_only,
+            '/county/wexford/': county_wexford_only,
+            '/county/wicklow/': county_wicklow_only,
+            '/county/kerry/': county_kerry_only,
+            '/county/louth/': county_louth_only,
             '/farming/': farming_only,  
             '/irish-news/': irish_news_only,
             '/lifestyle/': lifestyle_only,
@@ -462,8 +477,8 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 if any(slug in url_lower for slug in 
                 [
                     '/sport/', '/entertainment/', '/business/',    
-                    '/comment/', '/courts/', '/county/', '/farming/',
-                    '/irish-news/', '/lifestyle/', '/podcasts/', 
+                    '/comment/', '/courts/', '/county/', '/county/wexford/', '/county/wicklow/', '/county/kerry/', '/county/louth/', 
+                    '/farming/', '/irish-news/', '/lifestyle/', '/podcasts/', 
                     '/politics/', '/weather/', '/world-news/'
                 ]):
                     continue  
@@ -877,6 +892,47 @@ def indo_county():
         feed_title_override="Indo Main: County",
         county_only=True
     )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_wexford.xml
+@app.route('/indo_county_wexford.xml')
+def indo_county_wexford():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
+        feed_title_override="Indo Main: County: Wexford",
+        county_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_wicklow.xml
+@app.route('/indo_county_wicklow.xml')
+def indo_county_wicklow():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
+        feed_title_override="Indo Main: County: Wicklow",
+        county_only=True
+    )
+    
+# https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
+@app.route('/indo_county_kerry.xml')
+def indo_county_kerry():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
+        feed_title_override="Indo Main: County: Kerry",
+        county_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
+@app.route('/indo_county_louth.xml')
+def indo_county_louth():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
+        feed_title_override="Indo Main: County: Louth",
+        county_only=True
+    )    
+
 
 # https://rss-filter-y4fa.onrender.com/indo_farming.xml
 @app.route('/indo_farming.xml')
