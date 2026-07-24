@@ -38,112 +38,212 @@ app = Flask(__name__)
 G_BLOCK_NEGATIVE = (
     r"\b("
     # A
+    r"abandon|abandoned|abandons|"
     r"abduct|abducted|abducting|abduction|abductions|abductor|abductors|"
     r"abuse|abused|abuser|abusers|abuses|abusing|abusive|"
+    r"accident|acid|accidental|"
+    r"accuse|accused|accusing|accuses|"
+    r"adjourned|adjourn|"
     r"aggravate|aggravated|aggravating|aggravation|"
     r"anger|angered|angering|angers|angry|"
+    r"anti-social|"
+    r"appeal|appealed|"
+    r"arrest|arrested|arrests"
+    r"arson|arsonists|arsonist|"
     r"assault|assaulted|assaulting|assaults|"
     r"attack|attacked|attacker|attackers|attacking|attacks|"
     # B
+    r"backlash|"
+    r"bail|"
+    r"balaclava|balaclavas|balaclava-clad|"
+    r"ban|banned|bans|"
     r"bereaved|bereavement|bereavements|"
     r"bleed|bleeding|bloodshed|bloody|"
     r"bomb|bombed|bomber|bombers|bombing|bombings|bombs|"
+    r"boy racer|boy racers|"
+    r"breach|"
     r"bribe|bribery|bribes|bribing|"
-    r"burglar|burglaries|burglars|burglary|burgled|"
+    r"burglar|burglaries|burglars|burglary|burgled|break-in|break-ins|"
     r"burial|burials|buried|bury|burying|"
     # C
+    r"cancer|cancerous|leukemia|"
+    r"careless|wreckless|"
     r"catastrophe|catastrophes|catastrophic|"
+    r"charges|charged|"
+    r"co-accused|co-defendent|"
     r"collapse|collapsed|collapses|collapsing|"
+    r"community service|"
+    r"concerns|concerns|concerned|"
+    r"confront|confrontation|confronting|"
+    r"conviction|convictions|"
+    r"controversial|controversy|"
     r"corrupt|corrupted|corrupting|corruption|corrupts|"
+    r"courts|court"
+    r"crash|crashes|"
     r"crime|crimes|criminal|criminals|"
     r"crisis|crises|"
     r"critical|critical condition|critically|"
     r"cruel|cruelly|cruelty|"
     # D
     r"dead|deadliest|deadly|"
-    r"death|deathly|deaths|"
+    r"death|deathly|deaths|in memory|in memorial|"
+    r"dementia|"
     r"demise|"
     r"devastate|devastated|devastating|devastation|"
     r"diagnose|diagnosed|diagnoses|diagnosing|diagnosis|"
     r"die|died|dies|dying|"
     r"dire|"
+    r"disabled|disability|disabilities|"
     r"disaster|disastrous|disasters|"
+    r"dispute|"
+    r"disqualification|disqualified|"
+    r"drug|drugs|drugged|drunk|"
+    r"dumped|dump|"
     # E
     r"emergencies|emergency|"
     r"explode|exploded|explodes|exploding|explosion|explosions|explosive|explosives|"
+    r"exposed|expose|"
     r"extremism|extremist|extremists|"
     # F
+    r"failure|failures|failed|fail|"
     r"fatal|fatalities|fatality|fatally|"
+    r"fear|fears|"
+    r"fight|fighting|"
+    r"fire|firing|fires|firearm|firearms|"
+    r"flooding|flood|floods|"
     r"fraud|fraudster|fraudsters|fraudulent|fraudulently|frauds|"
+    r"fright|frighten|frightening|"
     r"funeral|funerals|"
     # G
     r"garda|gardai|"
     r"grief|grieving|grieve|grieves|"
     r"gunfire|gunman|gunmen|gunshot|gunshots|"
     # H
+    r"harm|harmful|harmed|"
     r"hate|hated|hateful|hater|haters|hates|hating|hatred|"
     r"hospitalise|hospitalised|hospitalises|hospitalising|hospitalize|hospitalized|hospitalizes|hospitalizing|"
     r"hostage|hostages|"
     # I
+    r"illness|ill|"
+    r"incident|"
+    r"injured|injury|injuries|"
+    r"inquest|"
     r"inmate|inmates|"
+    r"intruder|intrude|"
+    r"investigation|investigate|investigates|"
     r"israel|israeli|"
     # J
+    r"jailed|jail|jails|"
     r"jimmy savile|"
     # K
     r"kidnap|kidnapped|kidnapper|kidnappers|kidnapping|kidnappings|kidnaps|"
     r"kill|killed|killer|killers|killing|killings|kills|"
+    r"knife|knives|knifed|"
     r"kkk|ku klux klan|"
+    # L 
+    r"left waiting|"
+    r"life-saving|"
     # M
+    r"mental|mental health|"
     r"militant|militants|military|"
     r"miserable|miserably|misery|"
     r"missile|missiles|"
-    r"missing|missing person|missing persons|"
+    r"missing|missing person|missing persons|last seen|"
     r"mourn|mourned|mourner|mourners|mourning|mourns|"
     r"murder|murdered|murderer|murderers|murdering|murderous|murders|"
     # O
     r"offence|offences|offend|offended|offender|offenders|offending|offends|"
+    r"opposition|"
     r"ordeal|ordeals|"
     r"overdose|overdosed|overdoses|overdosing|"
     # P
     r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|"
     r"palestine|palestinian|"
-    r"prison|prisoner|prisoners|prisons|"
+    r"pressure|"
+    r"prison|prisoner|prisoners|prisons|imprisoned|"
+    r"problem|problems|problematic|"
     r"protest|protested|protester|protesters|protesting|protests|"
+    r"punches|punched|punch"
     # R
     r"racism|racist|racists|"
     r"rape|raped|raper|rapes|raping|rapist|rapists|"
+    r"regulations|"
+    r"rejected|rejects|reject|"
+    r"rescue|rescued|rescuers|rescues|"
+    r"restrictions|restrict|restricts   |"
+    r"risks|risk|risked|risking|"
     r"rolf harris|"
+    r"rubbish|"
     # S
-    r"unsafe|safeties|safety|"
+    r"safeties|safety|unsafe|"
     r"scam|scammed|scammer|scammers|scamming|scams|"
+    r"scourge|"
     r"self-harm|self-harming|self-harmed|"
+    r"seized|seize|seizure|"
+    r"sentences|sentencing|"
+    r"sewage|"
     r"shoot|shooter|shooters|shooting|shootings|shoots|shot|"
+    r"slammed|slams|slamming|"
+    r"slapping|slap|slapped|"
+    r"spectre|"
+    r"speeding|"
     r"stab|stabbed|stabber|stabbers|stabbing|stabbings|stabs|"
     r"steal|stealing|steals|stolen|"
+    r"stranded|"
     r"strike|striker|strikers|striking|strikes|struck|"
     r"struggle|struggled|struggles|struggling|"
-    r"suicidal|suicide|suicides|"
+    r"suicidal|suicide|suicides|pieta|darkness into light|"
+    r"syndrome|syndromes|"
     # T
+    r"tension|tensions|"
     r"terminal|terminally|terminally ill|"
     r"terror|terrorism|terrorist|terrorists|terrorise|terrorised|terrorize|terrorized|"
+    r"theft|thefts|thieves|thief|thieving|"
+    r"threat|threaten|threatens|"
+    r"torture|tortured|tortures|torturing|"
     r"tragedy|tragic|tragically|"
-    r"trump|"
+    r"trial|"
+    r"trump|melania|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|"
     # U
     r"ukraine|ukrainian|"
+    r"uninsured|"
+    r"unkempt|"
+    r"urgent|urgency|"
     # V
     r"vandal|vandalise|vandalised|vandalism|vandals|"
     r"vicious|viciously|"
-    r"victim|victimised|"
+    r"victim|victims|victimised|"
     r"violence|violent|violently|"
     # W
-    r"war|warfare|warring|wars"
+    r"war|warfare|warring|wars|"
+    r"warrant|"
+    r"warning|warn|warns|"
+    r"woe|woes"
+    r"wildfire|wildfires|fire|fires|firing|"
+    r"worrying|worry"
     r")\b"
 )
 G_BLOCK_OTHER = (
-r"queer|pride|lesbian|gay|LGBQT|"
-r"shelbourne|bohemians|league of ireland|LOI|"
+r"Around the districts|"
+r"basketball|"
+r"camogie|"
+r"charity|charities|fund-raising|fundraisers|"
+r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|"
+r"council housing|council houses|"
 r"Eurobasket|"
-r"Selena Gomez|Bieber|Lily Allen"
+r"e-scooters|"
+r"gridlock|"
+r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|"
+r"legal|legality|legalities|"
+r"lotto|lottery|euromillions|"
+r"period drama|"
+r"public consultation|"
+r"queer|pride|lesbian|gay|LGBQT|"
+r"touching tribute|"
+r"Selena Gomez|Bieber|Lily Allen|"
+r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|"
+r"softball|"
+r"solicitor|solicitors"
 )
 
 # =============================================================
@@ -557,7 +657,7 @@ def indo_main_filterout():
     return process_generic_feed(
         "https://www.independent.ie/rss",
         BLOCKS,
-        "Indo Main Filter Out",
+        "Filter Out: Indo Main",
         exclude_groups_of_links=True,
         return_filtered_out=True
     )
@@ -591,7 +691,7 @@ def indo_sport_filterout():
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
-        "Indo Sport Filter Out",
+        "Filter Out: Indo Sport",
         return_filtered_out=True
     )
 
@@ -624,7 +724,7 @@ def indo_business_filterout():
     return process_generic_feed(
         "https://www.independent.ie/business/rss",
         BLOCKS,
-        "Indo Business Filter Out",
+        "Filter Out: Indo Business",
         return_filtered_out=True
     )
     
@@ -647,7 +747,7 @@ def indo_ent_filterout():
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
-        "Indo Entertainment Filter Out",
+        "Filter Out: Indo Entertainment",
         return_filtered_out=True
     )
 
@@ -1067,7 +1167,7 @@ def business_insider_filterout():
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
-        "Business Insider Filter Out",
+        "Filter Out: Business Insider",
         return_filtered_out=True
     )
 
@@ -1258,7 +1358,7 @@ def forbes_filterout():
     return process_generic_feed(
         "https://www.forbes.com/feeds/popstories.xml",
         BLOCKS,
-        "Forbes Filter Out",
+        "Filter Out: Forbes",
         return_filtered_out=True
     )
 
@@ -1279,7 +1379,7 @@ def fortune_filterout():
     return process_generic_feed(
         "https://fortune.com/rss",
         BLOCKS,
-        "Fortune Filter Out",
+        "Filter Out: Fortune",
         return_filtered_out=True
     )
     
@@ -1300,7 +1400,7 @@ def nyt_soccer_filterout():
     return process_generic_feed(
         "https://rss.nytimes.com/services/xml/rss/nyt/Soccer.xml",
         BLOCKS,
-        "NYT Soccer Filter Out",
+        "Filter Out: NYT Soccer",
         return_filtered_out=True
     )
     
@@ -1321,7 +1421,7 @@ def wired_filterout():
     return process_generic_feed(
         "https://www.wired.com/feed/rss",
         BLOCKS,
-        "Wired Filter Out",
+        "Filter Out: Wired",
         return_filtered_out=True
     )
 
