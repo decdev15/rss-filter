@@ -79,7 +79,7 @@ G_BLOCK_NEGATIVE = (
     r"die|died|dies|dying|"
     r"dire|"
     r"disabled|disability|disabilities|"
-    r"drugged|"
+    r"drugged|cocaine|heroin|ketamin|overdose|overdosed|overdoses|overdosing|"
     # E
     r"emergencies|emergency|"
     r"explosives|"
@@ -97,6 +97,7 @@ G_BLOCK_NEGATIVE = (
     # H
     r"harm|harmful|harmed|"
     r"hateful|hater|haters|hatred|"
+    r"hit-and-run|"
     r"hospitalise|hospitalised|hospitalises|hospitalising|hospitalize|hospitalized|hospitalizes|hospitalizing|"
     r"hostage|hostages|"
     r"hunger|"
@@ -123,7 +124,6 @@ G_BLOCK_NEGATIVE = (
     # O
     r"offence|offences|offend|offended|offender|offenders|offending|offends|"
     r"ordeal|ordeals|"
-    r"overdose|overdosed|overdoses|overdosing|"
     # P
     r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|Epstein|rolf harris|Cosby|house of horrors|savile|"
     r"prison|prisoner|prisoners|prisons|imprisoned|"
@@ -203,7 +203,7 @@ r"\b("
     r"legal|legality|legalities|subpoenas|subpoena|"
     r"lotto|lottery|euromillions|"
     # People: I want to avoid articles about, good or bad
-    r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|"    
+    r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|"    
     r"period drama|"
     # Places
     r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian|"
@@ -286,7 +286,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         money_only=False, technology_only=False, world_only=False, 
                         
                         books_only=False, celebrity_only=False, comment_ent_only=False, county_ent_only=False, horoscopes_only=False, 
-                        irish_news_ent_only=False, lifestyle_ent_only=False, music_only=False, movies_only=False, radio_only=False, 
+                        irish_news_ent_only=False, lifestyle_ent_only=False, music_only=False, movies_only=False, 
                         television_only=False, theatre_arts_only=False,
 
                         # Business Insider
@@ -365,7 +365,6 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/lifestyle/': lifestyle_ent_only,
             '/movies/': movies_only,
             '/music/': music_only,
-            '/radio/': radio_only,
             '/television/': television_only,
             '/theatre-arts/': theatre_arts_only
         }
@@ -688,7 +687,7 @@ def indo_main_inclusive():
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
-        feed_title_override="Indo Main (FI)",
+        feed_title_override="Filter In: Indo Main",
         exclude_groups_of_links=True,
         inclusive=True
     )
@@ -722,7 +721,7 @@ def indo_sport_inclusive():
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         ALLOWED,
-        "Indo Sport (FI)",
+        "Filter In: Indo Sport",
         inclusive=True
     )
 
@@ -747,7 +746,16 @@ def indo_business_filterout_1():
         return_filtered_out=True
     )
     
-
+# https://rss-filter-y4fa.onrender.com/indo_business_inclusive.xml
+@app.route('/indo_business_inclusive.xml')
+def indo_business_inclusive():
+    ALLOWED = r"Liverpool|Roscommon"
+    return process_generic_feed(
+        "https://www.independent.ie/business/rss",
+        ALLOWED,
+        "Filter In: Indo Business",
+        inclusive=True
+    )
     
 # https://rss-filter-y4fa.onrender.com/indo_ent.xml
 @app.route('/indo_ent.xml')
@@ -778,7 +786,7 @@ def indo_ent_inclusive():
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         ALLOWED,
-        "Indo Entertainment (FI)",
+        "Filter In: Indo Entertainment",
         inclusive=True
     )
 
@@ -1142,16 +1150,6 @@ def indo_music():
         regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
         feed_title_override="Indo Entertainment: Music",
         music_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_radio.xml
-@app.route('/indo_radio.xml')
-def indo_radio():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/entertainment/rss",
-        regex_pattern=f"{G_BLOCK_NEGATIVE}|{G_BLOCK_AVOID}",
-        feed_title_override="Indo Entertainment: Radio",
-        radio_only=True
     )
 
 # https://rss-filter-y4fa.onrender.com/indo_television.xml
