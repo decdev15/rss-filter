@@ -44,7 +44,11 @@ app = Flask(__name__)
 # Word patterns
 W_CHARITIES = r"charity|charities|fund-raising|fundraisers"
 W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny"
-W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
+
+# TEST OUT Football: LOI first 
+# W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
+W_LOI = r"shelbourne"
+
 W_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan" 
 W_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
 W_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
@@ -334,10 +338,11 @@ def debug_match(title, link, compiled_regex):
         print("TITLE MATCH:", bool(title_match))
         print("LINK MATCH:", bool(link_match))
 
-        if title_match:
-            print("➡ MATCHED IN TITLE")
-        if link_match:
-            print("➡ MATCHED IN LINK")
+    if title_match:
+        print("TITLE MATCH:", title_match.group(0))
+
+    if link_match:
+        print("LINK MATCH:", link_match.group(0))
 
     print("=================================================\n")
 
@@ -1087,7 +1092,7 @@ def indo_soccer_loi():
     return process_generic_feed(
         source_url="https://www.independent.ie/sport/rss",
         regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_SPORT}",
-        feed_title_override="Indo Sport: Soccer",
+        feed_title_override="Indo Sport: Football: LOI",
         soccer_loi_only=True
     )
 
