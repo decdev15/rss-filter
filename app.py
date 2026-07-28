@@ -323,28 +323,26 @@ INCLUSIVE_PATTERNS = {
 # DEBUG HELPER
 # =============================================================
 def debug_match(title, link, compiled_regex):
-    """Print exactly what is being checked and what matches."""
+    """Prints TITLE, LINK, and MATCH details ONLY when a match occurs."""
+    if not compiled_regex:
+        return
+
     title_l = title.lower()
     link_l = link.lower()
 
-    print("\n================ FEED ITEM DEBUG ================")
-    print("TITLE:", title)
-    print("LINK:", link)
+    title_match = compiled_regex.search(title_l)
+    link_match = compiled_regex.search(link_l)
 
-    if compiled_regex:
-        title_match = compiled_regex.search(title_l)
-        link_match = compiled_regex.search(link_l)
-
-        print("TITLE MATCH:", bool(title_match))
-        print("LINK MATCH:", bool(link_match))
-
-    if title_match:
-        print("TITLE MATCH:", title_match.group(0))
-
-    if link_match:
-        print("LINK MATCH:", link_match.group(0))
-
-    print("=================================================\n")
+    # Only print to console if there is at least one match
+    if title_match or link_match:
+        print("\n================ MATCH FOUND ================")
+        print("TITLE:", title)
+        print("LINK:", link)
+        if title_match:
+            print("➡ TITLE MATCH:", title_match.group(0))
+        if link_match:
+            print("➡ LINK MATCH:", link_match.group(0))
+        print("=============================================\n")
 
 
 # ============================================================= 
