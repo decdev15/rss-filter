@@ -32,7 +32,9 @@ app = Flask(__name__)
     #       if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
     #           continue
 
-
+# TODO Common items that will break this - need alerts for when they happen?
+# W_ variables will stop working if "|" at the end of a line
+# If xml lines indented, python thinks they are nested, therefore be very careful with indentation 
 
 
 # =============================================================
@@ -42,14 +44,14 @@ app = Flask(__name__)
 # Word patterns
 W_CHARITIES = r"charity|charities|fund-raising|fundraisers"
 W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny"
-W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley|"
+W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
 W_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan" 
 W_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
 W_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
 W_HOUSING = r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential|homes"
 
 # TODO These should be words that are always negative in every context, therefore a global block.  e.g. whether in main feed or entertainment feed.  
-# Use other blocks where there is ambiguity e.g. "hits" can be music hits or an attack.  
+# Use other blocks where there is ambiguity e.g. "hit" can relate to music or an attack.  
 F_ALWAYS_NEGATIVE = (
 r"\b("
     r"aaaa|"
@@ -943,48 +945,48 @@ def indo_county():
         county_only=True
     )
 
-    # LEVEL 3
-    # https://rss-filter-y4fa.onrender.com/indo_county_wexford.xml
-    @app.route('/indo_county_wexford.xml')
-    def indo_county_wexford():
-        return process_generic_feed(
-            source_url="https://www.independent.ie/rss",
-            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-            feed_title_override="Indo Main: County: Wexford",
-            county_wexford_only=True
-        )
+# LEVEL 3
+# https://rss-filter-y4fa.onrender.com/indo_county_wexford.xml
+@app.route('/indo_county_wexford.xml')
+def indo_county_wexford():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Wexford",
+        county_wexford_only=True
+    )
 
-    # https://rss-filter-y4fa.onrender.com/indo_county_wicklow.xml
-    @app.route('/indo_county_wicklow.xml')
-    def indo_county_wicklow():
-        return process_generic_feed(
-            source_url="https://www.independent.ie/rss",
-            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-            feed_title_override="Indo Main: County: Wicklow",
-            county_wicklow_only=True
-        )
-        
-    # https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
-    @app.route('/indo_county_kerry.xml')
-    def indo_county_kerry():
-        return process_generic_feed(
-            source_url="https://www.independent.ie/rss",
-            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-            feed_title_override="Indo Main: County: Kerry",
-            county_kerry_only=True
-        )
+# https://rss-filter-y4fa.onrender.com/indo_county_wicklow.xml
+@app.route('/indo_county_wicklow.xml')
+def indo_county_wicklow():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Wicklow",
+        county_wicklow_only=True
+    )
+    
+# https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
+@app.route('/indo_county_kerry.xml')
+def indo_county_kerry():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Kerry",
+        county_kerry_only=True
+    )
 
-    # https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
-    @app.route('/indo_county_louth.xml')
-    def indo_county_louth():
-        return process_generic_feed(
-            source_url="https://www.independent.ie/rss",
-            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-            feed_title_override="Indo Main: County: Louth",
-            county_louth_only=True
-        )    
+# https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
+@app.route('/indo_county_louth.xml')
+def indo_county_louth():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Louth",
+        county_louth_only=True
+    )    
 
-
+#  LEVEL 2 AGAIN
 # https://rss-filter-y4fa.onrender.com/indo_farming.xml
 @app.route('/indo_farming.xml')
 def indo_farming():
@@ -1078,21 +1080,18 @@ def indo_soccer():
         soccer_only=True
     )
 
+# LEVEL 3
+# https://rss-filter-y4fa.onrender.com/indo_soccer_loi.xml
+@app.route('/indo_soccer_loi.xml')
+def indo_soccer_loi():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/sport/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_SPORT}",
+        feed_title_override="Indo Sport: Soccer",
+        soccer_loi_only=True
+    )
 
-
-    # LEVEL 3
-    # https://rss-filter-y4fa.onrender.com/indo_soccer_loi.xml
-    @app.route('/indo_soccer_loi.xml')
-    def indo_soccer_loi():
-        return process_generic_feed(
-            source_url="https://www.independent.ie/sport/rss",
-            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_SPORT}",
-            feed_title_override="Indo Sport: Soccer",
-            soccer_loi_only=True
-        )
-
-
-
+#  LEVEL 2 AGAIN
 # https://rss-filter-y4fa.onrender.com/indo_gaa.xml
 @app.route('/indo_gaa.xml')
 def indo_gaa():
