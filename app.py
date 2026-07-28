@@ -1037,7 +1037,7 @@ def indo_ent():
 # https://rss-filter-y4fa.onrender.com/indo_ent_filterout_1.xml
 @app.route('/indo_ent_filterout_1.xml')
 def indo_ent_filterout_1():
-    BLOCKS = f{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_ENTERTAINMENT}"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_ENTERTAINMENT}"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
