@@ -42,17 +42,16 @@ app = Flask(__name__)
 # =============================================================
 
 # Word patterns
-W_CHARITIES = r"charity|charities|fund-raising|fundraisers"
-W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny|pride parade"
+W_CHARITIES = r"charity|charities|fundraising|fundraisers"
+W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny|pride parade|HIV"
 
 # TEST OUT Football: LOI first 
 W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
 
-W_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan|Rhys Mcclenaghan|Adeleke|Luke Littler|Seamus Power|Martin O'Neill|Guardiola|Lewis Hamilton|Lando Norris|Philly McMahon" 
-W_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
+W_PEOPLE = r"Hitler|Andrew Tate|Tate brothers|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan|Rhys Mcclenaghan|Adeleke|Luke Littler|Seamus Power|Martin O'Neill|Guardiola|Lewis Hamilton|Lando Norris|Philly McMahon|Putin|Zelensky|Netanyahu|Jong-un|Khamenei|Maduro|Lukashenko|al-Assad" 
+W_PLACES = r"Afghan|Afghanistan|Ethiopia|Ethiopian|Gaza|Iran|Iranian|Iraq|Iraqi|israel|israeli|Kiev|Lebanese|Lebanon|Moscow|Palestine|palestinian|Petersburg|Russia|Russian|Syria|Syrian|Ukraine|Ukrainian|Yemen|Yemeni"
 W_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
-W_HOUSING = r"housing|zoned|apartments|apartment|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential|homes|home|council housing|council houses"
-W_HOUSING = r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential|homes|home"
+W_HOUSING = r"apartments|council houses|council housing|derelict|development|holding|homes|homeless|housing|leaseback|lettings|mortgage|mortgaged|mortgages|on the market|properties|property|renovation|renovations|rentals|renting|residential|retail space|rezoned|rezoning|tenancy|tenant|tenants|tender|unzoned|vacant|zoned"
 
 # TODO These should be words that are always negative in every context, therefore a global block.  e.g. whether in main feed or entertainment feed.  
 # Use other blocks where there is ambiguity e.g. "hit" can relate to music or an attack.  
@@ -75,7 +74,7 @@ r"\b("
     r"bereaved|bereavement|bereavements|"
     r"blackmail|blackmailed|blackmailer|blackmailers|"
     r"bleed|bleeding|bloodshed|bloody|"
-    r"body found|"
+    r"body found|body was found|"
     r"bomb|bombed|bomber|bombers|bombing|bombings|bombs|"
     r"boy racer|boy racers|"
     r"bribe|bribery|bribes|bribing|"
@@ -85,7 +84,6 @@ r"\b("
     r"cancer|cancerous|leukemia|"
     r"carjack|carjacked|carjacking|carjackings|"
     r"catastrophe|catastrophes|catastrophic|"
-    r"chaos|chaotic|"
     r"man charged|woman charged|men charged|women charged|"
     r"co-accused|co-defendant|"
     r"community service|"
@@ -97,10 +95,11 @@ r"\b("
     r"critical condition|criticism|"
     r"cruelty|"
     r"culprit|culprits|"
+    r"curse|cursed|"
     # D
     r"dangerous|dangers|"
-    r"dead|deadliest|deadly|"
-    r"death|deathly|deaths|in memory|in memorial|"
+    r"deadliest|deadly|"
+    r"deathly|in memory|in memorial|"
     r"dementia|"
     r"demise|"
     r"devastate|devastated|devastating|devastation|"
@@ -114,9 +113,12 @@ r"\b("
     r"embezzle|embezzled|embezzlement|"
     r"emergencies|emergency|"
     r"epidemic|epidemics|"
+    r"evacuation|evacuate|evacuated|evacuates|"
     r"executor|"
     r"explosives|"
+    r"exposed himself|"
     r"extortion|extorted|"
+    r"extradite|extradition|"
     r"extremism|extremist|extremists|"
     # F
     r"famine|famines|"
@@ -128,7 +130,7 @@ r"\b("
     r"funeral|funerals|"
     # G
     r"gardai investigating|garda investigation|"
-    r"grief|grieving|grieve|grieves|"
+    r"grief|grieving|grieve|grieves|grievance|grievances|"
     r"gruesome|"
     r"gunfire|gunman|gunmen|gunshot|gunshots|"
     # H
@@ -164,6 +166,7 @@ r"\b("
     r"mourn|mourned|mourner|mourners|mourning|mourns|"
     r"murder|murdered|murderer|murderers|murdering|murderous|murders|"
     # N
+    r"nazi|nazis|"
     # O
     r"offence|offences|offend|offended|offender|offenders|offending|offends|"
     r"ordeal|ordeals|"
@@ -177,6 +180,7 @@ r"\b("
     r"racism|racist|racists|"
     r"rape|raped|raper|rapes|raping|rapist|rapists|"
     r"reckless|"
+    r"remains of boy|remains of girl|remains of man|remains of woman|"
     r"robbers|robbery|robberies|"
     r"rubbish|"
     # S
@@ -187,15 +191,16 @@ r"\b("
     r"seizure|"
     r"self-harm|self-harming|self-harmed|"
     r"sentences|sentencing|"
+    r"sex act|sex acts|"
     r"sewage|"
     r"shock|shocking|"
     r"slapping|slap|slapped|"
     r"spectre|"
     r"sportswashing|"
     r"stab|stabbed|stabber|stabbers|stabbing|stabbings|stabs|"
+    r"stardust survivor|stardust survivors|"
     r"starvation|"
     r"steal|stealing|steals|stolen|"
-    r"stranded|"
     r"strangling|strangled|strangle|"
     r"struggle|struggled|struggles|struggling|"
     r"subpoena|subpoenas|"
@@ -239,8 +244,6 @@ r")\b"
 F_ALWAYS_AVOID = (
 r"\b("
     r"aaaa|"
-    # America
-    r"white house|Pentagon|"
     r"Around the districts|"
     # Charities
     f"{W_CHARITIES}|"
@@ -263,7 +266,7 @@ r"\b("
     r"trump|fianna fail|fianna gael|labour party|republican|republicans|democratic|democrats|democracy|autocratic|dictator|dictatorship|politics|politician|politicians|referendum|"
     f"{W_LGBQT}|"
     # Religion
-    r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|"
+    r"cleric|clerical|clerics|priest|priests|bishop|bishops|cardinal|cardinals|pope|church|churches|religious|religion|parish|archbishop|"
     r"solicitor|solicitors|"
     # Sports
     r"softball|camogie|basketball|"
@@ -272,17 +275,20 @@ r"\b("
 r")\b"
 )
 
-# These are words that I want to filter out from this feed specifically
+# These are words that I want to filter out from a feed specifically
 F_MAIN = (
 r"\b("
     r"aaaa|"
+    r"apocalyptic|"
+    r"dead|death|deaths|"
     r"explosive|"
     r"fighting|"
+    r"monster|"
     r"zzzz"
 r")\b"
 )
 
-# These are words that I want to filter out from this feed specifically
+# These are words that I want to filter out from a feed specifically
 F_SPORT = (
 r"\b("
     r"aaaa|"
@@ -297,7 +303,7 @@ r"\b("
 r")\b"
 )
 
-# These are words that I want to filter out from this feed specifically
+# These are words that I want to filter out from a feed specifically
 F_ENTERTAINMENT = (
 r"\b("
     r"aaaa|"
@@ -315,7 +321,7 @@ r"\b("
 r")\b"
 )
 
-# These are words that I want to filter out from this feed specifically
+# These are words that I want to filter out from a feed specifically
 F_BUSINESS = (
 r"\b("
     r"aaaa|"
@@ -336,6 +342,25 @@ r"\b("
 r")\b"
 )
 
+# These are words that I want to filter in to a feed specifically
+
+FI_INDO = (
+r"\b("
+    r"aaaa|"
+    r"Liverpool|Roscommon|"
+    r"zzzz"
+r")\b"
+)
+
+
+FI_BUSINESS_INSIDER = (
+r"\b("
+    r"aaaa|"
+    r"AI|OpenAI|"
+    r"zzzz"
+r")\b"
+)
+
 
 
 
@@ -349,11 +374,16 @@ r")\b"
 # any of that section's sub-feeds. This maps each source RSS URL to the
 # allow-list pattern used by its *_inclusive route.
 INCLUSIVE_PATTERNS = {
-    "https://www.independent.ie/rss": r"Liverpool|Roscommon",
-    "https://www.independent.ie/sport/rss": r"Liverpool|Roscommon",
-    "https://www.independent.ie/entertainment/rss": r"Liverpool|Roscommon",
-    "https://www.independent.ie/business/rss": r"Liverpool|Roscommon",
+    "https://www.independent.ie/rss": f"{FI_INDO}|word1|word2",
+    "https://www.independent.ie/sport/rss": f"{FI_INDO}|word1|word2",
+    "https://www.independent.ie/entertainment/rss": f"{FI_INDO}|word1|word2",
+    "https://www.independent.ie/business/rss": f"{FI_INDO}|word1|word2",  
+    "https://feeds.businessinsider.com/custom/all": f"{FI_BUSINESS_INSIDER}|word1|word2", 
 }
+
+
+f"{FI_INDO}|word1|word2"
+
 
 # =============================================================
 # DEBUG HELPER
@@ -920,7 +950,7 @@ def indo_main_filterout_1():
 # https://rss-filter-y4fa.onrender.com/indo_main_inclusive.xml
 @app.route('/indo_main_inclusive.xml')
 def indo_main_inclusive():
-    ALLOWED = r"Liverpool|Roscommon"
+    ALLOWED = f"{FI_INDO}|word1|word2"
     return process_generic_feed(
         source_url="https://www.independent.ie/rss",
         regex_pattern=ALLOWED,
@@ -932,7 +962,7 @@ def indo_main_inclusive():
 # https://rss-filter-y4fa.onrender.com/indo_sport.xml
 @app.route('/indo_sport.xml')
 def indo_sport():
-    BLOCKS = f"{F_SPORT}"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_SPORT}"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
@@ -942,7 +972,7 @@ def indo_sport():
 # https://rss-filter-y4fa.onrender.com/indo_sport_filterout_1.xml
 @app.route('/indo_sport_filterout_1.xml')
 def indo_sport_filterout_1():
-    BLOCKS = f"{F_SPORT}"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_SPORT}"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         BLOCKS,
@@ -954,7 +984,7 @@ def indo_sport_filterout_1():
 # https://rss-filter-y4fa.onrender.com/indo_sport_inclusive.xml
 @app.route('/indo_sport_inclusive.xml')
 def indo_sport_inclusive():
-    ALLOWED = r"Liverpool|Roscommon"
+    ALLOWED = f"{FI_INDO}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/sport/rss",
         ALLOWED,
@@ -965,7 +995,7 @@ def indo_sport_inclusive():
 # https://rss-filter-y4fa.onrender.com/indo_business.xml
 @app.route('/indo_business.xml')
 def indo_business():
-    BLOCKS = f"{F_BUSINESS}"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}"
     return process_generic_feed(
         "https://www.independent.ie/business/rss",
         BLOCKS,
@@ -975,7 +1005,7 @@ def indo_business():
 # https://rss-filter-y4fa.onrender.com/indo_business_filterout_1.xml
 @app.route('/indo_business_filterout_1.xml')
 def indo_business_filterout_1():
-    BLOCKS = f"{F_BUSINESS}"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}"
     return process_generic_feed(
         "https://www.independent.ie/business/rss",
         BLOCKS,
@@ -986,7 +1016,7 @@ def indo_business_filterout_1():
 # https://rss-filter-y4fa.onrender.com/indo_business_inclusive.xml
 @app.route('/indo_business_inclusive.xml')
 def indo_business_inclusive():
-    ALLOWED = r"Liverpool|Roscommon"
+    ALLOWED = f"{FI_INDO}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/business/rss",
         ALLOWED,
@@ -997,7 +1027,7 @@ def indo_business_inclusive():
 # https://rss-filter-y4fa.onrender.com/indo_ent.xml
 @app.route('/indo_ent.xml')
 def indo_ent():
-    BLOCKS = f"{F_ENTERTAINMENT}"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_ENTERTAINMENT}"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
@@ -1007,7 +1037,7 @@ def indo_ent():
 # https://rss-filter-y4fa.onrender.com/indo_ent_filterout_1.xml
 @app.route('/indo_ent_filterout_1.xml')
 def indo_ent_filterout_1():
-    BLOCKS = f"{F_ENTERTAINMENT}"
+    BLOCKS = f{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_ENTERTAINMENT}"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         BLOCKS,
@@ -1019,7 +1049,7 @@ def indo_ent_filterout_1():
 # https://rss-filter-y4fa.onrender.com/indo_ent_inclusive.xml
 @app.route('/indo_ent_inclusive.xml')
 def indo_ent_inclusive():
-    ALLOWED = r"Liverpool|Roscommon"
+    ALLOWED = f"{FI_INDO}|word1|word2"
     return process_generic_feed(
         "https://www.independent.ie/entertainment/rss",
         ALLOWED,
@@ -1754,7 +1784,7 @@ def indo_theatre_arts():
 # https://rss-filter-y4fa.onrender.com/business_insider.xml
 @app.route('/business_insider.xml')
 def business_insider():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
@@ -1764,7 +1794,7 @@ def business_insider():
 # https://rss-filter-y4fa.onrender.com/business_insider_filterout.xml
 @app.route('/business_insider_filterout.xml')
 def business_insider_filterout():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         "https://feeds.businessinsider.com/custom/all",
         BLOCKS,
@@ -1772,10 +1802,23 @@ def business_insider_filterout():
         return_filtered_out=True
     )
 
+
+# https://rss-filter-y4fa.onrender.com/business_insider_inclusive.xml
+@app.route('/business_insider_inclusive.xml')
+def business_insider_inclusive():
+    ALLOWED = f"{FI_BUSINESS_INSIDER}|word1|word2"
+    return process_generic_feed(
+        source_url="https://feeds.businessinsider.com/custom/all",
+        regex_pattern=ALLOWED,
+        feed_title_override="Filter In: Business Insider",
+        exclude_groups_of_links=True,
+        inclusive=True
+    )
+
 # https://rss-filter-y4fa.onrender.com/bi_artificial_intelligence.xml
 @app.route('/bi_artificial_intelligence.xml')
 def bi_artificial_intelligence():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1786,7 +1829,7 @@ def bi_artificial_intelligence():
 # https://rss-filter-y4fa.onrender.com/bi_careers.xml
 @app.route('/bi_careers.xml')
 def bi_careers():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1797,7 +1840,7 @@ def bi_careers():
 # https://rss-filter-y4fa.onrender.com/bi_defense.xml
 @app.route('/bi_defense.xml')
 def bi_defense():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1808,7 +1851,7 @@ def bi_defense():
 # https://rss-filter-y4fa.onrender.com/bi_economy.xml
 @app.route('/bi_economy.xml')
 def bi_economy():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1819,7 +1862,7 @@ def bi_economy():
 # https://rss-filter-y4fa.onrender.com/bi_entertainment.xml
 @app.route('/bi_entertainment.xml')
 def bi_entertainment():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1830,7 +1873,7 @@ def bi_entertainment():
 # https://rss-filter-y4fa.onrender.com/bi_finance.xml
 @app.route('/bi_finance.xml')
 def bi_finance():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1841,7 +1884,7 @@ def bi_finance():
 # https://rss-filter-y4fa.onrender.com/bi_health.xml
 @app.route('/bi_health.xml')
 def bi_health():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1852,7 +1895,7 @@ def bi_health():
 # https://rss-filter-y4fa.onrender.com/bi_media.xml
 @app.route('/bi_media.xml')
 def bi_media():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1863,7 +1906,7 @@ def bi_media():
 # https://rss-filter-y4fa.onrender.com/bi_parenting.xml
 @app.route('/bi_parenting.xml')
 def bi_parenting():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1874,7 +1917,7 @@ def bi_parenting():
 # https://rss-filter-y4fa.onrender.com/bi_real_estate.xml
 @app.route('/bi_real_estate.xml')
 def bi_real_estate():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1885,7 +1928,7 @@ def bi_real_estate():
 # https://rss-filter-y4fa.onrender.com/bi_retail.xml
 @app.route('/bi_retail.xml')
 def bi_retail():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1896,7 +1939,7 @@ def bi_retail():
 # https://rss-filter-y4fa.onrender.com/bi_sports.xml
 @app.route('/bi_sports.xml')
 def bi_sports():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1907,7 +1950,7 @@ def bi_sports():
 # https://rss-filter-y4fa.onrender.com/bi_tech.xml
 @app.route('/bi_tech.xml')
 def bi_tech():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1918,7 +1961,7 @@ def bi_tech():
 # https://rss-filter-y4fa.onrender.com/bi_transportation.xml
 @app.route('/bi_transportation.xml')
 def bi_transportation():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
@@ -1929,7 +1972,7 @@ def bi_transportation():
 # https://rss-filter-y4fa.onrender.com/bi_travel.xml
 @app.route('/bi_travel.xml')
 def bi_travel():
-    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|word1|word2"
+    BLOCKS = f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_BUSINESS}|word1|word2"
     return process_generic_feed(
         source_url="https://feeds.businessinsider.com/custom/all",
         regex_pattern=BLOCKS,
