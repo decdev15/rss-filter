@@ -14,6 +14,15 @@ app = Flask(__name__)
 # Readme
 # =============================================================
 
+# Irish Independent:
+# Level 1 feeds are Main, Sport, Business, Entertainment.  Word filters applied here. 
+# Level 2 feeds are sub-feeds e.g. Main / County 
+# Level 3 feeds are sub-feeds of those e.g. Main / County / Wicklow 
+
+# Feeds that appear in one level should not appear in other levels.
+
+
+
 # "Indo Main" and "FI: Indo Main" include all articles except for:
 # those containing the block words above;
 # links included in this block of code (or similar as will be updated):
@@ -23,23 +32,17 @@ app = Flask(__name__)
     #       if '/sport/' in url_lower or '/entertainment/' in url_lower or '/politics/' in url_lower or '/courts/' in url_lower or '/county/' in url_lower or '/business/' in url_lower or '/world-news/' in url_lower or '/irish-news/' in url_lower or '/weather/' in url_lower:
     #           continue
 
+
+
+
 # =============================================================
 # Global variables
 # =============================================================
 
-# F_ALWAYS_NEGATIVE = (
-    # r"jellyfish|struck|dangerous|investment|Geaney|verdict|argument"
-# )
-
-# F_ALWAYS_AVOID = (
-    # r"Enoch|Trump|Farage"
-# )
-
-
 # Word patterns
 W_CHARITIES = r"charity|charities|fund-raising|fundraisers"
 W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny"
-W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers"
+W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley|"
 W_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan" 
 W_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
 W_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
@@ -250,9 +253,7 @@ F_SPORT = (
 r"\b("
     r"aaaa|"
     f"{W_LGBQT}|"
-    # league of Ireland 
-    f"{W_LOI}|"
-    # People: I want to avoid articles about, good or bad
+    f"{W_LOI}|Celtic|"
     f"{W_PEOPLE}|"
     f"{W_PLACES}|"
     r"zzzz"
@@ -268,7 +269,6 @@ r"\b("
     r"DWTS|dancing with the stars|"
     f"{W_HOUSING}|"
     f"{W_LGBQT}|"
-    # People: I want to avoid articles about, good or bad
     f"{W_PEOPLE}|"
     f"{W_PLACES}|"
     r"period drama|"
@@ -283,12 +283,10 @@ F_BUSINESS = (
 r"\b("
     r"aaaa|"
     r"Budget|Budgets|"
-    # Charities
     f"{W_CHARITIES}|"
     f"{W_HOUSING}|"
     f"inflation|inflationary|"
     f"{W_LGBQT}|"
-    # People: I want to avoid articles about, good or bad
     f"{W_PEOPLE}|"
     f"{W_PLACES}|"
     f"{W_SCAMS}|"
@@ -353,7 +351,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                         comment_only=False, courts_only=False, county_only=False, county_wexford_only=False, county_wicklow_only=False, county_kerry_only=False, county_louth_only=False, farming_only=False, irish_news_only=False, 
                         lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
                         
-                        sport_county_only=False, soccer_only=False, gaa_only=False, golf_only=False, 
+                        sport_county_only=False, soccer_only=False, soccer_loi_only=False, gaa_only=False, golf_only=False, 
                         sport_irish_news_only=False, other_sports_only=False, sport_podcasts_only=False, 
                         rugby_only=False, horse_racing_only=False,
                         
@@ -415,16 +413,17 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         # The four named counties are a nested layer *inside* the generic '/county/' feed - '/county/' is a substring of '/county/wexford/' etc,
         # so without this, the generic county feed would also show every named-county article. Same pattern as the sport/business/ent
         # sub-channel carve-out below, just one level deeper.
-        county_child_filters = {
+        main_county_L3_filters = {
             '/county/wexford/': county_wexford_only,
             '/county/wicklow/': county_wicklow_only,
             '/county/kerry/': county_kerry_only,
-            '/county/louth/': county_louth_only,
+            '/county/louth/': county_louth_only
         }
 
         sport_filters = {
             '/county/': sport_county_only,
             '/soccer/': soccer_only,
+            '/soccer/league-of-ireland/': soccer_loi_only,
             '/gaa/': gaa_only,
             '/golf/': golf_only,
             '/irish-news/': sport_irish_news_only,
@@ -432,6 +431,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/podcasts/': sport_podcasts_only,
             '/rugby/': rugby_only,
             '/horse-racing/': horse_racing_only
+        }
+
+        sport_soccer_L3_filters = {
+            '/soccer/league-of-ireland/': soccer_loi_only
         }
 
         business_filters = {
@@ -509,15 +512,15 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 continue
 
             # --- COUNTY SUB-CHANNEL CARVE-OUT (nested inside /county/) ---
-            any_county_child_active = any(county_child_filters.values())
+            any_county_child_active = any(main_county_L3_filters.values())
             if any_county_child_active:
                 # Strict filtering: only keep items matching the active named county
-                if any(is_active and slug not in url_lower for slug, is_active in county_child_filters.items()):
+                if any(is_active and slug not in url_lower for slug, is_active in main_county_L3_filters.items()):
                     continue
             elif county_only and not return_filtered_out and not inclusive:
                 # Generic /county/ route: strip out articles belonging to one of the
                 # four named counties, since they have their own dedicated feeds.
-                if any(slug in url_lower for slug in county_child_filters.keys()):
+                if any(slug in url_lower for slug in main_county_L3_filters.keys()):
                     continue
 
             # --- SUB-FEED & SUB-CHANNEL SPECIFIC MODES ---
@@ -536,6 +539,20 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                     # Skip items if they match ANY of the sub-channels that have their own feeds
                     if any(slug in url_lower for slug in current_map.keys()):
                         continue
+
+
+            # --- SOCCER SUB-CHANNEL CARVE-OUT (nested inside /soccer/) ---
+            any_soccer_l3_active = any(sport_soccer_L3_filters.values())
+            if any_soccer_l3_active:
+                # Strict filtering: only keep items matching the active soccer sub-channel
+                if any(is_active and slug not in url_lower for slug, is_active in sport_soccer_L3_filters.items()):
+                    continue
+            elif soccer_only and not return_filtered_out and not inclusive:
+                # Generic /soccer/ route: strip out League of Ireland articles, since
+                # they have their own dedicated feed.
+                if any(slug in url_lower for slug in sport_soccer_L3_filters.keys()):
+                    continue
+
 
 
             # --- BUSINESS INSIDER METADATA FILTERING ENGINE ---
@@ -926,45 +943,46 @@ def indo_county():
         county_only=True
     )
 
-# https://rss-filter-y4fa.onrender.com/indo_county_wexford.xml
-@app.route('/indo_county_wexford.xml')
-def indo_county_wexford():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-        feed_title_override="Indo Main: County: Wexford",
-        county_wexford_only=True
-    )
+    # LEVEL 3
+    # https://rss-filter-y4fa.onrender.com/indo_county_wexford.xml
+    @app.route('/indo_county_wexford.xml')
+    def indo_county_wexford():
+        return process_generic_feed(
+            source_url="https://www.independent.ie/rss",
+            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+            feed_title_override="Indo Main: County: Wexford",
+            county_wexford_only=True
+        )
 
-# https://rss-filter-y4fa.onrender.com/indo_county_wicklow.xml
-@app.route('/indo_county_wicklow.xml')
-def indo_county_wicklow():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-        feed_title_override="Indo Main: County: Wicklow",
-        county_wicklow_only=True
-    )
-    
-# https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
-@app.route('/indo_county_kerry.xml')
-def indo_county_kerry():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-        feed_title_override="Indo Main: County: Kerry",
-        county_kerry_only=True
-    )
+    # https://rss-filter-y4fa.onrender.com/indo_county_wicklow.xml
+    @app.route('/indo_county_wicklow.xml')
+    def indo_county_wicklow():
+        return process_generic_feed(
+            source_url="https://www.independent.ie/rss",
+            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+            feed_title_override="Indo Main: County: Wicklow",
+            county_wicklow_only=True
+        )
+        
+    # https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
+    @app.route('/indo_county_kerry.xml')
+    def indo_county_kerry():
+        return process_generic_feed(
+            source_url="https://www.independent.ie/rss",
+            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+            feed_title_override="Indo Main: County: Kerry",
+            county_kerry_only=True
+        )
 
-# https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
-@app.route('/indo_county_louth.xml')
-def indo_county_louth():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-        feed_title_override="Indo Main: County: Louth",
-        county_louth_only=True
-    )    
+    # https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
+    @app.route('/indo_county_louth.xml')
+    def indo_county_louth():
+        return process_generic_feed(
+            source_url="https://www.independent.ie/rss",
+            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+            feed_title_override="Indo Main: County: Louth",
+            county_louth_only=True
+        )    
 
 
 # https://rss-filter-y4fa.onrender.com/indo_farming.xml
@@ -1059,6 +1077,21 @@ def indo_soccer():
         feed_title_override="Indo Sport: Soccer",
         soccer_only=True
     )
+
+
+
+    # LEVEL 3
+    # https://rss-filter-y4fa.onrender.com/indo_soccer_loi.xml
+    @app.route('/indo_soccer_loi.xml')
+    def indo_soccer_loi():
+        return process_generic_feed(
+            source_url="https://www.independent.ie/sport/rss",
+            regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_SPORT}",
+            feed_title_override="Indo Sport: Soccer",
+            soccer_loi_only=True
+        )
+
+
 
 # https://rss-filter-y4fa.onrender.com/indo_gaa.xml
 @app.route('/indo_gaa.xml')
