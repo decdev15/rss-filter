@@ -412,6 +412,16 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/world-news/': world_news_only
         }
 
+        # The four named counties are a nested layer *inside* the generic '/county/' feed - '/county/' is a substring of '/county/wexford/' etc,
+        # so without this, the generic county feed would also show every named-county article. Same pattern as the sport/business/ent
+        # sub-channel carve-out below, just one level deeper.
+        county_child_filters = {
+            '/county/wexford/': county_wexford_only,
+            '/county/wicklow/': county_wicklow_only,
+            '/county/kerry/': county_kerry_only,
+            '/county/louth/': county_louth_only,
+        }
+
         sport_filters = {
             '/county/': sport_county_only,
             '/soccer/': soccer_only,
@@ -497,6 +507,18 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             # --- MAIN SECTION MODES ---
             if any(is_active and slug not in url_lower for slug, is_active in main_filters.items()):
                 continue
+
+            # --- COUNTY SUB-CHANNEL CARVE-OUT (nested inside /county/) ---
+            any_county_child_active = any(county_child_filters.values())
+            if any_county_child_active:
+                # Strict filtering: only keep items matching the active named county
+                if any(is_active and slug not in url_lower for slug, is_active in county_child_filters.items()):
+                    continue
+            elif county_only and not return_filtered_out and not inclusive:
+                # Generic /county/ route: strip out articles belonging to one of the
+                # four named counties, since they have their own dedicated feeds.
+                if any(slug in url_lower for slug in county_child_filters.keys()):
+                    continue
 
             # --- SUB-FEED & SUB-CHANNEL SPECIFIC MODES ---
             if source_url in feed_config:
