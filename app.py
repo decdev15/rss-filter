@@ -43,16 +43,16 @@ app = Flask(__name__)
 
 # Word patterns
 W_CHARITIES = r"charity|charities|fund-raising|fundraisers"
-W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny"
+W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny|pride parade"
 
 # TEST OUT Football: LOI first 
-# W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
-W_LOI = r"shelbourne"
+W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
 
-W_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan" 
+W_PEOPLE = r"Infantino|Hitler|Andrew Tate|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan|Rhys Mcclenaghan|Adeleke|Luke Littler|Seamus Power|Martin O'Neill|Guardiola|Lewis Hamilton|Lando Norris|Philly McMahon" 
 W_PLACES = r"Russia|Russian|Putin|Zelensky|Ukraine|Ukrainian|Kiev|Moscow|Petersburg|israel|israeli|Gaza|Palestine|palestinian|Lebanon|Ethiopia|Iran|Iraq|Yemen|Afghanistan|China|Chinese|India|Indian"
 W_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
-W_HOUSING = r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential|homes"
+W_HOUSING = r"housing|zoned|apartments|apartment|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential|homes|home|council housing|council houses"
+W_HOUSING = r"housing|zoned|apartments|retail space|lettings|renting|rentals|planning|planned|homeless|derelict|vacant|property|properties|on the market|tenancy|tenants|tenant|development|holding|tender|rezoned|rezoning|mortgage|mortgaged|mortgages|renovation|renovations|unzoned|leaseback|lease|residential|homes|home"
 
 # TODO These should be words that are always negative in every context, therefore a global block.  e.g. whether in main feed or entertainment feed.  
 # Use other blocks where there is ambiguity e.g. "hit" can relate to music or an attack.  
@@ -64,15 +64,18 @@ r"\b("
     r"abuse|abused|abuser|abusers|abuses|abusing|abusive|"
     r"adjourned|adjourn|"
     r"anti-social|"
+    r"armed|"
     r"arrested|arrests|"
     r"arson|arsonists|arsonist|"
     r"assault|assaulted|assaulting|assaults|"
-    r"asylum|"
+    r"asylum seekers|"
     # B
     r"balaclava|balaclavas|balaclava-clad|"
     r"bankrupt|bankruptcy|"
     r"bereaved|bereavement|bereavements|"
+    r"blackmail|blackmailed|blackmailer|blackmailers|"
     r"bleed|bleeding|bloodshed|bloody|"
+    r"body found|"
     r"bomb|bombed|bomber|bombers|bombing|bombings|bombs|"
     r"boy racer|boy racers|"
     r"bribe|bribery|bribes|bribing|"
@@ -80,17 +83,22 @@ r"\b("
     r"burial|burials|buried|"
     # C
     r"cancer|cancerous|leukemia|"
+    r"carjack|carjacked|carjacking|carjackings|"
     r"catastrophe|catastrophes|catastrophic|"
     r"chaos|chaotic|"
+    r"man charged|woman charged|men charged|women charged|"
     r"co-accused|co-defendant|"
     r"community service|"
     r"confront|confrontation|confronting|"
     r"corrupt|corrupted|corrupting|corruption|corrupts|"
+    r"cost-of-living|cost of living|"
     r"crime|crimes|criminal|criminals|"
     r"crisis|crises|"
-    r"critical condition|"
+    r"critical condition|criticism|"
     r"cruelty|"
+    r"culprit|culprits|"
     # D
+    r"dangerous|dangers|"
     r"dead|deadliest|deadly|"
     r"death|deathly|deaths|in memory|in memorial|"
     r"dementia|"
@@ -103,10 +111,15 @@ r"\b("
     r"disabled|disability|disabilities|"
     r"drugged|cocaine|heroin|ketamin|overdose|overdosed|overdoses|overdosing|drunk|"
     # E
+    r"embezzle|embezzled|embezzlement|"
     r"emergencies|emergency|"
+    r"epidemic|epidemics|"
+    r"executor|"
     r"explosives|"
+    r"extortion|extorted|"
     r"extremism|extremist|extremists|"
     # F
+    r"famine|famines|"
     r"fatal|fatalities|fatality|fatally|"
     r"firearm|firearms|"
     r"flooding|flood|floods|"
@@ -114,20 +127,25 @@ r"\b("
     r"fright|frighten|frightening|"
     r"funeral|funerals|"
     # G
+    r"gardai investigating|garda investigation|"
     r"grief|grieving|grieve|grieves|"
+    r"gruesome|"
     r"gunfire|gunman|gunmen|gunshot|gunshots|"
     # H
     r"harm|harmful|harmed|"
     r"hateful|hater|haters|hatred|"
     r"hit-and-run|"
+    r"horrific|horrifically|"
+    r"horror|horrible|"
     r"hospitalise|hospitalised|hospitalises|hospitalising|hospitalize|hospitalized|hospitalizes|hospitalizing|"
     r"hostage|hostages|"
     r"hunger|"
     # I
     r"illness|ill|"
     r"inmate|inmates|"
+    r"insolvent|insolvency|"
     r"intruder|intrude|"
-    r"investigation|investigate|investigates|"
+    r"investigation|investigate|investigates|investigator|investigators|"
     # J
     r"jailed|jails|jailing|"
     # K
@@ -135,8 +153,11 @@ r"\b("
     r"kill|killed|killer|killers|killing|killings|kills|"
     r"knife|knives|knifed|"
     r"kkk|ku klux klan|"
-    # L 
+    # L
     # M
+    r"macabre|"
+    r"malpractice|"
+    r"manslaughter|"
     r"miserable|miserably|misery|"
     r"missile|missiles|"
     r"missing|missing person|missing persons|last seen|"
@@ -148,20 +169,23 @@ r"\b("
     r"ordeal|ordeals|"
     # P
     r"paedophile|paedophiles|paedophilia|pedophile|pedophiles|pedophilia|Epstein|rolf harris|Cosby|house of horrors|savile|"
+    r"pandemic|pandemics|"
+    r"perjury|"
     r"prison|prisoner|prisoners|prisons|imprisoned|"
-    r"protest|protested|protester|protesters|protesting|protests|"
+    r"protested|protester|protesters|protesting|"
     # R
     r"racism|racist|racists|"
     r"rape|raped|raper|rapes|raping|rapist|rapists|"
     r"reckless|"
+    r"robbers|robbery|robberies|"
     r"rubbish|"
     # S
     r"sadist|sadistic|sadism|"
-    r"safeties|safety|unsafe|"
+    r"safeties|unsafe|"
     f"{W_SCAMS}|"
     r"scourge|"
-    r"self-harm|self-harming|self-harmed|"
     r"seizure|"
+    r"self-harm|self-harming|self-harmed|"
     r"sentences|sentencing|"
     r"sewage|"
     r"shock|shocking|"
@@ -169,10 +193,12 @@ r"\b("
     r"spectre|"
     r"sportswashing|"
     r"stab|stabbed|stabber|stabbers|stabbing|stabbings|stabs|"
+    r"starvation|"
     r"steal|stealing|steals|stolen|"
     r"stranded|"
     r"strangling|strangled|strangle|"
     r"struggle|struggled|struggles|struggling|"
+    r"subpoena|subpoenas|"
     r"suicidal|suicide|suicides|pieta|darkness into light|"
     r"syndrome|syndromes|"
     # T
@@ -183,7 +209,9 @@ r"\b("
     r"torture|tortured|tortures|torturing|"
     r"trafficking|trafficked|"
     r"tragedy|tragic|tragically|"
+    r"trauma|traumatic|traumatise|traumatising|"
     # U
+    r"ugly|"
     r"uninsured|"
     r"unkempt|"
     # V
@@ -193,12 +221,12 @@ r"\b("
     r"violence|violent|violently|"
     # W
     r"warfare|warship|warships|"
-    r"warrant|"
     r"warning|warn|warns|"
     r"weapon|weapons|weaponise|"
+    r"wildfire|wildfires|"
     r"woe|woes|"
-    r"wildfire|wildfires|fire|fires|firing|"
     r"worrying|worry|"
+    r"wrangle|wrangled|"
     r"zzzz"
 r")\b"
 )
@@ -216,7 +244,6 @@ r"\b("
     r"Around the districts|"
     # Charities
     f"{W_CHARITIES}|"
-    r"council housing|council houses|"
     r"divorce|divorcee|"
     r"Eurobasket|"
     r"e-scooters|"
@@ -250,6 +277,7 @@ F_MAIN = (
 r"\b("
     r"aaaa|"
     r"explosive|"
+    r"fighting|"
     r"zzzz"
 r")\b"
 )
@@ -258,10 +286,13 @@ r")\b"
 F_SPORT = (
 r"\b("
     r"aaaa|"
+    r"Cuala GAA|"
     f"{W_LGBQT}|"
     f"{W_LOI}|Celtic|"
     f"{W_PEOPLE}|"
     f"{W_PLACES}|"
+    f"rowing|"
+    f"tour de france|"
     r"zzzz"
 r")\b"
 )
@@ -288,14 +319,19 @@ r")\b"
 F_BUSINESS = (
 r"\b("
     r"aaaa|"
+    r"accumulated profits|"
     r"Budget|Budgets|"
     f"{W_CHARITIES}|"
+    f"ECB|Central Bank|"
     f"{W_HOUSING}|"
     f"inflation|inflationary|"
+    f"insurer|insurance|"
     f"{W_LGBQT}|"
+    f"oil|crude|"
     f"{W_PEOPLE}|"
     f"{W_PLACES}|"
     f"{W_SCAMS}|"
+    f"trade war|"
     r"zzzz"
 r")\b"
 )
@@ -351,32 +387,48 @@ def debug_match(title, link, compiled_regex):
 
 def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude_groups_of_links=False, inclusive=False, 
 
-                        # Irish Independent
+    # Irish Independent: Main
                         
-                        comment_only=False, courts_only=False, county_only=False, county_wexford_only=False, county_wicklow_only=False, county_kerry_only=False, county_louth_only=False, farming_only=False, irish_news_only=False, 
-                        lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
+    comment_only=False, courts_only=False, county_only=False, 
                         
-                        sport_county_only=False, soccer_only=False, soccer_loi_only=False, gaa_only=False, golf_only=False, 
-                        sport_irish_news_only=False, other_sports_only=False, sport_podcasts_only=False, 
-                        rugby_only=False, horse_racing_only=False,
-                        
-                        commercial_property_only=False, county_business_only=False, irish_business_only=False, irish_news_business_only=False, 
-                        money_only=False, technology_only=False, world_only=False, 
-                        
-                        books_only=False, celebrity_only=False, comment_ent_only=False, county_ent_only=False, horoscopes_only=False, 
-                        irish_news_ent_only=False, lifestyle_ent_only=False, music_only=False, movies_only=False, 
-                        television_only=False, theatre_arts_only=False,
+    county_antrim_only=False, county_armagh_only=False, county_carlow_only=False, county_cavan_only=False, county_clare_only=False, 
+    county_cork_only=False, county_derry_only=False, county_donegal_only=False, county_down_only=False, county_dublin_only=False, 
+    county_fermanagh_only=False, county_galway_only=False, county_kerry_only=False, county_kildare_only=False, county_kilkenny_only=False, 
+    county_laois_only=False, county_leitrim_only=False, county_limerick_only=False, county_longford_only=False, county_louth_only=False, 
+    county_mayo_only=False, county_meath_only=False, county_monaghan_only=False, county_offaly_only=False, county_roscommon_only=False, 
+    county_sligo_only=False, county_tipperary_only=False, county_tyrone_only=False, county_waterford_only=False, county_westmeath_only=False, 
+    county_wexford_only=False, county_wicklow_only=False,                        
 
-                        # Business Insider
-                        
-                        bi_ai_only=False, bi_careers_only=False, 
-                        bi_defense_only=False, bi_economy_only=False, bi_entertainment_only=False, 
-                        bi_finance_only=False, bi_health_only=False, bi_media_only=False, 
-                        bi_parenting_only=False, bi_real_estate_only=False, bi_retail_only=False, 
-                        bi_sports_only=False, bi_tech_only=False, 
-                        bi_transportation_only=False, bi_travel_only=False,
-                        
-                        return_filtered_out=False):
+    farming_only=False, irish_news_only=False, 
+    lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
+
+    # Irish Independent: Sport 
+    
+    sport_county_only=False, soccer_only=False, soccer_loi_only=False, gaa_only=False, golf_only=False, 
+    sport_irish_news_only=False, other_sports_only=False, sport_podcasts_only=False, 
+    rugby_only=False, horse_racing_only=False,
+
+    # Irish Independent: Business
+    
+    commercial_property_only=False, county_business_only=False, irish_business_only=False, irish_news_business_only=False, 
+    money_only=False, technology_only=False, world_only=False, 
+
+    # Irish Independent: Entertainment
+    
+    books_only=False, celebrity_only=False, comment_ent_only=False, county_ent_only=False, horoscopes_only=False, 
+    irish_news_ent_only=False, lifestyle_ent_only=False, music_only=False, movies_only=False, 
+    television_only=False, theatre_arts_only=False,
+
+    # Business Insider
+
+    bi_ai_only=False, bi_careers_only=False, 
+    bi_defense_only=False, bi_economy_only=False, bi_entertainment_only=False, 
+    bi_finance_only=False, bi_health_only=False, bi_media_only=False, 
+    bi_parenting_only=False, bi_real_estate_only=False, bi_retail_only=False, 
+    bi_sports_only=False, bi_tech_only=False, 
+    bi_transportation_only=False, bi_travel_only=False,
+
+    return_filtered_out=False):
 
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
@@ -402,10 +454,40 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/comment/': comment_only,
             '/courts/': courts_only,
             '/county/': county_only,
-            '/county/wexford/': county_wexford_only,
-            '/county/wicklow/': county_wicklow_only,
+            
+            '/county/antrim/': county_antrim_only,
+            '/county/armagh/': county_armagh_only,
+            '/county/carlow/': county_carlow_only,
+            '/county/cavan/': county_cavan_only,
+            '/county/clare/': county_clare_only,
+            '/county/cork/': county_cork_only,
+            '/county/derry/': county_derry_only,
+            '/county/donegal/': county_donegal_only,
+            '/county/down/': county_down_only,
+            '/county/dublin/': county_dublin_only,
+            '/county/fermanagh/': county_fermanagh_only,
+            '/county/galway/': county_galway_only,
             '/county/kerry/': county_kerry_only,
+            '/county/kildare/': county_kildare_only,
+            '/county/kilkenny/': county_kilkenny_only,
+            '/county/laois/': county_laois_only,
+            '/county/leitrim/': county_leitrim_only,
+            '/county/limerick/': county_limerick_only,
+            '/county/longford/': county_longford_only,
             '/county/louth/': county_louth_only,
+            '/county/mayo/': county_mayo_only,
+            '/county/meath/': county_meath_only,
+            '/county/monaghan/': county_monaghan_only,
+            '/county/offaly/': county_offaly_only,
+            '/county/roscommon/': county_roscommon_only,
+            '/county/sligo/': county_sligo_only,
+            '/county/tipperary/': county_tipperary_only,
+            '/county/tyrone/': county_tyrone_only,
+            '/county/waterford/': county_waterford_only,
+            '/county/westmeath/': county_westmeath_only,
+            '/county/wexford/': county_wexford_only,
+            '/county/wicklow/': county_wicklow_only,           
+
             '/farming/': farming_only,  
             '/irish-news/': irish_news_only,
             '/lifestyle/': lifestyle_only,
@@ -419,10 +501,39 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
         # so without this, the generic county feed would also show every named-county article. Same pattern as the sport/business/ent
         # sub-channel carve-out below, just one level deeper.
         main_county_L3_filters = {
-            '/county/wexford/': county_wexford_only,
-            '/county/wicklow/': county_wicklow_only,
+        
+            '/county/antrim/': county_antrim_only,
+            '/county/armagh/': county_armagh_only,
+            '/county/carlow/': county_carlow_only,
+            '/county/cavan/': county_cavan_only,
+            '/county/clare/': county_clare_only,
+            '/county/cork/': county_cork_only,
+            '/county/derry/': county_derry_only,
+            '/county/donegal/': county_donegal_only,
+            '/county/down/': county_down_only,
+            '/county/dublin/': county_dublin_only,
+            '/county/fermanagh/': county_fermanagh_only,
+            '/county/galway/': county_galway_only,
             '/county/kerry/': county_kerry_only,
-            '/county/louth/': county_louth_only
+            '/county/kildare/': county_kildare_only,
+            '/county/kilkenny/': county_kilkenny_only,
+            '/county/laois/': county_laois_only,
+            '/county/leitrim/': county_leitrim_only,
+            '/county/limerick/': county_limerick_only,
+            '/county/longford/': county_longford_only,
+            '/county/louth/': county_louth_only,
+            '/county/mayo/': county_mayo_only,
+            '/county/meath/': county_meath_only,
+            '/county/monaghan/': county_monaghan_only,
+            '/county/offaly/': county_offaly_only,
+            '/county/roscommon/': county_roscommon_only,
+            '/county/sligo/': county_sligo_only,
+            '/county/tipperary/': county_tipperary_only,
+            '/county/tyrone/': county_tyrone_only,
+            '/county/waterford/': county_waterford_only,
+            '/county/westmeath/': county_westmeath_only,
+            '/county/wexford/': county_wexford_only,
+            '/county/wicklow/': county_wicklow_only
         }
 
         sport_filters = {
@@ -506,7 +617,10 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
                 if any(slug in url_lower for slug in 
                 [
                     '/sport/', '/entertainment/', '/business/',    
-                    '/comment/', '/courts/', '/county/', '/county/wexford/', '/county/wicklow/', '/county/kerry/', '/county/louth/', 
+                    '/comment/', '/courts/', '/county/', 
+
+                    '/county/antrim/', '/county/armagh/', '/county/carlow/', '/county/cavan/', '/county/clare/', '/county/cork/', '/county/derry/', '/county/donegal/', '/county/down/', '/county/dublin/', '/county/fermanagh/', '/county/galway/', '/county/kerry/', '/county/kildare/', '/county/kilkenny/', '/county/laois/', '/county/leitrim/', '/county/limerick/', '/county/longford/', '/county/louth/', '/county/mayo/', '/county/meath/', '/county/monaghan/', '/county/offaly/', '/county/roscommon/', '/county/sligo/', '/county/tipperary/', '/county/tyrone/', '/county/waterford/', '/county/westmeath/', '/county/wexford/', '/county/wicklow/', 
+
                     '/farming/', '/irish-news/', '/lifestyle/', '/podcasts/', 
                     '/politics/', '/weather/', '/world-news/'
                 ]):
@@ -949,6 +1063,307 @@ def indo_county():
     )
 
 # LEVEL 3
+
+# https://rss-filter-y4fa.onrender.com/indo_county_antrim.xml
+@app.route('/indo_county_antrim.xml')
+def indo_county_antrim():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Antrim",
+        county_antrim_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_armagh.xml
+@app.route('/indo_county_armagh.xml')
+def indo_county_armagh():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Armagh",
+        county_armagh_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_carlow.xml
+@app.route('/indo_county_carlow.xml')
+def indo_county_carlow():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Carlow",
+        county_carlow_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_cavan.xml
+@app.route('/indo_county_cavan.xml')
+def indo_county_cavan():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Cavan",
+        county_cavan_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_clare.xml
+@app.route('/indo_county_clare.xml')
+def indo_county_clare():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Clare",
+        county_clare_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_cork.xml
+@app.route('/indo_county_cork.xml')
+def indo_county_cork():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Cork",
+        county_cork_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_derry.xml
+@app.route('/indo_county_derry.xml')
+def indo_county_derry():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Derry",
+        county_derry_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_donegal.xml
+@app.route('/indo_county_donegal.xml')
+def indo_county_donegal():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Donegal",
+        county_donegal_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_down.xml
+@app.route('/indo_county_down.xml')
+def indo_county_down():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Down",
+        county_down_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_dublin.xml
+@app.route('/indo_county_dublin.xml')
+def indo_county_dublin():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Dublin",
+        county_dublin_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_fermanagh.xml
+@app.route('/indo_county_fermanagh.xml')
+def indo_county_fermanagh():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Fermanagh",
+        county_fermanagh_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_galway.xml
+@app.route('/indo_county_galway.xml')
+def indo_county_galway():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Galway",
+        county_galway_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
+@app.route('/indo_county_kerry.xml')
+def indo_county_kerry():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Kerry",
+        county_kerry_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_kildare.xml
+@app.route('/indo_county_kildare.xml')
+def indo_county_kildare():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Kildare",
+        county_kildare_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_kilkenny.xml
+@app.route('/indo_county_kilkenny.xml')
+def indo_county_kilkenny():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Kilkenny",
+        county_kilkenny_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_laois.xml
+@app.route('/indo_county_laois.xml')
+def indo_county_laois():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Laois",
+        county_laois_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_leitrim.xml
+@app.route('/indo_county_leitrim.xml')
+def indo_county_leitrim():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Leitrim",
+        county_leitrim_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_limerick.xml
+@app.route('/indo_county_limerick.xml')
+def indo_county_limerick():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Limerick",
+        county_limerick_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_longford.xml
+@app.route('/indo_county_longford.xml')
+def indo_county_longford():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Longford",
+        county_longford_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
+@app.route('/indo_county_louth.xml')
+def indo_county_louth():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Louth",
+        county_louth_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_mayo.xml
+@app.route('/indo_county_mayo.xml')
+def indo_county_mayo():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Mayo",
+        county_mayo_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_meath.xml
+@app.route('/indo_county_meath.xml')
+def indo_county_meath():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Meath",
+        county_meath_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_monaghan.xml
+@app.route('/indo_county_monaghan.xml')
+def indo_county_monaghan():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Monaghan",
+        county_monaghan_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_offaly.xml
+@app.route('/indo_county_offaly.xml')
+def indo_county_offaly():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Offaly",
+        county_offaly_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_roscommon.xml
+@app.route('/indo_county_roscommon.xml')
+def indo_county_roscommon():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Roscommon",
+        county_roscommon_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_sligo.xml
+@app.route('/indo_county_sligo.xml')
+def indo_county_sligo():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Sligo",
+        county_sligo_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_tipperary.xml
+@app.route('/indo_county_tipperary.xml')
+def indo_county_tipperary():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Tipperary",
+        county_tipperary_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_tyrone.xml
+@app.route('/indo_county_tyrone.xml')
+def indo_county_tyrone():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Tyrone",
+        county_tyrone_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_waterford.xml
+@app.route('/indo_county_waterford.xml')
+def indo_county_waterford():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Waterford",
+        county_waterford_only=True
+    )
+
+# https://rss-filter-y4fa.onrender.com/indo_county_westmeath.xml
+@app.route('/indo_county_westmeath.xml')
+def indo_county_westmeath():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: County: Westmeath",
+        county_westmeath_only=True
+    )
+
 # https://rss-filter-y4fa.onrender.com/indo_county_wexford.xml
 @app.route('/indo_county_wexford.xml')
 def indo_county_wexford():
@@ -968,26 +1383,6 @@ def indo_county_wicklow():
         feed_title_override="Indo Main: County: Wicklow",
         county_wicklow_only=True
     )
-    
-# https://rss-filter-y4fa.onrender.com/indo_county_kerry.xml
-@app.route('/indo_county_kerry.xml')
-def indo_county_kerry():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-        feed_title_override="Indo Main: County: Kerry",
-        county_kerry_only=True
-    )
-
-# https://rss-filter-y4fa.onrender.com/indo_county_louth.xml
-@app.route('/indo_county_louth.xml')
-def indo_county_louth():
-    return process_generic_feed(
-        source_url="https://www.independent.ie/rss",
-        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
-        feed_title_override="Indo Main: County: Louth",
-        county_louth_only=True
-    )    
 
 #  LEVEL 2 AGAIN
 # https://rss-filter-y4fa.onrender.com/indo_farming.xml
