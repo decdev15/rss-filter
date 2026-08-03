@@ -48,7 +48,7 @@ W_LGBQT = r"lesbian|gay|LGBQT|queer|bisexual|trans|transvestite|tranny|pride par
 # TEST OUT Football: LOI first 
 W_LOI = r"shelbourne|bohemians|league of ireland|LOI|sligo rovers|bohs|shels|youth tournament|dundalk fc|St Patrick’s Athletic|Bray Wanderers|shamrock rovers|stephen bradley"
 
-W_PEOPLE = r"Hitler|Andrew Tate|Tate brothers|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan|Rhys Mcclenaghan|Adeleke|Luke Littler|Seamus Power|Martin O'Neill|Guardiola|Lewis Hamilton|Lando Norris|Philly McMahon|Putin|Zelensky|Netanyahu|Jong-un|Khamenei|Maduro|Lukashenko|al-Assad" 
+W_PEOPLE = r"Hitler|Andrew Tate|Tate brothers|Madeleine McCann|Ann Widdecombe|Starmer|Burnham|Selena Gomez|Bieber|Lily Allen|Trump|Tubridy|Conor McGregor|Katie Price|Winkleman|Influencer|Influencers|Blake Lively|Baldoni|Niall Horan|Rhys Mcclenaghan|Adeleke|Luke Littler|Seamus Power|Martin O'Neill|Guardiola|Lewis Hamilton|Lando Norris|Philly McMahon|Putin|Zelensky|Netanyahu|Jong-un|Khamenei|Maduro|Lukashenko|al-Assad|Enoch|Martina Burke" 
 W_PLACES = r"Afghan|Afghanistan|Ethiopia|Ethiopian|Gaza|Iran|Iranian|Iraq|Iraqi|israel|israeli|Kiev|Lebanese|Lebanon|Moscow|Palestine|palestinian|Petersburg|Russia|Russian|Syria|Syrian|Ukraine|Ukrainian|Yemen|Yemeni"
 W_SCAMS = r"scam|scammed|scammer|scammers|scamming|scams"
 W_HOUSING = r"apartments|council houses|council housing|derelict|development|holding|homes|homeless|housing|leaseback|lettings|mortgage|mortgaged|mortgages|on the market|properties|property|renovation|renovations|rentals|renting|residential|retail space|rezoned|rezoning|tenancy|tenant|tenants|tender|unzoned|vacant|zoned"
@@ -429,7 +429,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
     county_sligo_only=False, county_tipperary_only=False, county_tyrone_only=False, county_waterford_only=False, county_westmeath_only=False, 
     county_wexford_only=False, county_wicklow_only=False,                        
 
-    farming_only=False, irish_news_only=False, 
+    farming_only=False, irish_news_only=False,  searchtain_only=False, 
     lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
 
     # Irish Independent: Sport 
@@ -522,6 +522,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/irish-news/': irish_news_only,
             '/lifestyle/': lifestyle_only,
             '/podcasts/': podcasts_only,
+            '/searchtain/': searchtain_only,
             '/politics/': politics_only,
             '/weather/': weather_only,
             '/world-news/': world_news_only
@@ -651,7 +652,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
 
                     '/county/antrim/', '/county/armagh/', '/county/carlow/', '/county/cavan/', '/county/clare/', '/county/cork/', '/county/derry/', '/county/donegal/', '/county/down/', '/county/dublin/', '/county/fermanagh/', '/county/galway/', '/county/kerry/', '/county/kildare/', '/county/kilkenny/', '/county/laois/', '/county/leitrim/', '/county/limerick/', '/county/longford/', '/county/louth/', '/county/mayo/', '/county/meath/', '/county/monaghan/', '/county/offaly/', '/county/roscommon/', '/county/sligo/', '/county/tipperary/', '/county/tyrone/', '/county/waterford/', '/county/westmeath/', '/county/wexford/', '/county/wicklow/', 
 
-                    '/farming/', '/irish-news/', '/lifestyle/', '/podcasts/', 
+                    '/farming/', '/irish-news/', '/lifestyle/', '/podcasts/', '/seachtain/', 
                     '/politics/', '/weather/', '/world-news/'
                 ]):
                     continue  
@@ -1455,6 +1456,16 @@ def indo_podcasts():
         podcasts_only=True
     )
 
+# https://rss-filter-y4fa.onrender.com/indo_seachtain.xml
+@app.route('/indo_seachtain.xml')
+def indo_seachtain():
+    return process_generic_feed(
+        source_url="https://www.independent.ie/rss",
+        regex_pattern=f"{F_ALWAYS_NEGATIVE}|{F_ALWAYS_AVOID}|{F_MAIN}",
+        feed_title_override="Indo Main: Seachtain",
+        seachtain_only=True
+    )
+    
 # https://rss-filter-y4fa.onrender.com/indo_politics.xml
 @app.route('/indo_politics.xml')
 def indo_politics():
