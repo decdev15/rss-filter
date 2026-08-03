@@ -429,7 +429,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
     county_sligo_only=False, county_tipperary_only=False, county_tyrone_only=False, county_waterford_only=False, county_westmeath_only=False, 
     county_wexford_only=False, county_wicklow_only=False,                        
 
-    farming_only=False, irish_news_only=False,  searchtain_only=False, 
+    farming_only=False, irish_news_only=False,  seachtain_only=False, 
     lifestyle_only=False, podcasts_only=False, politics_only=False, weather_only=False, world_news_only=False, 
 
     # Irish Independent: Sport 
@@ -522,7 +522,7 @@ def process_generic_feed(source_url, regex_pattern, feed_title_override, exclude
             '/irish-news/': irish_news_only,
             '/lifestyle/': lifestyle_only,
             '/podcasts/': podcasts_only,
-            '/searchtain/': searchtain_only,
+            '/seachtain/': seachtain_only,
             '/politics/': politics_only,
             '/weather/': weather_only,
             '/world-news/': world_news_only
